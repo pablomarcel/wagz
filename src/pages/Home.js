@@ -1,11 +1,13 @@
 import React from 'react';
-import '../bootstrap-5.2.3-dist/css/bootstrap.css'
+import { Box, Container, Typography } from '@mui/material';
 
 const Home = () => {
     return (
-        <main>
-            <h3>Home Page</h3>
-        </main>
+        <Container maxWidth="xs">
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+                <Typography variant="h3">Home Page</Typography>
+            </Box>
+        </Container>
     );
 };
 
