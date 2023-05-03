@@ -6,6 +6,9 @@ import Create from './pages/Create';
 import LoginPage from './pages/LoginPage';
 import NavBar from './components/NavBar';
 import './bootstrap-5.2.3-dist/css/bootstrap.css'
+import CreatePetOwner from "./pages/CreatePetOwner";
+import CreatePet from "./pages/CreatePet";
+import CreatePost from "./pages/CreatePost";
 
 function App() {
   return (
@@ -15,6 +18,9 @@ function App() {
           <Routes>
             <Route path="/" exact element={<Home />} />
             <Route path="/create" element={<Create />} />
+            <Route path="/createPetOwner" element={<CreatePetOwner />} />
+            <Route path="/createPet" element={<CreatePet />} />
+            <Route path="/post" element={<CreatePost />} />
             <Route path="/login" element={<LoginPage />} />
           </Routes>
         </Router>
