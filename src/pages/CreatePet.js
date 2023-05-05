@@ -128,7 +128,7 @@ const Create = () => {
                                 onClick={handleAddPet}
                                 sx={{ mt: 2 }}
                             >
-                                Add Pet
+                                Create Pet
                             </Button>
                         </form>
                     </CardContent>
