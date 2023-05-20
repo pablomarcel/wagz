@@ -75,8 +75,8 @@ const Home = () => {
                                             <MoreVertIcon />
                                         </IconButton>
                                     }
-                                    title={`Posted by: ${owner ? owner.name : 'Unknown'}`}
-                                    subheader={`Pet: ${pet ? pet.name : 'Unknown'}`}
+                                    title={`Pet: ${pet ? pet.name : 'Unknown'}`}
+                                    subheader={`Author: ${owner ? owner.name : 'Unknown'}`}
                                 />
                                 <StyledCardMedia image="https://via.placeholder.com/640x360" title="Post image" />
                                 <CardContent>
