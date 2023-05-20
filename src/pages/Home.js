@@ -9,8 +9,15 @@ import {
     CircularProgress,
     Alert,
     CardMedia,
+    IconButton,
+    CardActions
 } from '@mui/material';
 import { styled } from '@mui/system';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import CommentIcon from '@mui/icons-material/Comment';
+import ShareIcon from '@mui/icons-material/Share';
+import SaveIcon from '@mui/icons-material/Save';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
@@ -63,14 +70,32 @@ const Home = () => {
                         <Grid item xs={12} key={id}>
                             <StyledCard>
                                 <CardHeader
+                                    action={
+                                        <IconButton>
+                                            <MoreVertIcon />
+                                        </IconButton>
+                                    }
                                     title={`Posted by: ${owner ? owner.name : 'Unknown'}`}
                                     subheader={`Pet: ${pet ? pet.name : 'Unknown'}`}
                                 />
-                                {/* Add a placeholder image or replace with actual image URL */}
                                 <StyledCardMedia image="https://via.placeholder.com/640x360" title="Post image" />
                                 <CardContent>
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
+                                <CardActions disableSpacing>
+                                    <IconButton aria-label="add to favorites">
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="comment">
+                                        <CommentIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="share">
+                                        <ShareIcon />
+                                    </IconButton>
+                                    <IconButton aria-label="save">
+                                        <SaveIcon />
+                                    </IconButton>
+                                </CardActions>
                             </StyledCard>
                         </Grid>
                     ))
