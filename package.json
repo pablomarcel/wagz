@@ -16,6 +16,7 @@
     "bootstrap": "^5.2.3",
     "dotenv": "^16.0.3",
     "neo4j-driver": "^4.4.10",
+    "netlify-cli": "^15.1.1",
     "netlify-lambda": "^2.0.13",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
