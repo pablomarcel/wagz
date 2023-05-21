@@ -39,6 +39,7 @@ const Home = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [likedPosts, setLikedPosts] = useState({}); // new state to keep track of liked posts
+    const [savedPosts, setSavedPosts] = useState({});
 
     const likePost = (postId) => {
         fetch('/.netlify/functions/likesPost', {
@@ -60,6 +61,29 @@ const Home = () => {
             })
             .catch((error) => {
                 console.error('Error liking post:', error);
+            });
+    };
+
+    const savePost = (postId) => {
+        fetch('/.netlify/functions/savePost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userEmail: user.email, postId }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Post saved:', data);
+                setSavedPosts(prevState => ({...prevState, [postId]: true}));
+            })
+            .catch((error) => {
+                console.error('Error saving post:', error);
             });
     };
 
@@ -97,6 +121,27 @@ const Home = () => {
                         likedPostsObj[postId] = true;
                     });
                     setLikedPosts(likedPostsObj);
+
+                    const savedResponse = await fetch('/.netlify/functions/getSavedPosts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!savedResponse.ok) {
+                        throw new Error(`HTTP error ${savedResponse.status}`);
+                    }
+
+                    const savedData = await savedResponse.json();
+
+                    let savedPostsObj = {};
+                    savedData.forEach(postId => {
+                        savedPostsObj[postId] = true;
+                    });
+                    setSavedPosts(savedPostsObj);
+
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -107,8 +152,6 @@ const Home = () => {
 
         fetchPosts();
     }, [isAuthenticated, user]);
-
-
 
     return (
         <Container maxWidth="md">
@@ -162,8 +205,8 @@ const Home = () => {
                                     <IconButton aria-label="share">
                                         <ShareIcon />
                                     </IconButton>
-                                    <IconButton aria-label="save">
-                                        <SaveIcon />
+                                    <IconButton aria-label="save" onClick={() => savePost(id)}>
+                                        {savedPosts[id] ? <SaveIcon color="primary"/> : <SaveIcon />}
                                     </IconButton>
                                 </CardActions>
                             </StyledCard>
