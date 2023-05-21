@@ -26,7 +26,9 @@ import PostAddIcon from '@mui/icons-material/PostAdd';
 import LockOpenIcon from '@mui/icons-material/LockOpen';
 import ExitToAppIcon from '@mui/icons-material/ExitToApp';
 import { useAuth0 } from '@auth0/auth0-react';
-
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -64,6 +66,16 @@ const NavBar = () => {
                     text: 'Post',
                     icon: <PostAddIcon />,
                     route: '/post',
+                },
+                {
+                    text: 'Favorites',
+                    icon: <FavoriteIcon />, // import FavoriteIcon from '@mui/icons-material/Favorite';
+                    route: '/favorites',
+                },
+                {
+                    text: 'Saved',
+                    icon: <BookmarkIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/saved',
                 },
             ]
             : []),
