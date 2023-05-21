@@ -5,12 +5,13 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 const CreatePost = () => {
+    const { user } = useAuth0();
+    const currentUserEmail = user.email;
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
-
     const [owners, setOwners] = useState([]);
     const [pets, setPets] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState('');
@@ -24,7 +25,8 @@ const CreatePost = () => {
     const fetchOwners = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/.netlify/functions/listPetOwners`);
-            setOwners(response.data);
+            const filteredOwners = response.data.filter(owner => owner.email === currentUserEmail);
+            setOwners(filteredOwners);
         } catch (error) {
             console.error('Error fetching pet owners', error);
         }
