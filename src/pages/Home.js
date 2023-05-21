@@ -33,7 +33,7 @@ const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9 aspect ratio
 });
 
-const Home = () => {
+const Home = ({ filterPosts }) => {
     const { user, isAuthenticated } = useAuth0();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -95,7 +95,13 @@ const Home = () => {
                     throw new Error(`HTTP error ${response.status}`);
                 }
 
-                const data = await response.json();
+                let data = await response.json();
+
+                // Filter posts if filterPosts is provided and not empty
+                if(filterPosts && filterPosts.length > 0){
+                    data = data.filter(post => filterPosts.includes(post.id));
+                }
+
                 setPosts(data);
                 setLoading(false);
 
@@ -141,7 +147,6 @@ const Home = () => {
                         savedPostsObj[postId] = true;
                     });
                     setSavedPosts(savedPostsObj);
-
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -151,7 +156,8 @@ const Home = () => {
         };
 
         fetchPosts();
-    }, [isAuthenticated, user]);
+    }, [isAuthenticated, user, filterPosts]);
+
 
     return (
         <Container maxWidth="md">

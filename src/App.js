@@ -10,6 +10,8 @@ import CreatePetOwner from "./pages/CreatePetOwner";
 import CreatePet from "./pages/CreatePet";
 import CreatePost from "./pages/CreatePost";
 import Profile from "./pages/Profile";
+import Favorites from './pages/Favorites';
+import Saved from './pages/Saved';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
             <Route path="/post" element={<CreatePost />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/favorites" element={<Favorites />} />
+            <Route path="/saved" element={<Saved />} />
           </Routes>
         </Router>
       </div>
