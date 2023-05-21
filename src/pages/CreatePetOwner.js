@@ -5,21 +5,18 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
-import { withAuthenticationRequired } from '@auth0/auth0-react';
+import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent } from '@mui/material';
 
 
 const Create = () => {
-
-
-
+    const { user } = useAuth0();
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
-
     const [owners, setOwners] = useState([]);
     const [pets, setPets] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState('');
     const [ownerName, setOwnerName] = useState('');
-    const [ownerEmail, setOwnerEmail] = useState('');
+    const [ownerEmail, setOwnerEmail] = useState(user.email);
     const [petName, setPetName] = useState('');
     const [petBreed, setPetBreed] = useState('');
     const [petAge, setPetAge] = useState('');
@@ -94,7 +91,9 @@ const Create = () => {
                                 label="Owner Email"
                                 type="email"
                                 value={ownerEmail}
-                                onChange={(e) => setOwnerEmail(e.target.value)}
+                                InputProps={{
+                                    readOnly: true,
+                                }}
                             />
                             <Button
                                 fullWidth
