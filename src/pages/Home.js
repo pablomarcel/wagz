@@ -11,7 +11,8 @@ import {
     Alert,
     CardMedia,
     IconButton,
-    CardActions
+    CardActions,
+    Box
 } from '@mui/material';
 import { styled } from '@mui/system';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -19,6 +20,7 @@ import CommentIcon from '@mui/icons-material/Comment';
 import ShareIcon from '@mui/icons-material/Share';
 import SaveIcon from '@mui/icons-material/Save';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import Avatar from '@mui/material/Avatar';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
@@ -59,10 +61,17 @@ const Home = () => {
 
     return (
         <Container maxWidth="md">
-            {isAuthenticated && (
-                <Typography variant="h6" gutterBottom>
-                    {`Logged in as ${user.email}`}
-                </Typography>
+            {isAuthenticated && user && (
+                <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2, mb: 4 }}>
+                    <Avatar
+                        alt={user.name}
+                        src={user.picture}
+                        sx={{ width: 40, height: 40, marginRight: 1 }}
+                    />
+                    <Typography variant="h6">
+                        {user.email}
+                    </Typography>
+                </Box>
             )}
 
             {error && (
