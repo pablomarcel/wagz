@@ -16,6 +16,7 @@ import {
 } from '@mui/material';
 import { styled } from '@mui/system';
 import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import CommentIcon from '@mui/icons-material/Comment';
 import ShareIcon from '@mui/icons-material/Share';
 import SaveIcon from '@mui/icons-material/Save';
@@ -37,11 +38,16 @@ const Home = () => {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [likedPosts, setLikedPosts] = useState({}); // new state to keep track of liked posts
 
-
-
-    useEffect(() => {
-        fetch('/.netlify/functions/listPosts')
+    const likePost = (postId) => {
+        fetch('/.netlify/functions/likesPost', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userEmail: user.email, postId }),
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error ${response.status}`);
@@ -49,15 +55,60 @@ const Home = () => {
                 return response.json();
             })
             .then((data) => {
-                setPosts(data);
-                setLoading(false);
+                console.log('Post liked:', data);
+                setLikedPosts(prevState => ({...prevState, [postId]: true})); // update the liked state
             })
             .catch((error) => {
+                console.error('Error liking post:', error);
+            });
+    };
+
+    useEffect(() => {
+        const fetchPosts = async () => {
+            try {
+                const response = await fetch('/.netlify/functions/listPosts');
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
+                const data = await response.json();
+                setPosts(data);
+                setLoading(false);
+
+                // fetch the liked posts only if the user is authenticated
+                if (isAuthenticated && user) {
+                    const likedResponse = await fetch('/.netlify/functions/getLikedPosts', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!likedResponse.ok) {
+                        throw new Error(`HTTP error ${likedResponse.status}`);
+                    }
+
+                    const likedData = await likedResponse.json();
+
+                    // set the liked posts state
+                    let likedPostsObj = {};
+                    likedData.forEach(postId => {
+                        likedPostsObj[postId] = true;
+                    });
+                    setLikedPosts(likedPostsObj);
+                }
+            } catch (error) {
                 console.error('Error fetching posts:', error);
                 setError(error.message);
                 setLoading(false);
-            });
-    }, []);
+            }
+        };
+
+        fetchPosts();
+    }, [isAuthenticated, user]);
+
+
 
     return (
         <Container maxWidth="md">
@@ -102,8 +153,8 @@ const Home = () => {
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites">
-                                        <FavoriteIcon />
+                                    <IconButton aria-label="add to favorites" onClick={() => likePost(id)}>
+                                        {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
                                     </IconButton>
                                     <IconButton aria-label="comment">
                                         <CommentIcon />
