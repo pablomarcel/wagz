@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useAuth0 } from '@auth0/auth0-react';
 import {
     Container,
     Grid,
@@ -30,9 +31,12 @@ const StyledCardMedia = styled(CardMedia)({
 });
 
 const Home = () => {
+    const { user, isAuthenticated } = useAuth0();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+
+
 
     useEffect(() => {
         fetch('/.netlify/functions/listPosts')
@@ -55,6 +59,12 @@ const Home = () => {
 
     return (
         <Container maxWidth="md">
+            {isAuthenticated && (
+                <Typography variant="h6" gutterBottom>
+                    {`Logged in as ${user.email}`}
+                </Typography>
+            )}
+
             {error && (
                 <Alert severity="error" sx={{ mb: 2 }}>
                     {`Error fetching data: ${error}`}
