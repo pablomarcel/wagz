@@ -9,6 +9,7 @@ import './bootstrap-5.2.3-dist/css/bootstrap.css'
 import CreatePetOwner from "./pages/CreatePetOwner";
 import CreatePet from "./pages/CreatePet";
 import CreatePost from "./pages/CreatePost";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
             <Route path="/createPet" element={<CreatePet />} />
             <Route path="/post" element={<CreatePost />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/profile" element={<Profile />} />
           </Routes>
         </Router>
       </div>

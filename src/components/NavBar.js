@@ -3,6 +3,8 @@
 
 import React, { useState } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+
 import {
     AppBar,
     Toolbar,
@@ -43,6 +45,11 @@ const NavBar = () => {
         },
         ...(isAuthenticated
             ? [
+                {
+                    text: 'Profile',
+                    icon: <AccountCircleIcon />, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+                    route: '/profile',
+                },
                 {
                     text: 'Owner',
                     icon: <PersonIcon />,
