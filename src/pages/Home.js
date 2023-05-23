@@ -289,8 +289,11 @@ const Home = ({ filterPosts }) => {
                     closeComments={closeComments}
                     likeComment={likeComment}
                     likedComments={likedComments}
+                    commentsOpen={commentsOpen}
+                    handleClose={closeComments}
                 />
             )}
+
 
         </Container>
     );
