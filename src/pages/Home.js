@@ -22,6 +22,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import SaveIcon from '@mui/icons-material/Save';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
+import Comments from '../components/Comments/Comments';
 
 const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
@@ -40,6 +41,9 @@ const Home = ({ filterPosts }) => {
     const [error, setError] = useState(null);
     const [likedPosts, setLikedPosts] = useState({}); // new state to keep track of liked posts
     const [savedPosts, setSavedPosts] = useState({});
+    const [commentsOpen, setCommentsOpen] = useState(false);
+    const [currentPostId, setCurrentPostId] = useState(null);
+    const [likedComments, setLikedComments] = useState({});
 
     const likePost = (postId) => {
         fetch('/.netlify/functions/likesPost', {
@@ -84,6 +88,39 @@ const Home = ({ filterPosts }) => {
             })
             .catch((error) => {
                 console.error('Error saving post:', error);
+            });
+    };
+
+    const openComments = (postId) => {
+        setCurrentPostId(postId);
+        setCommentsOpen(true);
+    };
+
+    const closeComments = () => {
+        setCurrentPostId(null);
+        setCommentsOpen(false);
+    };
+
+    const likeComment = (postId, commentId) => {
+        fetch('/.netlify/functions/likeComment', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userEmail: user.email, postId, commentId }),
+        })
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((data) => {
+                console.log('Comment liked:', data);
+                setLikedComments(prevState => ({...prevState, [commentId]: true})); // update the liked state
+            })
+            .catch((error) => {
+                console.error('Error liking comment:', error);
             });
     };
 
@@ -147,6 +184,28 @@ const Home = ({ filterPosts }) => {
                         savedPostsObj[postId] = true;
                     });
                     setSavedPosts(savedPostsObj);
+
+                    // fetch the liked comments
+                    const likedCommentsResponse = await fetch('/.netlify/functions/getLikedComments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!likedCommentsResponse.ok) {
+                        throw new Error(`HTTP error ${likedCommentsResponse.status}`);
+                    }
+
+                    const likedCommentsData = await likedCommentsResponse.json();
+
+                    // set the liked comments state
+                    let likedCommentsObj = {};
+                    likedCommentsData.forEach(commentId => {
+                        likedCommentsObj[commentId] = true;
+                    });
+                    setLikedComments(likedCommentsObj);
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -157,6 +216,7 @@ const Home = ({ filterPosts }) => {
 
         fetchPosts();
     }, [isAuthenticated, user, filterPosts]);
+
 
 
     return (
@@ -205,7 +265,7 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="add to favorites" onClick={() => likePost(id)}>
                                         {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
                                     </IconButton>
-                                    <IconButton aria-label="comment">
+                                    <IconButton aria-label="comment" onClick={() => openComments(id)}>
                                         <CommentIcon />
                                     </IconButton>
                                     <IconButton aria-label="share">
@@ -220,6 +280,18 @@ const Home = ({ filterPosts }) => {
                     ))
                 )}
             </Grid>
+
+            {commentsOpen && user && (
+                <Comments
+                    postId={currentPostId}
+                    userEmail={user.email}
+                    userPicture={user.picture}
+                    closeComments={closeComments}
+                    likeComment={likeComment}
+                    likedComments={likedComments}
+                />
+            )}
+
         </Container>
     );
 };
