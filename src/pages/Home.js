@@ -37,6 +37,7 @@ import savePost from './savePost';
 import likeComment from './likeComment';
 import followUser from './followUser';
 import unfollowUser from './unfollowUser';
+import {PersonAdd} from "@mui/icons-material";
 
 
 const Home = ({ filterPosts }) => {
@@ -52,6 +53,8 @@ const Home = ({ filterPosts }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [followStatus, setFollowStatus] = useState("Follow");
     const [currentOwner, setCurrentOwner] = useState(null);
+    const [followedUsers, setFollowedUsers] = useState({});
+
 
     const openComments = (postId) => {
         setCurrentPostId(postId);
@@ -74,16 +77,41 @@ const Home = ({ filterPosts }) => {
         setModalOpen(false);
     }
 
-    const handleFollow = () => {
-
-        if (followStatus === "Follow") {
-            setFollowStatus("Unfollow");
-            followUser(user.email, currentOwner.email);
-        } else {
-            setFollowStatus("Follow");
-            unfollowUser(user.email, currentOwner.email);
+    const handleFollow = async () => {
+        try {
+            if (followStatus === "Follow") {
+                await followUser(user.email, currentOwner.email);
+                setFollowStatus("Unfollow");
+            } else {
+                await unfollowUser(user.email, currentOwner.email);
+                setFollowStatus("Follow");
+            }
+        } catch (error) {
+            console.error('Error updating follow status:', error);
         }
     };
+
+    const handleFollowUser = async (postAuthorEmail) => {
+        try {
+            if (followedUsers[postAuthorEmail]) {
+                await unfollowUser(user.email, postAuthorEmail);
+                setFollowedUsers((prev) => ({
+                    ...prev,
+                    [postAuthorEmail]: false
+                }));
+            } else {
+                await followUser(user.email, postAuthorEmail);
+                setFollowedUsers((prev) => ({
+                    ...prev,
+                    [postAuthorEmail]: true
+                }));
+            }
+        } catch (error) {
+            console.error('Error updating follow status:', error);
+        }
+    };
+
+
 
 
 
@@ -169,6 +197,31 @@ const Home = ({ filterPosts }) => {
                         likedCommentsObj[commentId] = true;
                     });
                     setLikedComments(likedCommentsObj);
+
+                    // Fetch the followed owners
+                    const followResponse = await fetch('/.netlify/functions/getFollowingOwners', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!followResponse.ok) {
+                        throw new Error(`HTTP error ${followResponse.status}`);
+                    }
+
+                    const followData = await followResponse.json();
+
+                    // set the followed users state
+                    let followObj = {};
+                    followData.forEach(userEmail => {
+                        followObj[userEmail] = true;
+                    });
+                    setFollowedUsers(followObj);
+
+
+
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -213,13 +266,14 @@ const Home = ({ filterPosts }) => {
                             <StyledCard>
                                 <CardHeader
                                     action={
-                                        <IconButton onClick={() => {handleModalOpen(); setCurrentOwner(owner);}}>
+                                        <IconButton onClick={() => {}}>
                                             <MoreVertIcon />
                                         </IconButton>
                                     }
                                     title={`${pet ? pet.name : 'Unknown'}`}
                                     subheader={`by: ${owner ? owner.name : 'Unknown'}`}
                                 />
+
                                 <StyledCardMedia image="https://via.placeholder.com/640x360" title="Post image" />
                                 <CardContent>
                                     <Typography variant="body1">{caption}</Typography>
@@ -237,6 +291,10 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="save" onClick={() => savePost(user, id, setSavedPosts)}>
                                         {savedPosts[id] ? <SaveIcon color="primary"/> : <SaveIcon />}
                                     </IconButton>
+                                    <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email)}>
+                                        {followedUsers[owner.email] ? <PersonAdd color="primary"/> : <PersonAdd />}
+                                    </IconButton>
+
                                 </CardActions>
                             </StyledCard>
                         </Grid>

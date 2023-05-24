@@ -28,6 +28,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
 import Comments from '../components/Comments/Comments';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
 
 export {
     React,
@@ -58,5 +59,6 @@ export {
     SaveIcon,
     MoreVertIcon,
     Avatar,
-    Comments
+    Comments,
+    PersonAddIcon
 };
