@@ -29,6 +29,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import PeopleIcon from '@mui/icons-material/People';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -76,6 +77,11 @@ const NavBar = () => {
                     text: 'Saved',
                     icon: <BookmarkIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/saved',
+                },
+                {
+                    text: 'Following',
+                    icon: <PeopleIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/following',
                 },
             ]
             : []),

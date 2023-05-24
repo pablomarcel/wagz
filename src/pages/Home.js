@@ -12,7 +12,11 @@ import {
     CardMedia,
     IconButton,
     CardActions,
-    Box
+    Box,
+    Modal,
+    MenuItem,
+    MenuList,
+    Button
 } from '@mui/material';
 import { styled } from '@mui/system';
 import FavoriteIcon from '@mui/icons-material/Favorite';
@@ -34,6 +38,33 @@ const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9 aspect ratio
 });
 
+const ModalMenu = ({ handleOpen, handleClose, modalOpen, followHandler, currentOwner }) => (
+    <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+    >
+        <Box
+            sx={{
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 400,
+                bgcolor: 'background.paper',
+                boxShadow: 24,
+                p: 4,
+            }}
+        >
+            <MenuList>
+                <MenuItem onClick={() => followHandler()}>Follow</MenuItem>
+            </MenuList>
+            <Button onClick={handleClose}>Close</Button>
+        </Box>
+    </Modal>
+);
+
 const Home = ({ filterPosts }) => {
     const { user, isAuthenticated } = useAuth0();
     const [posts, setPosts] = useState([]);
@@ -44,6 +75,9 @@ const Home = ({ filterPosts }) => {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [currentPostId, setCurrentPostId] = useState(null);
     const [likedComments, setLikedComments] = useState({});
+    const [modalOpen, setModalOpen] = useState(false);
+    const [followStatus, setFollowStatus] = useState("Follow");
+    const [currentOwner, setCurrentOwner] = useState(null);
 
     const likePost = (postId) => {
         fetch('/.netlify/functions/likesPost', {
@@ -60,7 +94,7 @@ const Home = ({ filterPosts }) => {
                 return response.json();
             })
             .then((data) => {
-                console.log('Post liked:', data);
+
                 setLikedPosts(prevState => ({...prevState, [postId]: true})); // update the liked state
             })
             .catch((error) => {
@@ -83,7 +117,7 @@ const Home = ({ filterPosts }) => {
                 return response.json();
             })
             .then((data) => {
-                console.log('Post saved:', data);
+
                 setSavedPosts(prevState => ({...prevState, [postId]: true}));
             })
             .catch((error) => {
@@ -116,13 +150,75 @@ const Home = ({ filterPosts }) => {
                 return response.json();
             })
             .then((data) => {
-                console.log('Comment liked:', data);
+
                 setLikedComments(prevState => ({...prevState, [commentId]: true})); // update the liked state
             })
             .catch((error) => {
                 console.error('Error liking comment:', error);
             });
     };
+
+    const followUser = async (followerEmail, followeeEmail) => {
+        try {
+            const response = await fetch('/.netlify/functions/follow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ followerEmail, followeeEmail }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+
+            const data = await response.json();
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const unfollowUser = async (followerEmail, unfolloweeEmail) => {
+        try {
+            const response = await fetch('/.netlify/functions/unfollow', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ followerEmail, unfolloweeEmail }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+
+            const data = await response.json();
+
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const handleModalOpen = () => setModalOpen(true);
+
+    const handleModalClose = () => {
+        setFollowStatus("Follow");
+        setModalOpen(false);
+    }
+
+    const handleFollow = () => {
+
+        if (followStatus === "Follow") {
+            setFollowStatus("Unfollow");
+            followUser(user.email, currentOwner.email);
+        } else {
+            setFollowStatus("Follow");
+            unfollowUser(user.email, currentOwner.email);
+        }
+    };
+
+
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -250,7 +346,7 @@ const Home = ({ filterPosts }) => {
                             <StyledCard>
                                 <CardHeader
                                     action={
-                                        <IconButton>
+                                        <IconButton onClick={() => {handleModalOpen(); setCurrentOwner(owner);}}>
                                             <MoreVertIcon />
                                         </IconButton>
                                     }
@@ -293,6 +389,14 @@ const Home = ({ filterPosts }) => {
                     handleClose={closeComments}
                 />
             )}
+
+            <ModalMenu
+                handleOpen={handleModalOpen}
+                handleClose={handleModalClose}
+                modalOpen={modalOpen}
+                followHandler={handleFollow}
+                currentOwner={currentOwner}
+            />
 
 
         </Container>
