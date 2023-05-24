@@ -1,7 +1,9 @@
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
 import {
+    React,
+    useEffect,
+    useState,
+    useAuth0,
     Container,
     Grid,
     Card,
@@ -17,54 +19,25 @@ import {
     Modal,
     MenuItem,
     MenuList,
-    Button
-} from '@mui/material';
-import { styled } from '@mui/system';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import CommentIcon from '@mui/icons-material/Comment';
-import ShareIcon from '@mui/icons-material/Share';
-import SaveIcon from '@mui/icons-material/Save';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Avatar from '@mui/material/Avatar';
-import Comments from '../components/Comments/Comments';
+    Button,
+    styled,
+    FavoriteIcon,
+    FavoriteBorderIcon,
+    CommentIcon,
+    ShareIcon,
+    SaveIcon,
+    MoreVertIcon,
+    Avatar,
+    Comments
+} from './imports';
+import { StyledCard, StyledCardMedia } from './styledComponents';
+import ModalMenu from './ModalMenu';
+import likePost from './likePost';
+import savePost from './savePost';
+import likeComment from './likeComment';
+import followUser from './followUser';
+import unfollowUser from './unfollowUser';
 
-const StyledCard = styled(Card)(({ theme }) => ({
-    width: '100%',
-    marginBottom: theme.spacing(2),
-}));
-
-const StyledCardMedia = styled(CardMedia)({
-    height: 0,
-    paddingTop: '56.25%', // 16:9 aspect ratio
-});
-
-const ModalMenu = ({ handleOpen, handleClose, modalOpen, followHandler, currentOwner }) => (
-    <Modal
-        open={modalOpen}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-    >
-        <Box
-            sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 400,
-                bgcolor: 'background.paper',
-                boxShadow: 24,
-                p: 4,
-            }}
-        >
-            <MenuList>
-                <MenuItem onClick={() => followHandler()}>Follow</MenuItem>
-            </MenuList>
-            <Button onClick={handleClose}>Close</Button>
-        </Box>
-    </Modal>
-);
 
 const Home = ({ filterPosts }) => {
     const { user, isAuthenticated } = useAuth0();
@@ -80,52 +53,6 @@ const Home = ({ filterPosts }) => {
     const [followStatus, setFollowStatus] = useState("Follow");
     const [currentOwner, setCurrentOwner] = useState(null);
 
-    const likePost = (postId) => {
-        fetch('/.netlify/functions/likesPost', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userEmail: user.email, postId }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-
-                setLikedPosts(prevState => ({...prevState, [postId]: true})); // update the liked state
-            })
-            .catch((error) => {
-                console.error('Error liking post:', error);
-            });
-    };
-
-    const savePost = (postId) => {
-        fetch('/.netlify/functions/savePost', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userEmail: user.email, postId }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-
-                setSavedPosts(prevState => ({...prevState, [postId]: true}));
-            })
-            .catch((error) => {
-                console.error('Error saving post:', error);
-            });
-    };
-
     const openComments = (postId) => {
         setCurrentPostId(postId);
         setCommentsOpen(true);
@@ -136,69 +63,8 @@ const Home = ({ filterPosts }) => {
         setCommentsOpen(false);
     };
 
-    const likeComment = (postId, commentId) => {
-        fetch('/.netlify/functions/likeComment', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ userEmail: user.email, postId, commentId }),
-        })
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((data) => {
-
-                setLikedComments(prevState => ({...prevState, [commentId]: true})); // update the liked state
-            })
-            .catch((error) => {
-                console.error('Error liking comment:', error);
-            });
-    };
-
-    const followUser = async (followerEmail, followeeEmail) => {
-        try {
-            const response = await fetch('/.netlify/functions/follow', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ followerEmail, followeeEmail }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error ${response.status}`);
-            }
-
-            const data = await response.json();
-
-        } catch (error) {
-            console.error(error);
-        }
-    };
-
-    const unfollowUser = async (followerEmail, unfolloweeEmail) => {
-        try {
-            const response = await fetch('/.netlify/functions/unfollow', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ followerEmail, unfolloweeEmail }),
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error ${response.status}`);
-            }
-
-            const data = await response.json();
-
-        } catch (error) {
-            console.error(error);
-        }
+    const handleLikeComment = (postId, commentId) => {
+        likeComment(user.email, postId, commentId, setLikedComments);
     };
 
     const handleModalOpen = () => setModalOpen(true);
@@ -359,7 +225,7 @@ const Home = ({ filterPosts }) => {
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites" onClick={() => likePost(id)}>
+                                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, setLikedPosts)}>
                                         {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
                                     </IconButton>
                                     <IconButton aria-label="comment" onClick={() => openComments(id)}>
@@ -368,7 +234,7 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="share">
                                         <ShareIcon />
                                     </IconButton>
-                                    <IconButton aria-label="save" onClick={() => savePost(id)}>
+                                    <IconButton aria-label="save" onClick={() => savePost(user, id, setSavedPosts)}>
                                         {savedPosts[id] ? <SaveIcon color="primary"/> : <SaveIcon />}
                                     </IconButton>
                                 </CardActions>
@@ -384,7 +250,7 @@ const Home = ({ filterPosts }) => {
                     userEmail={user.email}
                     userPicture={user.picture}
                     closeComments={closeComments}
-                    likeComment={likeComment}
+                    likeComment={handleLikeComment}
                     likedComments={likedComments}
                     commentsOpen={commentsOpen}
                     handleClose={closeComments}
