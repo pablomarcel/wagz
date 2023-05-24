@@ -65,7 +65,7 @@ const CreatePost = () => {
                 petId: selectedPet,
                 caption,
             });
-            console.log(response.data);
+
             setSelectedPet('');
             setCaption('');
         } catch (error) {

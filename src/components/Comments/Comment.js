@@ -5,10 +5,7 @@ import ReplyIcon from '@mui/icons-material/Reply';
 
 const Comment = ({ id, ownerName, text, timestamp, isLiked: initialIsLiked, likeCount: initialLikeCount, userEmail, userPicture }) => {
 
-    console.log('initialIsLiked:', initialIsLiked);
-    console.log('initialLikeCount:', initialLikeCount);
 
-    console.log('Comment ownerName:', ownerName);
 
     const initialIsLikedBool = initialIsLiked !== undefined ? initialIsLiked : false;
     const initialLikeCountNumber = initialLikeCount !== undefined ? initialLikeCount : 0;

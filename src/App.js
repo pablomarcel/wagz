@@ -12,6 +12,7 @@ import CreatePost from "./pages/CreatePost";
 import Profile from "./pages/Profile";
 import Favorites from './pages/Favorites';
 import Saved from './pages/Saved';
+import Following from './pages/Following';
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/saved" element={<Saved />} />
+            <Route path="/following" element={<Following />} />
           </Routes>
         </Router>
       </div>

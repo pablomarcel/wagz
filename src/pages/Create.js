@@ -38,7 +38,7 @@ const Create = () => {
                 name: ownerName,
                 email: ownerEmail,
             });
-            console.log(response.data);
+
             setOwnerName('');
             setOwnerEmail('');
             fetchOwners();
@@ -58,7 +58,7 @@ const Create = () => {
                 breed: petBreed,
                 age: petAge,
             });
-            console.log(response.data);
+
             setPetName('');
             setPetBreed('');
             setPetAge('');
