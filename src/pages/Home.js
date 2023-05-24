@@ -31,14 +31,12 @@ import {
     Comments
 } from './imports';
 import { StyledCard, StyledCardMedia } from './styledComponents';
-import ModalMenu from './ModalMenu';
 import likePost from './likePost';
 import savePost from './savePost';
 import likeComment from './likeComment';
 import followUser from './followUser';
 import unfollowUser from './unfollowUser';
 import {PersonAdd} from "@mui/icons-material";
-
 
 const Home = ({ filterPosts }) => {
     const { user, isAuthenticated } = useAuth0();
@@ -50,9 +48,6 @@ const Home = ({ filterPosts }) => {
     const [commentsOpen, setCommentsOpen] = useState(false);
     const [currentPostId, setCurrentPostId] = useState(null);
     const [likedComments, setLikedComments] = useState({});
-    const [modalOpen, setModalOpen] = useState(false);
-    const [followStatus, setFollowStatus] = useState("Follow");
-    const [currentOwner, setCurrentOwner] = useState(null);
     const [followedUsers, setFollowedUsers] = useState({});
 
 
@@ -68,27 +63,6 @@ const Home = ({ filterPosts }) => {
 
     const handleLikeComment = (postId, commentId) => {
         likeComment(user.email, postId, commentId, setLikedComments);
-    };
-
-    const handleModalOpen = () => setModalOpen(true);
-
-    const handleModalClose = () => {
-        setFollowStatus("Follow");
-        setModalOpen(false);
-    }
-
-    const handleFollow = async () => {
-        try {
-            if (followStatus === "Follow") {
-                await followUser(user.email, currentOwner.email);
-                setFollowStatus("Unfollow");
-            } else {
-                await unfollowUser(user.email, currentOwner.email);
-                setFollowStatus("Follow");
-            }
-        } catch (error) {
-            console.error('Error updating follow status:', error);
-        }
     };
 
     const handleFollowUser = async (postAuthorEmail) => {
@@ -110,10 +84,6 @@ const Home = ({ filterPosts }) => {
             console.error('Error updating follow status:', error);
         }
     };
-
-
-
-
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -220,8 +190,6 @@ const Home = ({ filterPosts }) => {
                     });
                     setFollowedUsers(followObj);
 
-
-
                 }
             } catch (error) {
                 console.error('Error fetching posts:', error);
@@ -232,8 +200,6 @@ const Home = ({ filterPosts }) => {
 
         fetchPosts();
     }, [isAuthenticated, user, filterPosts]);
-
-
 
     return (
         <Container maxWidth="md">
@@ -314,15 +280,6 @@ const Home = ({ filterPosts }) => {
                     handleClose={closeComments}
                 />
             )}
-
-            <ModalMenu
-                handleOpen={handleModalOpen}
-                handleClose={handleModalClose}
-                modalOpen={modalOpen}
-                followHandler={handleFollow}
-                currentOwner={currentOwner}
-            />
-
 
         </Container>
     );
