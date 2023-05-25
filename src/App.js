@@ -13,6 +13,7 @@ import Profile from "./pages/Profile";
 import Favorites from './pages/Favorites';
 import Saved from './pages/Saved';
 import Following from './pages/Following';
+import SharedWithMe from './pages/SharedWithMe';
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
             <Route path="/favorites" element={<Favorites />} />
             <Route path="/saved" element={<Saved />} />
             <Route path="/following" element={<Following />} />
+            <Route path="/sharedwithme" element={<SharedWithMe />} />
           </Routes>
         </Router>
       </div>

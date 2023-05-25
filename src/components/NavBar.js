@@ -30,6 +30,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PeopleIcon from '@mui/icons-material/People';
+import ShareIcon from '@mui/icons-material/Share';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -82,6 +83,11 @@ const NavBar = () => {
                     text: 'Following',
                     icon: <PeopleIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/following',
+                },
+                {
+                    text: 'Shared With Me',
+                    icon: <ShareIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/sharedwithme',
                 },
             ]
             : []),
