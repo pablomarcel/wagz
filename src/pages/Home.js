@@ -29,7 +29,8 @@ import {
     MoreVertIcon,
     Avatar,
     Comments,
-    ShareForm
+    ShareForm,
+    AboutPet
 } from './imports';
 import { StyledCard, StyledCardMedia } from './styledComponents';
 import likePost from './likePost';
@@ -52,6 +53,8 @@ const Home = ({ filterPosts }) => {
     const [followedUsers, setFollowedUsers] = useState({});
     const [shareFormOpen, setShareFormOpen] = useState(false);
     const [currentPostToShare, setCurrentPostToShare] = useState(null);
+    const [aboutPetOpen, setAboutPetOpen] = useState(false);
+    const [currentPet, setCurrentPet] = useState(null);
 
 
     const openComments = (postId) => {
@@ -106,6 +109,10 @@ const Home = ({ filterPosts }) => {
         }
     };
 
+    const handleAboutPet = (pet) => {
+        setCurrentPet(pet);
+        setAboutPetOpen(true);
+    };
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -254,7 +261,7 @@ const Home = ({ filterPosts }) => {
                             <StyledCard>
                                 <CardHeader
                                     action={
-                                        <IconButton onClick={() => {}}>
+                                        <IconButton onClick={() => handleAboutPet(pet)}>
                                             <MoreVertIcon />
                                         </IconButton>
                                     }
@@ -313,6 +320,17 @@ const Home = ({ filterPosts }) => {
                     onShare={handleSharePost}
                 />
             )}
+
+            {aboutPetOpen && currentPet && (
+                <AboutPet
+                    open={aboutPetOpen}
+                    onClose={() => setAboutPetOpen(false)}
+                    pet={currentPet}
+                />
+            )}
+
+
+
 
         </Container>
     );

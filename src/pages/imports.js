@@ -30,6 +30,7 @@ import Avatar from '@mui/material/Avatar';
 import Comments from '../components/Comments/Comments';
 import PersonAddIcon from '@mui/icons-material/PersonAdd';
 import ShareForm from '../components/Sharing/ShareForm';
+import AboutPet from '../components/More/AboutPet';
 
 export {
     React,
@@ -62,5 +63,6 @@ export {
     Avatar,
     Comments,
     PersonAddIcon,
-    ShareForm
+    ShareForm,
+    AboutPet
 };
