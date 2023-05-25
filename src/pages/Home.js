@@ -28,7 +28,8 @@ import {
     SaveIcon,
     MoreVertIcon,
     Avatar,
-    Comments
+    Comments,
+    ShareForm
 } from './imports';
 import { StyledCard, StyledCardMedia } from './styledComponents';
 import likePost from './likePost';
@@ -49,6 +50,8 @@ const Home = ({ filterPosts }) => {
     const [currentPostId, setCurrentPostId] = useState(null);
     const [likedComments, setLikedComments] = useState({});
     const [followedUsers, setFollowedUsers] = useState({});
+    const [shareFormOpen, setShareFormOpen] = useState(false);
+    const [currentPostToShare, setCurrentPostToShare] = useState(null);
 
 
     const openComments = (postId) => {
@@ -84,6 +87,25 @@ const Home = ({ filterPosts }) => {
             console.error('Error updating follow status:', error);
         }
     };
+
+    const handleSharePost = async (shareToEmail) => {
+        try {
+            const response = await fetch('/.netlify/functions/sharePost', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ sharerEmail: user.email, postId: currentPostToShare, receiverEmail: shareToEmail }),
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+            alert("Post shared successfully!");
+        } catch (error) {
+            console.error('Error sharing post:', error);
+        }
+    };
+
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -251,7 +273,10 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="comment" onClick={() => openComments(id)}>
                                         <CommentIcon />
                                     </IconButton>
-                                    <IconButton aria-label="share">
+                                    <IconButton aria-label="share" onClick={() => {
+                                        setCurrentPostToShare(id);
+                                        setShareFormOpen(true);
+                                    }}>
                                         <ShareIcon />
                                     </IconButton>
                                     <IconButton aria-label="save" onClick={() => savePost(user, id, setSavedPosts)}>
@@ -278,6 +303,14 @@ const Home = ({ filterPosts }) => {
                     likedComments={likedComments}
                     commentsOpen={commentsOpen}
                     handleClose={closeComments}
+                />
+            )}
+
+            {user && (
+                <ShareForm
+                    open={shareFormOpen}
+                    onClose={() => setShareFormOpen(false)}
+                    onShare={handleSharePost}
                 />
             )}
 
