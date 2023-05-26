@@ -256,7 +256,7 @@ const Home = ({ filterPosts }) => {
                         <CircularProgress />
                     </Grid>
                 ) : (
-                    posts.map(({ id, caption, pet, owner }) => (
+                    posts.map(({ id, caption, pet, owner, fileUrl }) => (
                         <Grid item xs={12} key={id}>
                             <StyledCard>
                                 <CardHeader
@@ -269,7 +269,11 @@ const Home = ({ filterPosts }) => {
                                     subheader={`by: ${owner ? owner.name : 'Unknown'}`}
                                 />
 
-                                <StyledCardMedia image="https://via.placeholder.com/640x360" title="Post image" />
+                                <StyledCardMedia
+                                    image={fileUrl ? fileUrl : "https://via.placeholder.com/640x360"}
+                                    title="Post image"
+                                />
+
                                 <CardContent>
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
