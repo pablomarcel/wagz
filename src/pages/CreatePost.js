@@ -7,6 +7,7 @@ import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import UploadComponent from './UploadComponent'; // Remember to import UploadComponent here
 
 const CreatePost = () => {
     const { user } = useAuth0();
@@ -17,6 +18,10 @@ const CreatePost = () => {
     const [selectedOwner, setSelectedOwner] = useState('');
     const [selectedPet, setSelectedPet] = useState('');
     const [caption, setCaption] = useState('');
+    const [fileUrl, setFileUrl] = useState(null);  // Add a state for the file URL
+    const [isUploading, setIsUploading] = useState(false);  // Add this line
+
+
 
     useEffect(() => {
         fetchOwners();
@@ -41,9 +46,6 @@ const CreatePost = () => {
         }
     };
 
-
-
-
     const handleOwnerChange = (e) => {
         setSelectedOwner(e.target.value);
         if (e.target.value) {
@@ -59,15 +61,19 @@ const CreatePost = () => {
             return;
         }
 
+        console.log('Sending fileUrl:', fileUrl);
+
         try {
             const response = await axios.post(`${API_BASE_URL}/.netlify/functions/createPost`, {
                 petOwnerId: selectedOwner,
                 petId: selectedPet,
                 caption,
+                fileUrl,  // Add the fileUrl to the post data
             });
 
             setSelectedPet('');
             setCaption('');
+            setFileUrl(null);  // Reset the file URL
         } catch (error) {
             console.error('Error creating post', error);
         }
@@ -130,6 +136,11 @@ const CreatePost = () => {
                                 />
                             </FormControl>
 
+                            {/* Include the UploadComponent here */}
+                            <FormControl fullWidth margin="normal">
+                                <UploadComponent setFileUrl={setFileUrl} setIsUploading={setIsUploading}/>
+                            </FormControl>
+
                             <Button
                                 fullWidth
                                 type="button"
@@ -137,6 +148,7 @@ const CreatePost = () => {
                                 variant="contained"
                                 onClick={handleCreatePost}
                                 sx={{ mt: 2 }}
+                                disabled={isUploading}  // Add this line
                             >
                                 Create Post
                             </Button>
@@ -151,4 +163,3 @@ const CreatePost = () => {
 export default withAuthenticationRequired(CreatePost, {
     onRedirecting: () => <div>Loading...</div>,
 });
-
