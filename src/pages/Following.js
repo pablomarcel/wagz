@@ -1,5 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper } from '@mui/material';
+import { styled } from '@mui/system';
+import Alert from '@mui/lab/Alert';
+
+const StyledTypography = styled(Typography)({
+    marginBottom: '10px',
+});
+
+const StyledPaper = styled(Paper)({
+    padding: '10px',
+    margin: '10px 0',
+    textAlign: 'center',
+});
 
 const Following = () => {
     const { user, isAuthenticated } = useAuth0();
@@ -36,18 +49,30 @@ const Following = () => {
         fetchFollowingOwners();
     }, [isAuthenticated, user]);
 
-    if (loading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (loading) return <CircularProgress />;
+    if (error) return <Alert severity="error">{error}</Alert>;
 
     return (
-        <div>
-            <h1>Following</h1>
+        <Container>
+            <StyledTypography variant="h4" component="h1">Following</StyledTypography>
             {owners.length > 0 ? (
-                owners.map((owner, index) => <p key={index}>{owner}</p>)
+                <List>
+                    {owners.map((owner, index) => (
+                        <ListItem key={index}>
+                            <Grid container justifyContent="center">
+                                <Grid item xs={12} sm={8} md={6}>
+                                    <StyledPaper elevation={3}>
+                                        <Typography variant="body1">{owner}</Typography>
+                                    </StyledPaper>
+                                </Grid>
+                            </Grid>
+                        </ListItem>
+                    ))}
+                </List>
             ) : (
-                <p>You are not following anyone.</p>
+                <Typography variant="body1">You are not following anyone.</Typography>
             )}
-        </div>
+        </Container>
     );
 };
 

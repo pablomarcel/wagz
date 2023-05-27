@@ -5,6 +5,11 @@ import { Card, CardMedia } from '@mui/material';
 export const StyledCard = styled(Card)(({ theme }) => ({
     width: '100%',
     marginBottom: theme.spacing(2),
+    backgroundColor: '#f5f5f5',
+    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
+    borderRadius: '15px',
+    padding: 'rem',
+
 }));
 
 export const StyledCardMedia = styled(CardMedia)({

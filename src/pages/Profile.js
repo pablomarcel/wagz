@@ -1,6 +1,25 @@
 import React from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Avatar, Box, Typography } from '@mui/material';
+import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
+import { styled } from '@mui/system';
+
+const StyledTypography = styled(Typography)({
+    textAlign: 'center',
+    fontSize: '1.2rem',
+    fontWeight: '600',
+    marginTop: '1rem',
+});
+
+const StyledCard = styled(Card)({
+    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
+    borderRadius: '15px',
+    padding: '2rem',
+    marginTop: '2rem',
+    backgroundColor: '#f5f5f5',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+});
 
 const Profile = () => {
     const { user, isAuthenticated } = useAuth0();
@@ -8,19 +27,21 @@ const Profile = () => {
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3 }}>
             {isAuthenticated && user && (
-                <>
+                <StyledCard>
                     <Avatar
                         alt={user.name}
                         src={user.picture}
-                        sx={{ width: 80, height: 80 }}
+                        sx={{ width: 80, height: 80, marginTop: '1rem' }}
                     />
-                    <Typography variant="h4" component="div" sx={{ mt: 2 }}>
-                        {user.name}
-                    </Typography>
-                    <Typography variant="body1" component="div" sx={{ mt: 1 }}>
-                        {user.email}
-                    </Typography>
-                </>
+                    <CardContent>
+                        <StyledTypography variant="h5">
+                            {user.name}
+                        </StyledTypography>
+                        <StyledTypography variant="subtitle1">
+                            {user.email}
+                        </StyledTypography>
+                    </CardContent>
+                </StyledCard>
             )}
         </Box>
     );
