@@ -1,5 +1,9 @@
-const savePost = (user, postId, setSavedPosts) => {
-    fetch('/.netlify/functions/savePost', {
+const savePost = (user, postId, alreadySaved, setSavedPosts) => {
+    const endpoint = alreadySaved
+        ? '/.netlify/functions/unsavePost'
+        : '/.netlify/functions/savePost';
+
+    fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -13,10 +17,10 @@ const savePost = (user, postId, setSavedPosts) => {
             return response.json();
         })
         .then((data) => {
-            setSavedPosts(prevState => ({...prevState, [postId]: true}));
+            setSavedPosts(prevState => ({...prevState, [postId]: !alreadySaved}));
         })
         .catch((error) => {
-            console.error('Error saving post:', error);
+            console.error('Error updating save status:', error);
         });
 };
 
