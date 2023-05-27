@@ -12,6 +12,10 @@ const StyledPaper = styled(Paper)({
     padding: '10px',
     margin: '10px 0',
     textAlign: 'center',
+    backgroundColor: '#f5f5f5',
+    borderRadius: '15px',
+    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
+
 });
 
 const Following = () => {

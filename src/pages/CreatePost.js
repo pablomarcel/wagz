@@ -81,8 +81,17 @@ const CreatePost = () => {
 
     return (
         <Container maxWidth="xs">
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-                <Card>
+            <Box
+                sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+
+            }}>
+                <Card sx={{
+                    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
+                    backgroundColor: '#f5f5f5',
+                    borderRadius: '15px',
+                }}>
                     <CardContent>
                         <h2>Create Post</h2>
                         <form>
