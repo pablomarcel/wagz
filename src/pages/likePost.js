@@ -1,6 +1,9 @@
-// likePost.js
-const likePost = (user, postId, setLikedPosts) => {
-    fetch('/.netlify/functions/likesPost', {
+const likePost = (user, postId, alreadyLiked, setLikedPosts) => {
+    const endpoint = alreadyLiked
+        ? '/.netlify/functions/unlikePost'
+        : '/.netlify/functions/likesPost';
+
+    fetch(endpoint, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -14,10 +17,10 @@ const likePost = (user, postId, setLikedPosts) => {
             return response.json();
         })
         .then((data) => {
-            setLikedPosts(prevState => ({...prevState, [postId]: true})); // update the liked state
+            setLikedPosts(prevState => ({...prevState, [postId]: !alreadyLiked})); // update the liked state
         })
         .catch((error) => {
-            console.error('Error liking post:', error);
+            console.error('Error updating like status:', error);
         });
 };
 
