@@ -291,9 +291,10 @@ const Home = ({ filterPosts }) => {
                                     }}>
                                         <ShareIcon />
                                     </IconButton>
-                                    <IconButton aria-label="save" onClick={() => savePost(user, id, setSavedPosts)}>
+                                    <IconButton aria-label="save" onClick={() => savePost(user, id, savedPosts[id], setSavedPosts)}>
                                         {savedPosts[id] ? <SaveIcon color="primary"/> : <SaveIcon />}
                                     </IconButton>
+
                                     <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email)}>
                                         {followedUsers[owner.email] ? <PersonAdd color="primary"/> : <PersonAdd />}
                                     </IconButton>
