@@ -14,7 +14,7 @@ const StyledCard = styled(Card)({
     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
     borderRadius: '15px',
     padding: '2rem',
-    marginTop: '2rem',
+    marginTop: '0rem',
     backgroundColor: '#f5f5f5',
     display: 'flex',
     flexDirection: 'column',
@@ -25,7 +25,13 @@ const Profile = () => {
     const { user, isAuthenticated } = useAuth0();
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', mt: 3 }}>
+        <Box
+            sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                mt: 0
+        }}>
             {isAuthenticated && user && (
                 <StyledCard>
                     <Avatar
