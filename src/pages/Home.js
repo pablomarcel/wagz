@@ -55,6 +55,7 @@ const Home = ({ filterPosts }) => {
     const [currentPostToShare, setCurrentPostToShare] = useState(null);
     const [aboutPetOpen, setAboutPetOpen] = useState(false);
     const [currentPet, setCurrentPet] = useState(null);
+    const [likeCounts, setLikeCounts] = useState({});
 
 
     const openComments = (postId) => {
@@ -286,7 +287,7 @@ const Home = ({ filterPosts }) => {
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts)}>
+                                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts, setLikeCounts)}>
                                         {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
                                     </IconButton>
 
@@ -306,6 +307,10 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email)}>
                                         {followedUsers[owner.email] ? <PersonAdd color="primary"/> : <PersonAdd />}
                                     </IconButton>
+
+                                    <Typography variant="body2">
+                                        {likeCounts[id] || 0} Likes
+                                    </Typography>
 
                                 </CardActions>
                             </StyledCard>
@@ -351,3 +356,5 @@ const Home = ({ filterPosts }) => {
 };
 
 export default Home;
+
+
