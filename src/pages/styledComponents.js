@@ -17,3 +17,7 @@ export const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9 aspect ratio
 });
 
+export const StyledCardVideo = styled('video')({
+    width: '100%', // match the width of the card
+    height: 'auto'  // maintain the aspect ratio
+});
