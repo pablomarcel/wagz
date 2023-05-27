@@ -38,6 +38,8 @@ import savePost from './savePost';
 import likeComment from './likeComment';
 import followUser from './followUser';
 import unfollowUser from './unfollowUser';
+import handleFollowUser from './handleFollowUser';
+import { handleSharePost } from './handleSharePost';
 import {PersonAdd} from "@mui/icons-material";
 
 const Home = ({ filterPosts }) => {
@@ -56,58 +58,20 @@ const Home = ({ filterPosts }) => {
     const [aboutPetOpen, setAboutPetOpen] = useState(false);
     const [currentPet, setCurrentPet] = useState(null);
     const [likeCounts, setLikeCounts] = useState({});
-
-
     const openComments = (postId) => {
         setCurrentPostId(postId);
         setCommentsOpen(true);
     };
-
     const closeComments = () => {
         setCurrentPostId(null);
         setCommentsOpen(false);
     };
-
     const handleLikeComment = (postId, commentId) => {
         likeComment(user.email, postId, commentId, setLikedComments);
     };
 
-    const handleFollowUser = async (postAuthorEmail) => {
-        try {
-            if (followedUsers[postAuthorEmail]) {
-                await unfollowUser(user.email, postAuthorEmail);
-                setFollowedUsers((prev) => ({
-                    ...prev,
-                    [postAuthorEmail]: false
-                }));
-            } else {
-                await followUser(user.email, postAuthorEmail);
-                setFollowedUsers((prev) => ({
-                    ...prev,
-                    [postAuthorEmail]: true
-                }));
-            }
-        } catch (error) {
-            console.error('Error updating follow status:', error);
-        }
-    };
-
-    const handleSharePost = async (shareToEmail) => {
-        try {
-            const response = await fetch('/.netlify/functions/sharePost', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ sharerEmail: user.email, postId: currentPostToShare, receiverEmail: shareToEmail }),
-            });
-            if (!response.ok) {
-                throw new Error(`HTTP error ${response.status}`);
-            }
-            alert("Post shared successfully!");
-        } catch (error) {
-            console.error('Error sharing post:', error);
-        }
+    const handlePostSharing = (shareToEmail) => {
+        handleSharePost(shareToEmail, user, currentPostToShare);
     };
 
     const handleAboutPet = (pet) => {
@@ -281,8 +245,6 @@ const Home = ({ filterPosts }) => {
                                         title="Post image"
                                     />
                                 )}
-
-
                                 <CardContent>
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
@@ -290,7 +252,6 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts, setLikeCounts)}>
                                         {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
                                     </IconButton>
-
                                     <IconButton aria-label="comment" onClick={() => openComments(id)}>
                                         <CommentIcon />
                                     </IconButton>
@@ -303,11 +264,9 @@ const Home = ({ filterPosts }) => {
                                     <IconButton aria-label="save" onClick={() => savePost(user, id, savedPosts[id], setSavedPosts)}>
                                         {savedPosts[id] ? <SaveIcon color="primary"/> : <SaveIcon />}
                                     </IconButton>
-
-                                    <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email)}>
+                                    <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email, user, followedUsers, setFollowedUsers)}>
                                         {followedUsers[owner.email] ? <PersonAdd color="primary"/> : <PersonAdd />}
                                     </IconButton>
-
                                     <Typography variant="body2">
                                         {likeCounts[id] || 0} Likes
                                     </Typography>
@@ -336,10 +295,9 @@ const Home = ({ filterPosts }) => {
                 <ShareForm
                     open={shareFormOpen}
                     onClose={() => setShareFormOpen(false)}
-                    onShare={handleSharePost}
+                    onShare={handlePostSharing}
                 />
             )}
-
             {aboutPetOpen && currentPet && (
                 <AboutPet
                     open={aboutPetOpen}
@@ -347,10 +305,6 @@ const Home = ({ filterPosts }) => {
                     pet={currentPet}
                 />
             )}
-
-
-
-
         </Container>
     );
 };
