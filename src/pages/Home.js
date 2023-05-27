@@ -278,9 +278,10 @@ const Home = ({ filterPosts }) => {
                                     <Typography variant="body1">{caption}</Typography>
                                 </CardContent>
                                 <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, setLikedPosts)}>
+                                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts)}>
                                         {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
                                     </IconButton>
+
                                     <IconButton aria-label="comment" onClick={() => openComments(id)}>
                                         <CommentIcon />
                                     </IconButton>
