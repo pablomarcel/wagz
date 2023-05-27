@@ -32,7 +32,7 @@ import {
     ShareForm,
     AboutPet
 } from './imports';
-import { StyledCard, StyledCardMedia } from './styledComponents';
+import { StyledCard, StyledCardMedia, StyledCardVideo } from './styledComponents';
 import likePost from './likePost';
 import savePost from './savePost';
 import likeComment from './likeComment';
@@ -269,10 +269,18 @@ const Home = ({ filterPosts }) => {
                                     subheader={`by: ${owner ? owner.name : 'Unknown'}`}
                                 />
 
-                                <StyledCardMedia
-                                    image={fileUrl ? fileUrl : "https://via.placeholder.com/640x360"}
-                                    title="Post image"
-                                />
+                                {fileUrl && fileUrl.endsWith('.mp4') ? (
+                                    <StyledCardVideo controls>
+                                        <source src={fileUrl} type="video/mp4" />
+                                        Your browser does not support the video tag.
+                                    </StyledCardVideo>
+                                ) : (
+                                    <StyledCardMedia
+                                        image={fileUrl ? fileUrl : "https://via.placeholder.com/640x360"}
+                                        title="Post image"
+                                    />
+                                )}
+
 
                                 <CardContent>
                                     <Typography variant="body1">{caption}</Typography>
