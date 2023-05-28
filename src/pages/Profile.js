@@ -1,5 +1,5 @@
-import React from 'react';
-import { useAuth0 } from '@auth0/auth0-react';
+import React, { useEffect, useState } from 'react';
+import { useAuth0 } from "@auth0/auth0-react";
 import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
@@ -24,6 +24,35 @@ const StyledCard = styled(Card)({
 
 const Profile = () => {
     const { user, isAuthenticated } = useAuth0();
+    const [petOwnerName, setPetOwnerName] = useState('');
+
+    useEffect(() => {
+        const fetchPetOwnerName = async () => {
+            if (isAuthenticated && user) {
+                try {
+                    const response = await fetch('/.netlify/functions/getPetOwnerName', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error ${response.status}`);
+                    }
+
+                    const petOwnerNameData = await response.json();
+
+                    setPetOwnerName(petOwnerNameData);
+                } catch (error) {
+                    console.error('Error fetching pet owner name:', error);
+                }
+            }
+        };
+
+        fetchPetOwnerName();
+    }, [user, isAuthenticated]);
 
     return (
         <Container maxWidth="xs">
@@ -43,10 +72,7 @@ const Profile = () => {
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
-                                {user.name}
-                            </StyledTypography>
-                            <StyledTypography variant="subtitle1">
-                                {user.email}
+                                {petOwnerName}
                             </StyledTypography>
                         </CardContent>
                     </StyledCard>
