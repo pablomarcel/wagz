@@ -3,6 +3,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
+import PostList from '../components/Posts/PostList';
 
 const StyledTypography = styled(Typography)({
     textAlign: 'center',
@@ -20,6 +21,8 @@ const StyledCard = styled(Card)({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    width: '100%',
+    marginBottom: '2rem'
 });
 
 const Profile = () => {
@@ -55,7 +58,7 @@ const Profile = () => {
     }, [user, isAuthenticated]);
 
     return (
-        <Container maxWidth="xs">
+        <Container maxWidth="lg">
             <Box
                 sx={{
                     display: 'flex',
@@ -77,6 +80,7 @@ const Profile = () => {
                         </CardContent>
                     </StyledCard>
                 )}
+                <PostList />
             </Box>
         </Container>
     );
