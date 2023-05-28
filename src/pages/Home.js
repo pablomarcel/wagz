@@ -58,6 +58,8 @@ const Home = ({ filterPosts }) => {
     const [aboutPetOpen, setAboutPetOpen] = useState(false);
     const [currentPet, setCurrentPet] = useState(null);
     const [likeCounts, setLikeCounts] = useState({});
+    const [petOwnerName, setPetOwnerName] = useState('');
+
     const openComments = (postId) => {
         setCurrentPostId(postId);
         setCommentsOpen(true);
@@ -96,9 +98,26 @@ const Home = ({ filterPosts }) => {
 
                 setPosts(data);
                 setLoading(false);
-
                 // fetch the liked posts only if the user is authenticated
                 if (isAuthenticated && user) {
+
+                    const petOwnerNameResponse = await fetch('/.netlify/functions/getPetOwnerName', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!petOwnerNameResponse.ok) {
+                        throw new Error(`HTTP error ${petOwnerNameResponse.status}`);
+                    }
+
+                    const petOwnerNameData = await petOwnerNameResponse.json();
+
+                    // Set the pet owner name state
+                    setPetOwnerName(petOwnerNameData);
+
                     const likedResponse = await fetch('/.netlify/functions/getLikedPosts', {
                         method: 'POST',
                         headers: {
@@ -205,7 +224,7 @@ const Home = ({ filterPosts }) => {
                         sx={{ width: 40, height: 40, marginRight: 1 }}
                     />
                     <Typography variant="h6">
-                        {user.email}
+                        {petOwnerName}
                     </Typography>
                 </Box>
             )}
