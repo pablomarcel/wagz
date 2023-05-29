@@ -11,7 +11,7 @@ const StyledTypography = styled(Typography)({
 
 const StyledPaper = styled(Paper)({
     padding: '10px',
-    margin: '10px 0',
+
     textAlign: 'center',
     backgroundColor: '#f5f5f5',
     borderRadius: '15px',

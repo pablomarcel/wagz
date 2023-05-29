@@ -2,6 +2,7 @@
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
 import { styled } from '@mui/system';
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const StyledDialogTitle = styled(DialogTitle)({
     textAlign: 'center',
@@ -22,6 +23,7 @@ const StyledButton = styled(Button)({
 const AboutPet = ({ open, onClose, pet }) => {
     const [petDetails, setPetDetails] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchPetDetails = async () => {
@@ -70,6 +72,9 @@ const AboutPet = ({ open, onClose, pet }) => {
                         <Typography variant="subtitle1">
                             <strong>Breed:</strong> {petDetails.breed}
                         </Typography>
+                        <Typography variant="subtitle1">
+                            <strong>Bio:</strong> {petDetails.bio}
+                        </Typography>
                         {/* Add more pet attributes if you have them */}
                     </DialogContent>
                 </>
@@ -79,6 +84,9 @@ const AboutPet = ({ open, onClose, pet }) => {
                     <DialogContent>
                         <StyledButton variant="text" onClick={() => setShowDetails(true)}>
                             About This Pet
+                        </StyledButton>
+                        <StyledButton variant="text" onClick={() => navigate(`/petprofile/${petDetails.id}`)}>
+                            Pet Profile
                         </StyledButton>
                     </DialogContent>
                 </>
