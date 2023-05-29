@@ -198,10 +198,11 @@ const Home = ({ filterPosts }) => {
 
                     // set the followed users state
                     let followObj = {};
-                    followData.forEach(userEmail => {
-                        followObj[userEmail] = true;
+                    followData.forEach(user => {
+                        followObj[user.email] = true;
                     });
                     setFollowedUsers(followObj);
+
 
                 }
             } catch (error) {

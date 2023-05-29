@@ -14,6 +14,7 @@ import Favorites from './pages/Favorites';
 import Saved from './pages/Saved';
 import Following from './pages/Following';
 import SharedWithMe from './pages/SharedWithMe';
+import PetOwnerProfile from './components/Profile/PetOwnerProfile';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
             <Route path="/saved" element={<Saved />} />
             <Route path="/following" element={<Following />} />
             <Route path="/sharedwithme" element={<SharedWithMe />} />
+            <Route path="/petownerprofile" element={<PetOwnerProfile />} />
           </Routes>
         </Router>
       </div>
