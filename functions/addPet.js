@@ -14,17 +14,18 @@ exports.handler = async (event, context) => {
 
     const ownerId = event.path.split('/').pop();
     const body = JSON.parse(event.body);
-    const { name, breed, age } = body;
+    //console.log('Parsed body:', body);
+    const { name, breed, age, fileUrl, bio } = body; // Include fileUrl and bio in the destructuring
 
     const session = driver.session();
     try {
         const result = await session.writeTransaction(async (tx) => {
             const query = `
                 MATCH (owner:PetOwner) WHERE owner.id = $ownerId
-                CREATE (pet:Pet {id: $id, name: $name, breed: $breed, age: $age})-[:OWNED_BY]->(owner)
+                CREATE (pet:Pet {id: $id, name: $name, breed: $breed, age: $age, fileUrl: $fileUrl, bio: $bio})-[:OWNED_BY]->(owner)
                 RETURN pet
             `;
-            const params = { id: uuidv4(), ownerId, name, breed, age };
+            const params = { id: uuidv4(), ownerId, name, breed, age, fileUrl, bio }; // Include fileUrl and bio in the params
             const response = await tx.run(query, params);
             return response.records[0].get('pet').properties;
         });
