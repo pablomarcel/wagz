@@ -28,6 +28,8 @@ const getPet = async (petId) => {
             name: petData.name,
             age: petData.age,
             breed: petData.breed,
+            fileUrl: petData.fileUrl,  // Added fileUrl
+            bio: petData.bio,          // Added bio
         };
     } finally {
         await session.close();
