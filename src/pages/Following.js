@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper } from '@mui/material';
+import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper, Button } from '@mui/material';
 import { styled } from '@mui/system';
 import Alert from '@mui/lab/Alert';
+import { useNavigate } from 'react-router-dom';
 
 const StyledTypography = styled(Typography)({
     marginBottom: '10px',
@@ -23,6 +24,11 @@ const Following = () => {
     const [owners, setOwners] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const navigate = useNavigate();
+
+    const handleProfileClick = (email) => {
+        navigate(`/petownerprofile/${email}`);
+    }
 
     useEffect(() => {
         const fetchFollowingOwners = async () => {
@@ -66,7 +72,9 @@ const Following = () => {
                             <Grid container justifyContent="center">
                                 <Grid item xs={12} sm={8} md={6}>
                                     <StyledPaper elevation={3}>
-                                        <Typography variant="body1">{owner.name}</Typography>
+                                        <Button onClick={() => handleProfileClick(owner.email)}> {/* Updated */}
+                                            <Typography variant="body1">{owner.name}</Typography>
+                                        </Button>
                                     </StyledPaper>
                                 </Grid>
                             </Grid>

@@ -33,7 +33,7 @@ function App() {
             <Route path="/saved" element={<Saved />} />
             <Route path="/following" element={<Following />} />
             <Route path="/sharedwithme" element={<SharedWithMe />} />
-            <Route path="/petownerprofile" element={<PetOwnerProfile />} />
+            <Route path="/petownerprofile/:email" element={<PetOwnerProfile />} />
           </Routes>
         </Router>
       </div>
