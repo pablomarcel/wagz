@@ -1,23 +1,35 @@
 import React, { useState, useEffect } from 'react';
-import { Typography, Grid, CircularProgress, Container, Paper } from '@mui/material';
+import { Typography, Grid, CircularProgress, Container, Avatar, Card, CardContent, Box} from '@mui/material';
 import { styled } from '@mui/system';
 import Alert from '@mui/lab/Alert';
-import { useParams } from 'react-router-dom'; // new
+import { useParams } from 'react-router-dom';
+import Post from '../Posts/Post';
 
-const StyledPaper = styled(Paper)({
-    padding: '10px',
-    margin: '10px 0',
+const StyledTypography = styled(Typography)({
     textAlign: 'center',
-    backgroundColor: '#f5f5f5',
-    borderRadius: '15px',
+    fontSize: '1.2rem',
+    fontWeight: '600',
+    marginTop: '1rem',
+});
+
+const StyledCard = styled(Card)({
     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
+    borderRadius: '15px',
+    padding: '2rem',
+    marginTop: '0rem',
+    backgroundColor: '#f5f5f5',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%',
+    marginBottom: '2rem'
 });
 
 const PetOwnerProfile = () => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { email } = useParams(); // new
+    const { email } = useParams();
 
     useEffect(() => {
         const fetchFolloweeProfile = async () => {
@@ -50,18 +62,36 @@ const PetOwnerProfile = () => {
     if (error) return <Alert severity="error">{error}</Alert>;
 
     return (
-        <Container>
-            <Typography variant="h4" component="h1">{profile.name}</Typography>
-            <Grid container spacing={2}>
-                {profile.posts.map((post, index) => (
-                    <Grid item xs={12} sm={6} md={4} key={index}>
-                        <StyledPaper elevation={3}>
-                            <Typography variant="body1">{post.caption}</Typography>
-                            {/* Here you could add more data about the post */}
-                        </StyledPaper>
-                    </Grid>
-                ))}
-            </Grid>
+        <Container maxWidth="lg">
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    mt: 0
+                }}>
+                {profile && (
+                    <StyledCard>
+                        <Avatar
+                            alt={profile.name}
+                            sx={{ width: 80, height: 80, marginTop: '1rem' }}
+                        />
+                        <CardContent>
+                            <StyledTypography variant="h5">
+                                {profile.name}
+                            </StyledTypography>
+                        </CardContent>
+                    </StyledCard>
+                )}
+                <Grid container spacing={2}>
+                    {profile.posts.map((post, index) => (
+                        <Grid item xs={12} sm={6} md={4} key={index} style={{ minHeight: '500px' }}>
+                            <Post post={post} />
+                        </Grid>
+                    ))}
+                </Grid>
+
+            </Box>
         </Container>
     );
 };
