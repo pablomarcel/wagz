@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Container, Grid } from '@mui/material';
 import { styled } from '@mui/system';
+import Post from '../Posts/Post';
 
 const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9
@@ -30,6 +31,7 @@ const StyledCard = styled(Card)({
 
 const PetProfile = () => {
     const [petDetails, setPetDetails] = useState(null);
+    const [posts, setPosts] = useState([]);
     const { petId } = useParams(); // Extract the petId from the route params
 
     useEffect(() => {
@@ -48,6 +50,26 @@ const PetProfile = () => {
         };
 
         fetchPetDetails();
+
+        const fetchPosts = async () => {
+            const response = await fetch('/.netlify/functions/getPostsByPet', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    petId: petId,
+                }),
+            });
+            const data = await response.json();
+
+            setPosts(data);
+        };
+
+        fetchPosts();
+
+
+
     }, [petId]);
 
     if (!petDetails) {
@@ -55,7 +77,7 @@ const PetProfile = () => {
     }
 
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
             <StyledCard>
                 {petDetails.fileUrl && petDetails.fileUrl.endsWith('.mp4') ? (
                     <StyledCardVideo controls>
@@ -82,6 +104,17 @@ const PetProfile = () => {
                     {/* Add more pet attributes if you have them */}
                 </CardContent>
             </StyledCard>
+
+            <Grid container spacing={2}>
+                {posts.map(post => (
+                    <Grid item xs={12} sm={6} md={4} key={post.id} style={{ minHeight: '500px' }}>
+                        <StyledCard>
+                            <Post post={post} />
+                        </StyledCard>
+                    </Grid>
+                ))}
+            </Grid>
+
         </Container>
     );
 };
