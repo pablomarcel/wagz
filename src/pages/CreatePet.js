@@ -7,13 +7,12 @@ import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
-
+import UploadComponent from './UploadComponent';
 
 const Create = () => {
     const { user } = useAuth0();
     const currentUserEmail = user.email;
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
-
     const [owners, setOwners] = useState([]);
     const [pets, setPets] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState('');
@@ -22,6 +21,10 @@ const Create = () => {
     const [petName, setPetName] = useState('');
     const [petBreed, setPetBreed] = useState('');
     const [petAge, setPetAge] = useState('');
+    const [petBio, setPetBio] = useState('');
+    const [fileUrl, setFileUrl] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+
 
     useEffect(() => {
         fetchOwners();
@@ -57,20 +60,28 @@ const Create = () => {
             alert('Please select a pet owner first');
             return;
         }
+
+        console.log('Sending fileUrl:', fileUrl);
+
         try {
             const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addPet/${selectedOwner}`, {
                 name: petName,
                 breed: petBreed,
                 age: petAge,
+                bio: petBio,
+                fileUrl,
             });
 
             setPetName('');
             setPetBreed('');
             setPetAge('');
+            setPetBio('');
+            setFileUrl(null);
         } catch (error) {
-            console.error('Error adding pet', error);
+            console.error('Error creating pet', error);
         }
     };
+
 
     return (
         <Container maxWidth="xs">
@@ -127,6 +138,17 @@ const Create = () => {
                                 value={petAge}
                                 onChange={(e) => setPetAge(e.target.value)}
                             />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                id="petBio"
+                                label="Pet Bio"
+                                value={petBio}
+                                onChange={(e) => setPetBio(e.target.value)}
+                            />
+                            <FormControl fullWidth margin="normal">
+                                <UploadComponent setFileUrl={setFileUrl} setIsUploading={setIsUploading}/>
+                            </FormControl>
                             <Button
                                 fullWidth
                                 type="button"
@@ -134,6 +156,7 @@ const Create = () => {
                                 variant="contained"
                                 onClick={handleAddPet}
                                 sx={{ mt: 2 }}
+                                disabled={isUploading}
                             >
                                 Create Pet
                             </Button>
@@ -143,6 +166,7 @@ const Create = () => {
             </Box>
         </Container>
     );
+
 };
 
 export default withAuthenticationRequired(Create, {
