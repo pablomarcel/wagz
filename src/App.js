@@ -15,6 +15,7 @@ import Saved from './pages/Saved';
 import Following from './pages/Following';
 import SharedWithMe from './pages/SharedWithMe';
 import PetOwnerProfile from './components/Profile/PetOwnerProfile';
+import PetPost from './components/Pets/PetPost';
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
             <Route path="/following" element={<Following />} />
             <Route path="/sharedwithme" element={<SharedWithMe />} />
             <Route path="/petownerprofile/:email" element={<PetOwnerProfile />} />
+            <Route path="/petpost/:postId" element={<PetPost />} />
           </Routes>
         </Router>
       </div>
