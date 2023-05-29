@@ -66,7 +66,7 @@ const Following = () => {
                             <Grid container justifyContent="center">
                                 <Grid item xs={12} sm={8} md={6}>
                                     <StyledPaper elevation={3}>
-                                        <Typography variant="body1">{owner}</Typography>
+                                        <Typography variant="body1">{owner.name}</Typography>
                                     </StyledPaper>
                                 </Grid>
                             </Grid>

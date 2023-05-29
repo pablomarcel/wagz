@@ -24,13 +24,17 @@ exports.handler = async (event) => {
     try {
         const result = await session.run(
             `
-      MATCH (follower:PetOwner {email: $userEmail})-[:FOLLOWS]->(followee:PetOwner)
-      RETURN followee.email as followeeEmail
-      `,
+                    MATCH (follower:PetOwner {email: $userEmail})-[:FOLLOWS]->(followee:PetOwner)
+                    RETURN followee.email as followeeEmail, followee.name as followeeName
+                    `,
             { userEmail }
         );
 
-        const followingOwners = result.records.map((record) => record.get('followeeEmail'));
+        const followingOwners = result.records.map((record) => ({
+            email: record.get('followeeEmail'),
+            name: record.get('followeeName'),
+        }));
+
 
         return {
             statusCode: 200,
