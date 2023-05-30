@@ -58,7 +58,7 @@ const Profile = () => {
     }, [user, isAuthenticated]);
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
             <Box
                 sx={{
                     display: 'flex',
