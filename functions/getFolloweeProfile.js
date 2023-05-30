@@ -17,7 +17,7 @@ exports.handler = async function(event, context) {
         const result = await session.run(
             `
             MATCH (po:PetOwner {email: $followeeEmail})-[r:POSTED]->(p:Post)
-            RETURN po.name AS name, po.email AS email, collect(p) AS posts
+            RETURN po.name AS name, po.email AS email, po.bio AS bio, po.fileUrl AS fileUrl, collect(p) AS posts
             `,
             { followeeEmail }
         );
@@ -36,6 +36,8 @@ exports.handler = async function(event, context) {
         const profile = {
             name: record.get('name'),
             email: record.get('email'),
+            bio: record.get('bio'),
+            fileUrl: record.get('fileUrl'),
             posts: record.get('posts').map(post => ({
                 id: post.properties.id,
                 caption: post.properties.caption,

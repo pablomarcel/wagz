@@ -82,13 +82,13 @@ const Profile = () => {
                 {isAuthenticated && user && (
                     <StyledCard>
                         <Avatar
-                            alt={petOwnerProfile.name || user.name}
+                            alt={petOwnerProfile.name || ''}
                             src={petOwnerProfile.fileUrl || user.picture}
                             sx={{ width: 80, height: 80, marginTop: '1rem' }}
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
-                                {petOwnerProfile.name || user.name}
+                                {petOwnerProfile.name || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
                                 {petOwnerProfile.bio}
