@@ -28,7 +28,7 @@ const UploadComponent = ({ setFileUrl, setIsUploading }) => {
 
 
             const signedUrl = response.data.signedUrl;
-            console.log('Received signed URL:', signedUrl);  // Add this log
+            //console.log('Received signed URL:', signedUrl);  // Add this log
 
             // Step 2: Upload the file to S3
             await axios.put(signedUrl, selectedFile, {

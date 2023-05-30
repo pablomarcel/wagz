@@ -6,8 +6,8 @@ import axios from 'axios';
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Box, Container, TextField, Button, Card, CardContent } from '@mui/material';
-
+import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import UploadComponent from './UploadComponent';
 
 const Create = () => {
     const { user } = useAuth0();
@@ -20,6 +20,9 @@ const Create = () => {
     const [petName, setPetName] = useState('');
     const [petBreed, setPetBreed] = useState('');
     const [petAge, setPetAge] = useState('');
+    const [ownerBio, setOwnerBio] = useState('');
+    const [fileUrl, setFileUrl] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     useEffect(() => {
         fetchOwners();
@@ -39,33 +42,17 @@ const Create = () => {
             const response = await axios.post(`${API_BASE_URL}/.netlify/functions/createPetOwner`, {
                 name: ownerName,
                 email: ownerEmail,
+                bio: ownerBio,
+                fileUrl: fileUrl
             });
 
             setOwnerName('');
             setOwnerEmail('');
+            setOwnerBio('');
+            setFileUrl(null);
             fetchOwners();
         } catch (error) {
             console.error('Error creating pet owner', error);
-        }
-    };
-
-    const handleAddPet = async () => {
-        if (!selectedOwner) {
-            alert('Please select a pet owner first');
-            return;
-        }
-        try {
-            const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addPet/${selectedOwner}`, {
-                name: petName,
-                breed: petBreed,
-                age: petAge,
-            });
-
-            setPetName('');
-            setPetBreed('');
-            setPetAge('');
-        } catch (error) {
-            console.error('Error adding pet', error);
         }
     };
 
@@ -104,6 +91,17 @@ const Create = () => {
                                     readOnly: true,
                                 }}
                             />
+                            <TextField
+                                fullWidth
+                                margin="normal"
+                                id="ownerBio"
+                                label="Pet Owner Bio"
+                                value={ownerBio}
+                                onChange={(e) => setOwnerBio(e.target.value)}
+                            />
+                            <FormControl fullWidth margin="normal">
+                                <UploadComponent setFileUrl={setFileUrl} setIsUploading={setIsUploading}/>
+                            </FormControl>
                             <Button
                                 fullWidth
                                 type="button"
@@ -111,6 +109,7 @@ const Create = () => {
                                 variant="contained"
                                 onClick={handleCreateOwner}
                                 sx={{ mt: 2 }}
+                                disabled={isUploading}
                             >
                                 Create Owner
                             </Button>
