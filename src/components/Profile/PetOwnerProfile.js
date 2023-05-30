@@ -12,6 +12,14 @@ const StyledTypography = styled(Typography)({
     marginTop: '1rem',
 });
 
+const StyledTypographyBio = styled(Typography)({
+    textAlign: 'center',
+    fontSize: '1rem',
+    fontWeight: '400',
+    marginTop: '0.5rem',
+    marginBottom: '1rem',
+});
+
 const StyledCard = styled(Card)({
     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
     borderRadius: '15px',
@@ -73,13 +81,17 @@ const PetOwnerProfile = () => {
                 {profile && (
                     <StyledCard>
                         <Avatar
-                            alt={profile.name}
+                            alt={profile.name || ''}
+                            src={profile.fileUrl || ''}
                             sx={{ width: 80, height: 80, marginTop: '1rem' }}
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
                                 {profile.name}
                             </StyledTypography>
+                            <StyledTypographyBio variant="body2" color="text.secondary">
+                                {profile.bio}
+                            </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>
                 )}
