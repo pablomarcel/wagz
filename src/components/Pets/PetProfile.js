@@ -77,7 +77,7 @@ const PetProfile = () => {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
             <StyledCard>
                 {petDetails.fileUrl && petDetails.fileUrl.endsWith('.mp4') ? (
                     <StyledCardVideo controls>

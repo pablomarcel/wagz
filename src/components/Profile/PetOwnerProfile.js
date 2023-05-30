@@ -62,7 +62,7 @@ const PetOwnerProfile = () => {
     if (error) return <Alert severity="error">{error}</Alert>;
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="md">
             <Box
                 sx={{
                     display: 'flex',
