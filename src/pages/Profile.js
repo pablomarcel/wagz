@@ -12,6 +12,15 @@ const StyledTypography = styled(Typography)({
     marginTop: '1rem',
 });
 
+const StyledTypographyBio = styled(Typography)({
+    textAlign: 'center',
+    fontSize: '1rem',
+    fontWeight: '400',
+    marginTop: '0.5rem',
+    marginBottom: '1rem',
+});
+
+
 const StyledCard = styled(Card)({
     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
     borderRadius: '15px',
@@ -27,13 +36,17 @@ const StyledCard = styled(Card)({
 
 const Profile = () => {
     const { user, isAuthenticated } = useAuth0();
-    const [petOwnerName, setPetOwnerName] = useState('');
+    const [petOwnerProfile, setPetOwnerProfile] = useState({
+        name: '',
+        bio: '',
+        fileUrl: '',
+    });
 
     useEffect(() => {
-        const fetchPetOwnerName = async () => {
+        const fetchPetOwnerProfile = async () => {
             if (isAuthenticated && user) {
                 try {
-                    const response = await fetch('/.netlify/functions/getPetOwnerName', {
+                    const response = await fetch('/.netlify/functions/getPetOwnerProfile', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -45,16 +58,16 @@ const Profile = () => {
                         throw new Error(`HTTP error ${response.status}`);
                     }
 
-                    const petOwnerNameData = await response.json();
+                    const petOwnerProfileData = await response.json();
 
-                    setPetOwnerName(petOwnerNameData);
+                    setPetOwnerProfile(petOwnerProfileData);
                 } catch (error) {
-                    console.error('Error fetching pet owner name:', error);
+                    console.error('Error fetching pet owner profile:', error);
                 }
             }
         };
 
-        fetchPetOwnerName();
+        fetchPetOwnerProfile();
     }, [user, isAuthenticated]);
 
     return (
@@ -69,14 +82,17 @@ const Profile = () => {
                 {isAuthenticated && user && (
                     <StyledCard>
                         <Avatar
-                            alt={user.name}
-                            src={user.picture}
+                            alt={petOwnerProfile.name || user.name}
+                            src={petOwnerProfile.fileUrl || user.picture}
                             sx={{ width: 80, height: 80, marginTop: '1rem' }}
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
-                                {petOwnerName}
+                                {petOwnerProfile.name || user.name}
                             </StyledTypography>
+                            <StyledTypographyBio variant="body2" color="text.secondary">
+                                {petOwnerProfile.bio}
+                            </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>
                 )}
