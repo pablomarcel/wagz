@@ -18,6 +18,8 @@ import PetOwnerProfile from './components/Profile/PetOwnerProfile';
 import PetPost from './components/Pets/PetPost';
 import PetProfile from './components/Pets/PetProfile';
 import Feedback from './pages/Feedback';
+import Shop from './components/Commerce/Shop';
+import Events from './components/Commerce/Events';
 
 function App() {
   return (
@@ -40,6 +42,8 @@ function App() {
             <Route path="/petpost/:postId" element={<PetPost />} />
             <Route path="/petprofile/:petId" element={<PetProfile />} />
             <Route path="/feedback" element={<Feedback />} />
+            <Route path="/shop" element={<Shop />} />
+            <Route path="/events" element={<Events />} />
           </Routes>
         </Router>
       </div>
