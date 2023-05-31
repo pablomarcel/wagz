@@ -32,6 +32,8 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import PeopleIcon from '@mui/icons-material/People';
 import ShareIcon from '@mui/icons-material/Share';
 import FeedbackIcon from '@mui/icons-material/Feedback';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import EventIcon from '@mui/icons-material/Event';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -89,6 +91,16 @@ const NavBar = () => {
                     text: 'Shared With Me',
                     icon: <ShareIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/sharedwithme',
+                },
+                {
+                    text: 'Shop',
+                    icon: <StorefrontIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/shop',
+                },
+                {
+                    text: 'Events',
+                    icon: <EventIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/events',
                 },
                 {
                     text: 'Feedback',
