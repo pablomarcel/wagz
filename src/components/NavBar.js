@@ -34,6 +34,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import EventIcon from '@mui/icons-material/Event';
+import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -58,7 +59,12 @@ const NavBar = () => {
                     route: '/profile',
                 },
                 {
-                    text: 'Owner',
+                    text: 'My Pets',
+                    icon: <FormatListNumberedRtlIcon />,
+                    route: '/mypets',
+                },
+                {
+                    text: 'Owners',
                     icon: <PersonIcon />,
                     route: '/createPetOwner',
                 },
@@ -68,12 +74,12 @@ const NavBar = () => {
                     route: '/createPet',
                 },
                 {
-                    text: 'Post',
+                    text: 'Create',
                     icon: <PostAddIcon />,
                     route: '/post',
                 },
                 {
-                    text: 'Favorites',
+                    text: 'Liked',
                     icon: <FavoriteIcon />, // import FavoriteIcon from '@mui/icons-material/Favorite';
                     route: '/favorites',
                 },

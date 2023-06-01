@@ -20,6 +20,7 @@ import PetProfile from './components/Pets/PetProfile';
 import Feedback from './pages/Feedback';
 import Shop from './components/Commerce/Shop';
 import Events from './components/Commerce/Events';
+import MyPets from './components/Pets/MyPets';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/mypets" element={<MyPets />} />
           </Routes>
         </Router>
       </div>
