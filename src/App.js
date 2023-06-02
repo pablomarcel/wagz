@@ -19,9 +19,10 @@ import PetPost from './components/Pets/PetPost';
 import PetProfile from './components/Pets/PetProfile';
 import Feedback from './pages/Feedback';
 import Shop from './components/Commerce/Shop';
-import Events from './components/Commerce/Events';
+import Events from './components/Events/Events';
 import MyPets from './components/Pets/MyPets';
 import ItemPost from './components/Commerce/ItemPost';
+import EventPost from './components/Events/EventPost';
 
 function App() {
   return (
@@ -48,6 +49,7 @@ function App() {
             <Route path="/events" element={<Events />} />
             <Route path="/mypets" element={<MyPets />} />
             <Route path="/itempost/:itemId" element={<ItemPost />} />
+            <Route path="/eventpost/:eventId" element={<EventPost />} />
           </Routes>
         </Router>
       </div>
