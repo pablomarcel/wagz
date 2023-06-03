@@ -1,9 +1,12 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
 import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
 import EventList from '../Events/EventList';
+import EventIcon from '@mui/icons-material/Event';
+
 
 const StyledTypography = styled(Typography)({
     textAlign: 'center',
@@ -80,17 +83,16 @@ const Events = () => {
                 }}>
                 {isAuthenticated && user && (
                     <StyledCard>
-                        <Avatar
-                            alt={petOwnerProfile.name || ''}
-                            src={petOwnerProfile.fileUrl || user.picture}
-                            sx={{ width: 80, height: 80, marginTop: '1rem' }}
+                        <EventIcon
+                            sx={{ fontSize: 80, marginTop: '1rem' }}
+                            color="primary"
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
-                                {'Shop' || ''}
+                                {'Events' || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
-                                {'Pawesome deals'}
+                                {'Browse Events'}
                             </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>
