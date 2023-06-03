@@ -34,6 +34,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import FeedbackIcon from '@mui/icons-material/Feedback';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import EventIcon from '@mui/icons-material/Event';
+import PortraitIcon from '@mui/icons-material/Portrait';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 const drawerWidth = 240;
 
@@ -107,6 +108,11 @@ const NavBar = () => {
                     text: 'Events',
                     icon: <EventIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/events',
+                },
+                {
+                    text: 'Public Figures',
+                    icon: <PortraitIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/publicfigures',
                 },
                 {
                     text: 'Feedback',
