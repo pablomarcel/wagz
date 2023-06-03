@@ -20,9 +20,11 @@ import PetProfile from './components/Pets/PetProfile';
 import Feedback from './pages/Feedback';
 import Shop from './components/Commerce/Shop';
 import Events from './components/Events/Events';
+import PublicFigures from './components/PublicFigures/PublicFigures';
 import MyPets from './components/Pets/MyPets';
 import ItemPost from './components/Commerce/ItemPost';
 import EventPost from './components/Events/EventPost';
+import PublicFigurePost from './components/PublicFigures/PublicFigurePost';
 
 function App() {
   return (
@@ -47,9 +49,11 @@ function App() {
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/events" element={<Events />} />
+            <Route path="/publicfigures" element={<PublicFigures />} />
             <Route path="/mypets" element={<MyPets />} />
             <Route path="/itempost/:itemId" element={<ItemPost />} />
             <Route path="/eventpost/:eventId" element={<EventPost />} />
+            <Route path="/publicfigurepost/:publicFigureId" element={<PublicFigurePost />} />
           </Routes>
         </Router>
       </div>
