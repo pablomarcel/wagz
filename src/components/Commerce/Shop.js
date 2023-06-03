@@ -1,9 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
+import { Typography, Box, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
 import ItemList from './ItemList';
+import StoreIcon from '@mui/icons-material/Store';
 
 const StyledTypography = styled(Typography)({
     textAlign: 'center',
@@ -80,17 +82,16 @@ const MyPets = () => {
                 }}>
                 {isAuthenticated && user && (
                     <StyledCard>
-                        <Avatar
-                            alt={petOwnerProfile.name || ''}
-                            src={petOwnerProfile.fileUrl || user.picture}
-                            sx={{ width: 80, height: 80, marginTop: '1rem' }}
+                        <StoreIcon
+                            sx={{ fontSize: 80, marginTop: '1rem' }}
+                            color="primary"
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
                                 {'Shop' || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
-                                {'Pawesome deals'}
+                                {'Browse Pawesome Deals'}
                             </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>
