@@ -17,58 +17,43 @@ const StyledCard = styled(Card)({
 });
 
 function PublicFigurePost() {
-    const { publicFigureId } = useParams();
-    const [publicFigure, setPublicFigure] = useState(null);
+    const { publicFigurePostId } = useParams();
+    const [post, setPost] = useState(null);
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        axios.post('/.netlify/functions/getPublicFigure', { publicFigureId })
+        axios.post('/.netlify/functions/getPublicFigurePost', { postId: publicFigurePostId })
             .then(response => {
-                setPublicFigure(response.data);
+                setPost(response.data);
                 setIsLoading(false);
             })
             .catch(error => {
-                console.error('Error fetching public figure:', error);
+                console.error('Error fetching public figure post:', error);
                 setIsLoading(false);
             });
-    }, [publicFigureId]);
+    }, [publicFigurePostId]);
 
     if (isLoading) {
-        return <p>Loading public figure...</p>;
+        return <p>Loading post...</p>;
     }
 
-    if (!publicFigure) {
-        return <p>No public figure found for this id.</p>;
+    if (!post) {
+        return <p>No post found for this id.</p>;
     }
 
     return (
         <Container maxWidth="md">
             <StyledCard>
                 <StyledCardMedia
-                    image={publicFigure.imageUrl ? publicFigure.imageUrl : "https://via.placeholder.com/640x360"}
-                    title="Public figure image"
+                    image={post.fileUrl ? post.fileUrl : "https://via.placeholder.com/640x360"}
+                    title={post.title}
                 />
                 <CardContent>
                     <Typography variant="h5">
-                        {publicFigure.name}
+                        {post.title}
                     </Typography>
                     <Typography variant="body1" color="text.secondary">
-                        Occupation: {publicFigure.occupation}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        Birth Date: {publicFigure.birthDate}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        Birth Place: {publicFigure.birthPlace}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        Nationality: {publicFigure.nationality}
-                    </Typography>
-                    <Typography variant="body1" color="text.secondary">
-                        Known For: {publicFigure.knownFor}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {publicFigure.bio}
+                        {post.content}
                     </Typography>
                 </CardContent>
             </StyledCard>

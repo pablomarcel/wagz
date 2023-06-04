@@ -17,6 +17,7 @@ import SharedWithMe from './pages/SharedWithMe';
 import PetOwnerProfile from './components/Profile/PetOwnerProfile';
 import PetPost from './components/Pets/PetPost';
 import PetProfile from './components/Pets/PetProfile';
+import PublicFigureProfile from './components/PublicFigures/PublicFigureProfile';
 import Feedback from './pages/Feedback';
 import Shop from './components/Commerce/Shop';
 import Events from './components/Events/Events';
@@ -25,6 +26,7 @@ import MyPets from './components/Pets/MyPets';
 import ItemPost from './components/Commerce/ItemPost';
 import EventPost from './components/Events/EventPost';
 import PublicFigurePost from './components/PublicFigures/PublicFigurePost';
+import PostByPublicFigure from "./components/PublicFigures/PostByPublicFigure";
 
 function App() {
   return (
@@ -53,7 +55,8 @@ function App() {
             <Route path="/mypets" element={<MyPets />} />
             <Route path="/itempost/:itemId" element={<ItemPost />} />
             <Route path="/eventpost/:eventId" element={<EventPost />} />
-            <Route path="/publicfigurepost/:publicFigureId" element={<PublicFigurePost />} />
+            <Route path="/publicfigurepost/:publicFigurePostId" element={<PublicFigurePost />} />
+            <Route path="/publicfigureprofile/:publicFigureId" element={<PublicFigureProfile />} />
           </Routes>
         </Router>
       </div>

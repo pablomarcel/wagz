@@ -14,7 +14,7 @@ const StyledLink = styled(Link)({
 });
 
 const PublicFigure = ({ publicFigure }) => (
-    <StyledLink to={`/publicfigurepost/${publicFigure.id}`}>
+    <StyledLink to={`/publicfigureprofile/${publicFigure.id}`}>
         <Card
             sx={{
                 maxWidth: '100%',
