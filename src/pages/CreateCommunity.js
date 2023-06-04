@@ -9,19 +9,14 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import UploadComponent from './UploadComponent';
 
-const Create = () => {
+const CreateCommunity = () => {
     const { user } = useAuth0();
     const currentUserEmail = user.email;
     const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
     const [owners, setOwners] = useState([]);
-    const [pets, setPets] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState('');
-    const [ownerName, setOwnerName] = useState('');
-    const [ownerEmail, setOwnerEmail] = useState('');
-    const [petName, setPetName] = useState('');
-    const [petBreed, setPetBreed] = useState('');
-    const [petAge, setPetAge] = useState('');
-    const [petBio, setPetBio] = useState('');
+    const [communityName, setCommunityName] = useState('');
+    const [communityAbout, setCommunityAbout] = useState('');
     const [fileUrl, setFileUrl] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -42,30 +37,26 @@ const Create = () => {
 
 
 
-    const handleAddPet = async () => {
+    const handleAddCommunity = async () => {
         if (!selectedOwner) {
-            alert('Please select a pet owner first');
+            alert('Please select an owner first');
             return;
         }
 
         console.log('Sending fileUrl:', fileUrl);
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addPet/${selectedOwner}`, {
-                name: petName,
-                breed: petBreed,
-                age: petAge,
-                bio: petBio,
+            const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addCommunity/${selectedOwner}`, {
+                name: communityName,
+                about: communityAbout,
                 fileUrl,
             });
 
-            setPetName('');
-            setPetBreed('');
-            setPetAge('');
-            setPetBio('');
+            setCommunityName('');
+            setCommunityAbout('');
             setFileUrl(null);
         } catch (error) {
-            console.error('Error creating pet', error);
+            console.error('Error creating community', error);
         }
     };
 
@@ -79,19 +70,19 @@ const Create = () => {
                     borderRadius: '15px',
                 }}>
                     <CardContent>
-                        <h2>Select Pet Owner and Create Pet</h2>
+                        <h2>Select Owner and Create Community</h2>
                         <form>
                             <FormControl fullWidth margin="normal">
-                                <InputLabel id="petOwner-label">Pet Owner</InputLabel>
+                                <InputLabel id="owner-label">Owner</InputLabel>
                                 <Select
-                                    labelId="petOwner-label"
-                                    id="petOwner"
+                                    labelId="owner-label"
+                                    id="owner"
                                     value={selectedOwner}
                                     onChange={(e) => setSelectedOwner(e.target.value)}
-                                    label="Pet Owner"
+                                    label="Owner"
                                 >
                                     <MenuItem value="">
-                                        <em>Select a pet owner</em>
+                                        <em>Select an owner</em>
                                     </MenuItem>
                                     {owners.map((owner) => (
                                         <MenuItem key={owner.id} value={owner.id}>
@@ -103,35 +94,18 @@ const Create = () => {
                             <TextField
                                 fullWidth
                                 margin="normal"
-                                id="petName"
-                                label="Pet Name"
-                                value={petName}
-                                onChange={(e) => setPetName(e.target.value)}
+                                id="communityName"
+                                label="Community Name"
+                                value={communityName}
+                                onChange={(e) => setCommunityName(e.target.value)}
                             />
                             <TextField
                                 fullWidth
                                 margin="normal"
-                                id="petBreed"
-                                label="Pet Breed"
-                                value={petBreed}
-                                onChange={(e) => setPetBreed(e.target.value)}
-                            />
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="petAge"
-                                label="Pet Age"
-                                type="number"
-                                value={petAge}
-                                onChange={(e) => setPetAge(e.target.value)}
-                            />
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="petBio"
-                                label="Pet Bio"
-                                value={petBio}
-                                onChange={(e) => setPetBio(e.target.value)}
+                                id="communityAbout"
+                                label="Community About"
+                                value={communityAbout}
+                                onChange={(e) => setCommunityAbout(e.target.value)}
                             />
                             <FormControl fullWidth margin="normal">
                                 <UploadComponent setFileUrl={setFileUrl} setIsUploading={setIsUploading}/>
@@ -141,11 +115,11 @@ const Create = () => {
                                 type="button"
                                 color="primary"
                                 variant="contained"
-                                onClick={handleAddPet}
+                                onClick={handleAddCommunity}
                                 sx={{ mt: 2 }}
                                 disabled={isUploading}
                             >
-                                Create Pet
+                                Create Community
                             </Button>
                         </form>
                     </CardContent>
@@ -156,7 +130,6 @@ const Create = () => {
 
 };
 
-export default withAuthenticationRequired(Create, {
+export default withAuthenticationRequired(CreateCommunity, {
     onRedirecting: () => <div>Loading...</div>,
 });
-

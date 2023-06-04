@@ -8,7 +8,9 @@ import NavBar from './components/NavBar';
 import './bootstrap-5.2.3-dist/css/bootstrap.css'
 import CreatePetOwner from "./pages/CreatePetOwner";
 import CreatePet from "./pages/CreatePet";
+import CreateCommunity from "./pages/CreateCommunity";
 import CreatePost from "./pages/CreatePost";
+import CreateCommunityPost from "./pages/CreateCommunityPost";
 import Profile from "./pages/Profile";
 import Favorites from './pages/Favorites';
 import Saved from './pages/Saved';
@@ -37,7 +39,9 @@ function App() {
             <Route path="/create" element={<Create />} />
             <Route path="/createPetOwner" element={<CreatePetOwner />} />
             <Route path="/createPet" element={<CreatePet />} />
+            <Route path="/createCommunity" element={<CreateCommunity />} />
             <Route path="/post" element={<CreatePost />} />
+            <Route path="/communityPost" element={<CreateCommunityPost />} />
             <Route path="/login" element={<LoginPage />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/favorites" element={<Favorites />} />

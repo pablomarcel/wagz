@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import React, { useState } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -35,6 +34,9 @@ import FeedbackIcon from '@mui/icons-material/Feedback';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import EventIcon from '@mui/icons-material/Event';
 import PortraitIcon from '@mui/icons-material/Portrait';
+import ForumIcon from '@mui/icons-material/Forum';
+import AddBoxIcon from '@mui/icons-material/AddBox';
+import AddIcon from '@mui/icons-material/Add';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 const drawerWidth = 240;
 
@@ -75,7 +77,7 @@ const NavBar = () => {
                     route: '/createPet',
                 },
                 {
-                    text: 'Create',
+                    text: 'Post',
                     icon: <PostAddIcon />,
                     route: '/post',
                 },
@@ -98,6 +100,16 @@ const NavBar = () => {
                     text: 'Shared With Me',
                     icon: <ShareIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/sharedwithme',
+                },
+                {
+                    text: 'Community',
+                    icon: <ForumIcon />,
+                    route: '/createCommunity',
+                },
+                {
+                    text: 'Community Post',
+                    icon: <AddBoxIcon />,
+                    route: '/communityPost',
                 },
                 {
                     text: 'Shop',
