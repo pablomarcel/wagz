@@ -15,7 +15,6 @@ const getPublicFigure = async (publicFigureId) => {
             `, { publicFigureId })
         );
 
-        console.log('Query result:', result.records);
 
         if (result.records.length === 0) {
             return null;
