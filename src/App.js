@@ -26,7 +26,6 @@ import MyPets from './components/Pets/MyPets';
 import ItemPost from './components/Commerce/ItemPost';
 import EventPost from './components/Events/EventPost';
 import PublicFigurePost from './components/PublicFigures/PublicFigurePost';
-import PostByPublicFigure from "./components/PublicFigures/PostByPublicFigure";
 
 function App() {
   return (
