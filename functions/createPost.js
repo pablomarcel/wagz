@@ -10,15 +10,15 @@ const driver = neo4j.driver(
 exports.handler = async (event, context) => {
     console.log('Received parameters:', event.body);
 
-
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };
     }
 
-    const { petOwnerId, petId, caption, fileUrl } = JSON.parse(event.body);
+    const { petOwnerId, petId, caption, fileUrl, tags } = JSON.parse(event.body);
 
     const session = driver.session();
     try {
+        // Create the post
         const result = await session.run(`
             MATCH (owner:PetOwner {id: $petOwnerId})
             MATCH (pet:Pet {id: $petId})
@@ -29,6 +29,30 @@ exports.handler = async (event, context) => {
         `, { petOwnerId, petId, caption, fileUrl });
 
         const post = result.records[0].get('post').properties;
+
+        // Handle tags, if any
+        if (tags) {
+            for (const tagName of tags) {
+                // Check if tag already exists, otherwise create a new one
+                const tagExists = await session.run(`
+                    MATCH (t:Tag {name: $tagName})
+                    RETURN t
+                `, { tagName });
+
+                if (!tagExists.records.length) {
+                    await session.run(`
+                        CREATE (t:Tag {name: $tagName})
+                    `, { tagName });
+                }
+
+                // Create a relationship from the post to the tag
+                await session.run(`
+                    MATCH (p:Post {id: $postId})
+                    MATCH (t:Tag {name: $tagName})
+                    MERGE (p)-[:TAGGED_AS]->(t)
+                `, { postId: post.id, tagName });
+            }
+        }
 
         return { statusCode: 200, body: JSON.stringify(post) };
     } catch (error) {
