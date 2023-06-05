@@ -20,14 +20,17 @@ import PetOwnerProfile from './components/Profile/PetOwnerProfile';
 import PetPost from './components/Pets/PetPost';
 import PetProfile from './components/Pets/PetProfile';
 import PublicFigureProfile from './components/PublicFigures/PublicFigureProfile';
+import CommunityProfile from './components/Communities/CommunityProfile';
 import Feedback from './pages/Feedback';
 import Shop from './components/Commerce/Shop';
 import Events from './components/Events/Events';
 import PublicFigures from './components/PublicFigures/PublicFigures';
+import Communities from './components/Communities/Communities';
 import MyPets from './components/Pets/MyPets';
 import ItemPost from './components/Commerce/ItemPost';
 import EventPost from './components/Events/EventPost';
 import PublicFigurePost from './components/PublicFigures/PublicFigurePost';
+import CommunityPost from './components/Communities/CommunityPost';
 
 function App() {
   return (
@@ -55,11 +58,14 @@ function App() {
             <Route path="/shop" element={<Shop />} />
             <Route path="/events" element={<Events />} />
             <Route path="/publicfigures" element={<PublicFigures />} />
+            <Route path="/communities" element={<Communities />} />
             <Route path="/mypets" element={<MyPets />} />
             <Route path="/itempost/:itemId" element={<ItemPost />} />
             <Route path="/eventpost/:eventId" element={<EventPost />} />
             <Route path="/publicfigurepost/:publicFigurePostId" element={<PublicFigurePost />} />
+            <Route path="/communityPost/:communityPostId" element={<CommunityPost />} />
             <Route path="/publicfigureprofile/:publicFigureId" element={<PublicFigureProfile />} />
+            <Route path="/communityProfile/:communityId" element={<CommunityProfile />} />
           </Routes>
         </Router>
       </div>
