@@ -37,6 +37,7 @@ import PortraitIcon from '@mui/icons-material/Portrait';
 import ForumIcon from '@mui/icons-material/Forum';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import AddIcon from '@mui/icons-material/Add';
+import GroupsIcon from '@mui/icons-material/Groups';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 const drawerWidth = 240;
 
@@ -110,6 +111,11 @@ const NavBar = () => {
                     text: 'Community Post',
                     icon: <AddBoxIcon />,
                     route: '/communityPost',
+                },
+                {
+                    text: 'Communities',
+                    icon: <GroupsIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/communities',
                 },
                 {
                     text: 'Shop',
