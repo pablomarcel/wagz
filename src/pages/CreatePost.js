@@ -5,7 +5,7 @@ import axios from 'axios';
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Chip } from '@mui/material';
 import { WithContext as ReactTags } from 'react-tag-input';
 import UploadComponent from './UploadComponent'; // Remember to import UploadComponent here
 
@@ -21,10 +21,24 @@ const CreatePost = () => {
     const [fileUrl, setFileUrl] = useState(null);  // Add a state for the file URL
     const [isUploading, setIsUploading] = useState(false);  // Add this line
     const [tags, setTags] = useState([]);
+    const [chipData, setChipData] = useState([]);
 
     useEffect(() => {
         fetchOwners();
     }, []);
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const chipColors = ['primary', 'secondary', 'success', 'error', 'warning', 'info'];
+
+    const handleAddChip = (event) => {
+        if (event.key === 'Enter') {
+            setChipData([...chipData, { key: chipData.length, label: event.target.value, color: chipColors[chipData.length % chipColors.length] }]);
+            event.target.value = '';
+        }
+    };
 
     const fetchOwners = async () => {
         try {
@@ -68,13 +82,13 @@ const CreatePost = () => {
                 petId: selectedPet,
                 caption,
                 fileUrl,  // Add the fileUrl to the post data
-                tags: tags.map(tag => tag.text),
+                tags: chipData.map(chip => chip.label),
             });
 
             setSelectedPet('');
             setCaption('');
             setFileUrl(null);  // Reset the file URL
-            setTags([]);
+            setChipData([]);
         } catch (error) {
             console.error('Error creating post', error);
         }
@@ -146,15 +160,24 @@ const CreatePost = () => {
                                 />
                             </FormControl>
                             <FormControl fullWidth margin="normal">
-                                <ReactTags
-                                    tags={tags}
-                                    handleDelete={(index) => {
-                                        setTags(tags.filter((tag, i) => i !== index));
-                                    }}
-                                    handleAddition={(tag) => {
-                                        setTags([...tags, tag]);
-                                    }}
-                                />
+                                <Box component="span">
+                                    <TextField
+                                        id="standard-basic"
+                                        label="Add a tag"
+                                        onKeyDown={handleAddChip}
+                                    />
+                                </Box>
+                                <Box component="span">
+                                    {chipData.map((data, index) => (
+                                        <Chip
+                                            key={data.key}
+                                            label={data.label}
+                                            onDelete={handleDelete(data)}
+                                            style={{ margin: '5px' }}
+                                            color={data.color}  // Add color to the chip
+                                        />
+                                    ))}
+                                </Box>
                             </FormControl>
 
                             {/* Include the UploadComponent here */}
