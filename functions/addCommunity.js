@@ -14,7 +14,7 @@ exports.handler = async (event, context) => {
 
     const ownerId = event.path.split('/').pop();
     const body = JSON.parse(event.body);
-    const { name, about, fileUrl } = body;
+    const { name, about, fileUrl, tags } = body;
 
     const session = driver.session();
     try {
@@ -26,7 +26,33 @@ exports.handler = async (event, context) => {
             `;
             const params = { id: uuidv4(), ownerId, name, about, fileUrl };
             const response = await tx.run(query, params);
-            return response.records[0].get('community').properties;
+            const community = response.records[0].get('community').properties;
+
+            // Handle tags, if any
+            if (tags) {
+                for (const tagName of tags) {
+                    // Check if tag already exists, otherwise create a new one
+                    const tagExists = await tx.run(`
+                        MATCH (t:Tag {name: $tagName})
+                        RETURN t
+                    `, { tagName });
+
+                    if (!tagExists.records.length) {
+                        await tx.run(`
+                            CREATE (t:Tag {name: $tagName})
+                        `, { tagName });
+                    }
+
+                    // Create a relationship from the community to the tag
+                    await tx.run(`
+                        MATCH (c:Community {id: $communityId})
+                        MATCH (t:Tag {name: $tagName})
+                        MERGE (c)-[:TAGGED_AS]->(t)
+                    `, { communityId: community.id, tagName });
+                }
+            }
+
+            return community;
         });
 
         return { statusCode: 201, body: JSON.stringify(result) };
