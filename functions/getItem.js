@@ -15,8 +15,6 @@ const getItem = async (itemId) => {
             `, { itemId })
         );
 
-        console.log('Query result:', result.records);
-
         if (result.records.length === 0) {
             return null;
         }
@@ -61,7 +59,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(item),
         };
     } catch (error) {
-        console.error('Error fetching item:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch item' }),

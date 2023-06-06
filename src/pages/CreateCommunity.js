@@ -43,8 +43,6 @@ const CreateCommunity = () => {
             return;
         }
 
-        console.log('Sending fileUrl:', fileUrl);
-
         try {
             const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addCommunity/${selectedOwner}`, {
                 name: communityName,

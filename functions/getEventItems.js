@@ -15,8 +15,6 @@ const fetchEventItems = async () => {
       `)
         );
 
-        console.log('Query result:', result.records);
-
         const events = result.records.map((record) => {
             const eventData = record.get('event').properties;
             return {
@@ -44,7 +42,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(items),
         };
     } catch (error) {
-        console.error('Error fetching event items:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch event items' }),

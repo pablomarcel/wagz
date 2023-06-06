@@ -14,7 +14,6 @@ exports.handler = async (event, context) => {
 
     const ownerId = event.path.split('/').pop();
     const body = JSON.parse(event.body);
-    //console.log('Parsed body:', body);
     const { name, breed, age, fileUrl, bio } = body; // Include fileUrl and bio in the destructuring
 
     const session = driver.session();

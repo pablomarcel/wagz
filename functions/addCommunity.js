@@ -14,7 +14,6 @@ exports.handler = async (event, context) => {
 
     const ownerId = event.path.split('/').pop();
     const body = JSON.parse(event.body);
-    //console.log('Parsed body:', body);
     const { name, about, fileUrl } = body;
 
     const session = driver.session();

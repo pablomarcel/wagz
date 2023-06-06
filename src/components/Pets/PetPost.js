@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Card, CardMedia, CardContent, Typography, Container } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Container, CircularProgress, Box } from '@mui/material';
 import { styled } from '@mui/system';
 
 const StyledCardMedia = styled(CardMedia)({
@@ -47,7 +47,11 @@ function PetPost() {
     }, [postId]);
 
     if (isLoading) {
-        return <p>Loading post...</p>;
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="100vh">
+                <CircularProgress />
+            </Box>
+        );
     }
 
     if (!post) {

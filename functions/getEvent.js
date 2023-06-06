@@ -15,8 +15,6 @@ const getEvent = async (eventId) => {
             `, { eventId })
         );
 
-        console.log('Query result:', result.records);
-
         if (result.records.length === 0) {
             return null;
         }
@@ -62,7 +60,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(eventItem),
         };
     } catch (error) {
-        console.error('Error fetching event:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch event' }),
