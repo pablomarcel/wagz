@@ -1,12 +1,11 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css';
 import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Chip } from '@mui/material';
 import UploadComponent from './UploadComponent';
 
 const CreateCommunity = () => {
@@ -19,7 +18,21 @@ const CreateCommunity = () => {
     const [communityAbout, setCommunityAbout] = useState('');
     const [fileUrl, setFileUrl] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
+    const [tags, setTags] = useState([]);
+    const [chipData, setChipData] = useState([]);
 
+    const chipColors = ['primary', 'secondary', 'success', 'error', 'warning', 'info'];
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const handleAddChip = (event) => {
+        if (event.key === 'Enter') {
+            setChipData([...chipData, { key: chipData.length, label: event.target.value, color: chipColors[chipData.length % chipColors.length] }]);
+            event.target.value = '';
+        }
+    };
 
     useEffect(() => {
         fetchOwners();
@@ -35,8 +48,6 @@ const CreateCommunity = () => {
         }
     };
 
-
-
     const handleAddCommunity = async () => {
         if (!selectedOwner) {
             alert('Please select an owner first');
@@ -48,16 +59,17 @@ const CreateCommunity = () => {
                 name: communityName,
                 about: communityAbout,
                 fileUrl,
+                tags: chipData.map(chip => chip.label),
             });
 
             setCommunityName('');
             setCommunityAbout('');
             setFileUrl(null);
+            setChipData([]);
         } catch (error) {
             console.error('Error creating community', error);
         }
     };
-
 
     return (
         <Container maxWidth="xs">
@@ -108,6 +120,16 @@ const CreateCommunity = () => {
                             <FormControl fullWidth margin="normal">
                                 <UploadComponent setFileUrl={setFileUrl} setIsUploading={setIsUploading}/>
                             </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <Box component="span">
+                                    <TextField id="standard-basic" label="Add a tag" onKeyDown={handleAddChip} />
+                                </Box>
+                                <Box component="span">
+                                    {chipData.map((data, index) => (
+                                        <Chip key={data.key} label={data.label} onDelete={handleDelete(data)} style={{ margin: '5px' }} color={data.color} />
+                                    ))}
+                                </Box>
+                            </FormControl>
                             <Button
                                 fullWidth
                                 type="button"
@@ -125,7 +147,6 @@ const CreateCommunity = () => {
             </Box>
         </Container>
     );
-
 };
 
 export default withAuthenticationRequired(CreateCommunity, {
