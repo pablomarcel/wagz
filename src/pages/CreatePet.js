@@ -48,8 +48,6 @@ const Create = () => {
             return;
         }
 
-        console.log('Sending fileUrl:', fileUrl);
-
         try {
             const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addPet/${selectedOwner}`, {
                 name: petName,

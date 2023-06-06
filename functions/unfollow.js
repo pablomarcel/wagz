@@ -17,7 +17,6 @@ const unfollowUser = async (followerEmail, unfolloweeEmail) => {
             )
         );
 
-        console.log('Unfollow user result:', result);
         return result;
     } finally {
         await session.close();
@@ -33,7 +32,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(unfollowResult),
         };
     } catch (error) {
-        console.error('Error unfollowing user:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to unfollow user' }),

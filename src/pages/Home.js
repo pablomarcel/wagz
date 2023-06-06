@@ -59,6 +59,8 @@ const Home = ({ filterPosts }) => {
     const [currentPet, setCurrentPet] = useState(null);
     const [likeCounts, setLikeCounts] = useState({});
     const [petOwnerName, setPetOwnerName] = useState('');
+    const [hasFetched, setHasFetched] = useState(false);
+
 
     const openComments = (postId) => {
         setCurrentPostId(postId);
@@ -83,6 +85,7 @@ const Home = ({ filterPosts }) => {
 
     useEffect(() => {
         const fetchPosts = async () => {
+            setLoading(true);
             try {
                 const response = await fetch('/.netlify/functions/listPosts');
                 if (!response.ok) {
@@ -92,12 +95,20 @@ const Home = ({ filterPosts }) => {
                 let data = await response.json();
 
                 // Filter posts if filterPosts is provided and not empty
-                if(filterPosts && filterPosts.length > 0){
-                    data = data.filter(post => filterPosts.includes(post.id));
+                if (filterPosts) {
+                    if (filterPosts.length > 0) {
+                        // If filterPosts is not empty, filter the posts
+                        data = data.filter(post => filterPosts.includes(post.id));
+                    } else {
+                        // If filterPosts is empty, show no posts
+                        data = [];
+                    }
                 }
 
                 setPosts(data);
                 setLoading(false);
+                setHasFetched(true);
+
                 // fetch the liked posts only if the user is authenticated
                 if (isAuthenticated && user) {
 
@@ -209,6 +220,7 @@ const Home = ({ filterPosts }) => {
                 console.error('Error fetching posts:', error);
                 setError(error.message);
                 setLoading(false);
+                setHasFetched(true);
             }
         };
 
@@ -241,60 +253,67 @@ const Home = ({ filterPosts }) => {
                         <CircularProgress />
                     </Grid>
                 ) : (
-                    posts.map(({ id, caption, pet, owner, fileUrl }) => (
-                        <Grid item xs={12} key={id}>
-                            <StyledCard>
-                                <CardHeader
-                                    action={
-                                        <IconButton onClick={() => handleAboutPet(pet)}>
-                                            <MoreVertIcon />
-                                        </IconButton>
-                                    }
-                                    title={`${pet ? pet.name : 'Unknown'}`}
-                                    subheader={`by: ${owner ? owner.name : 'Unknown'}`}
-                                />
-
-                                {fileUrl && fileUrl.endsWith('.mp4') ? (
-                                    <StyledCardVideo controls>
-                                        <source src={fileUrl} type="video/mp4" />
-                                        Your browser does not support the video tag.
-                                    </StyledCardVideo>
-                                ) : (
-                                    <StyledCardMedia
-                                        image={fileUrl ? fileUrl : "https://via.placeholder.com/640x360"}
-                                        title="Post image"
-                                    />
-                                )}
-                                <CardContent>
-                                    <Typography variant="body1">{caption}</Typography>
-                                </CardContent>
-                                <CardActions disableSpacing>
-                                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts, setLikeCounts)}>
-                                        {likedPosts[id] ? <FavoriteIcon color="primary"/> : <FavoriteBorderIcon />}
-                                    </IconButton>
-                                    <IconButton aria-label="comment" onClick={() => openComments(id)}>
-                                        <CommentIcon />
-                                    </IconButton>
-                                    <IconButton aria-label="share" onClick={() => {
-                                        setCurrentPostToShare(id);
-                                        setShareFormOpen(true);
-                                    }}>
-                                        <ShareIcon />
-                                    </IconButton>
-                                    <IconButton aria-label="save" onClick={() => savePost(user, id, savedPosts[id], setSavedPosts)}>
-                                        {savedPosts[id] ? <SaveIcon color="primary"/> : <SaveIcon />}
-                                    </IconButton>
-                                    <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email, user, followedUsers, setFollowedUsers)}>
-                                        {followedUsers[owner.email] ? <PersonAdd color="primary"/> : <PersonAdd />}
-                                    </IconButton>
-                                    <Typography variant="body2">
-                                        {likeCounts[id] || 0} Likes
-                                    </Typography>
-
-                                </CardActions>
-                            </StyledCard>
-                        </Grid>
-                    ))
+                    <>
+                        {posts.length > 0 ? (
+                            posts.map(({ id, caption, pet, owner, fileUrl }) => (
+                                <Grid item xs={12} key={id}>
+                                    <StyledCard>
+                                        <CardHeader
+                                            action={
+                                                <IconButton onClick={() => handleAboutPet(pet)}>
+                                                    <MoreVertIcon style={{ color: '#607d8b' }}/>
+                                                </IconButton>
+                                            }
+                                            title={`${pet ? pet.name : 'Unknown'}`}
+                                            subheader={`by: ${owner ? owner.name : 'Unknown'}`}
+                                        />
+                                        {fileUrl && fileUrl.endsWith('.mp4') ? (
+                                            <StyledCardVideo controls>
+                                                <source src={fileUrl} type="video/mp4" />
+                                                Your browser does not support the video tag.
+                                            </StyledCardVideo>
+                                        ) : (
+                                            <StyledCardMedia
+                                                image={fileUrl ? fileUrl : "https://via.placeholder.com/640x360"}
+                                                title="Post image"
+                                            />
+                                        )}
+                                        <CardContent>
+                                            <Typography variant="body1">{caption}</Typography>
+                                        </CardContent>
+                                        <CardActions disableSpacing>
+                                            <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts, setLikeCounts)}>
+                                                {likedPosts[id] ? <FavoriteIcon style={{ color: '#e91e63'}}/> : <FavoriteBorderIcon style={{ color: '#607d8b'}}/>}
+                                            </IconButton>
+                                            <IconButton aria-label="comment" onClick={() => openComments(id)}>
+                                                <CommentIcon style={{ color: '#607d8b'}}/>
+                                            </IconButton>
+                                            <IconButton aria-label="share" onClick={() => {
+                                                setCurrentPostToShare(id);
+                                                setShareFormOpen(true);
+                                            }}>
+                                                <ShareIcon style={{ color: '#607d8b'}}/>
+                                            </IconButton>
+                                            <IconButton aria-label="save" onClick={() => savePost(user, id, savedPosts[id], setSavedPosts)}>
+                                                {savedPosts[id] ? <SaveIcon style={{ color: '#1976d2'}}/> : <SaveIcon style={{ color: '#607d8b'}}/>}
+                                            </IconButton>
+                                            <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email, user, followedUsers, setFollowedUsers)}>
+                                                {followedUsers[owner.email] ? <PersonAdd style={{ color: '#1976d2'}}/> : <PersonAdd style={{ color: '#607d8b'}}/>}
+                                            </IconButton>
+                                            <Typography variant="body2">
+                                                {likeCounts[id] || 0} Likes
+                                            </Typography>
+                                        </CardActions>
+                                    </StyledCard>
+                                </Grid>
+                            ))
+                        ) : hasFetched ? (
+                            <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                                <Typography variant="h6">
+                                </Typography>
+                            </Grid>
+                        ) : null}
+                    </>
                 )}
             </Grid>
 

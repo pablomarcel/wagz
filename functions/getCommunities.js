@@ -15,8 +15,6 @@ const fetchCommunities = async () => {
       `)
         );
 
-        console.log('Query result:', result.records);
-
         const communities = result.records.map((record) => {
             const communityData = record.get('c').properties;
             return {
@@ -41,7 +39,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(items),
         };
     } catch (error) {
-        console.error('Error fetching communities:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch communities' }),

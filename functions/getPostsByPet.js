@@ -15,8 +15,6 @@ const fetchPostsByPet = async (petId) => {
             `, { petId })
         );
 
-        console.log('Query result:', result.records);
-
         const posts = result.records.map((record) => {
             const postData = record.get('post').properties;
             return {
@@ -36,8 +34,6 @@ exports.handler = async (event, context) => {
     const body = JSON.parse(event.body);
     const { petId } = body;
 
-
-
     if (!petId) {
         return {
             statusCode: 400,
@@ -52,7 +48,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(posts),
         };
     } catch (error) {
-        console.error('Error fetching posts:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch posts' }),

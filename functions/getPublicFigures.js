@@ -15,8 +15,6 @@ const fetchPublicFigures = async () => {
       `)
         );
 
-        console.log('Query result:', result.records);
-
         const publicFigures = result.records.map((record) => {
             const publicFigureData = record.get('p').properties;
             return {
@@ -46,7 +44,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(items),
         };
     } catch (error) {
-        console.error('Error fetching public figures:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch public figures' }),

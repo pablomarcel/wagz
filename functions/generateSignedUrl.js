@@ -12,8 +12,6 @@ exports.handler = async (event, context) => {
     }
 
     const { fileName, contentType } = JSON.parse(event.body);  // Extract the contentType
-    console.log('FileName:', fileName);
-    console.log('ContentType:', contentType);  // Log the received contentType
 
     const params = {
         Bucket: process.env.AWS_BUCKET_NAME,
@@ -22,14 +20,10 @@ exports.handler = async (event, context) => {
         ContentType: contentType  // Use the received contentType
     };
 
-    console.log('S3 Params:', params);
-
     try {
         const signedUrl = await s3.getSignedUrlPromise('putObject', params);
-        console.log('Signed URL:', signedUrl);
         return { statusCode: 200, body: JSON.stringify({ signedUrl }) };
     } catch (error) {
-        console.error('Error generating signed URL:', error);
         return { statusCode: 500, body: JSON.stringify({ error: 'Error generating signed URL', details: error.message }) };
     }
 };

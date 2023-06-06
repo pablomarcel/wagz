@@ -15,8 +15,6 @@ const getPet = async (petId) => {
             `, { petId })
         );
 
-        console.log('Query result:', result.records);
-
         if (result.records.length === 0) {
             return null;
         }
@@ -60,7 +58,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(pet),
         };
     } catch (error) {
-        console.error('Error fetching pet:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch pet' }),

@@ -18,7 +18,6 @@ const followUser = async (followerEmail, followeeEmail) => {
             )
         );
 
-        console.log('Follow user result:', result);
         return result;
     } finally {
         await session.close();

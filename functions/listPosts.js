@@ -15,8 +15,6 @@ const fetchPosts = async () => {
       `)
         );
 
-        console.log('Query result:', result.records);
-
         const posts = result.records.map((record) => {
             const postData = record.get('post').properties;
             const petData = record.get('pet') ? record.get('pet').properties : null;
@@ -47,7 +45,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(posts),
         };
     } catch (error) {
-        console.error('Error fetching posts:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch posts' }),

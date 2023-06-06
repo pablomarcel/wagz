@@ -8,7 +8,6 @@ const driver = neo4j.driver(
 );
 
 exports.handler = async (event, context) => {
-    console.log('Received parameters:', event.body);
 
     if (event.httpMethod !== 'POST') {
         return { statusCode: 405, body: 'Method Not Allowed' };

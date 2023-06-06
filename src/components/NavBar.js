@@ -52,89 +52,89 @@ const NavBar = () => {
     const drawerItems = [
         {
             text: 'Home',
-            icon: <HomeIcon />,
+            icon: <HomeIcon style={{ color: '#1976d2'}}/>,
             route: '/',
         },
         ...(isAuthenticated
             ? [
                 {
                     text: 'Profile',
-                    icon: <AccountCircleIcon />, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+                    icon: <AccountCircleIcon style={{ color: '#1976d2'}}/>, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
                     route: '/profile',
                 },
                 {
                     text: 'My Pets',
-                    icon: <FormatListNumberedRtlIcon />,
+                    icon: <FormatListNumberedRtlIcon style={{ color: '#1976d2'}}/>,
                     route: '/mypets',
                 },
                 {
                     text: 'Owners',
-                    icon: <PersonIcon />,
+                    icon: <PersonIcon style={{ color: '#1976d2'}}/>,
                     route: '/createPetOwner',
                 },
                 {
                     text: 'Pets',
-                    icon: <PetsIcon />,
+                    icon: <PetsIcon style={{ color: '#1976d2'}}/>,
                     route: '/createPet',
                 },
                 {
                     text: 'Post',
-                    icon: <PostAddIcon />,
+                    icon: <PostAddIcon style={{ color: '#1976d2'}}/>,
                     route: '/post',
                 },
                 {
                     text: 'Liked',
-                    icon: <FavoriteIcon />, // import FavoriteIcon from '@mui/icons-material/Favorite';
+                    icon: <FavoriteIcon style={{ color: '#1976d2'}}/>, // import FavoriteIcon from '@mui/icons-material/Favorite';
                     route: '/favorites',
                 },
                 {
                     text: 'Saved',
-                    icon: <BookmarkIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <BookmarkIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/saved',
                 },
                 {
                     text: 'Following',
-                    icon: <PeopleIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <PeopleIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/following',
                 },
                 {
                     text: 'Shared With Me',
-                    icon: <ShareIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <ShareIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/sharedwithme',
                 },
                 {
                     text: 'Community',
-                    icon: <ForumIcon />,
+                    icon: <ForumIcon style={{ color: '#1976d2'}}/>,
                     route: '/createCommunity',
                 },
                 {
                     text: 'Community Post',
-                    icon: <AddBoxIcon />,
+                    icon: <AddBoxIcon style={{ color: '#1976d2'}}/>,
                     route: '/communityPost',
                 },
                 {
                     text: 'Communities',
-                    icon: <GroupsIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <GroupsIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/communities',
                 },
                 {
                     text: 'Shop',
-                    icon: <StorefrontIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <StorefrontIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/shop',
                 },
                 {
                     text: 'Events',
-                    icon: <EventIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <EventIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/events',
                 },
                 {
                     text: 'Public Figures',
-                    icon: <PortraitIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <PortraitIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/publicfigures',
                 },
                 {
                     text: 'Feedback',
-                    icon: <FeedbackIcon />, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    icon: <FeedbackIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/feedback',
                 },
             ]
@@ -160,7 +160,7 @@ const NavBar = () => {
                         onClick={handleDrawerToggle}
                         sx={{ mr: 2 }}
                     >
-                        <MenuIcon />
+                        <MenuIcon style={{ color: '#1976d2'}}/>
                     </IconButton>
                     <Avatar
                         alt="Wagzters Logo"
@@ -197,14 +197,14 @@ const NavBar = () => {
                         {!isAuthenticated ? (
                             <ListItem button onClick={loginWithRedirect}>
                                 <ListItemIcon>
-                                    <LockOpenIcon />
+                                    <LockOpenIcon style={{ color: '#1976d2'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Login" />
                             </ListItem>
                         ) : (
                             <ListItem button onClick={() => logout({ returnTo: window.location.origin })}>
                                 <ListItemIcon>
-                                    <ExitToAppIcon />
+                                    <ExitToAppIcon style={{ color: '#d32f2f'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>

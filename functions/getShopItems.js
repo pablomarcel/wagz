@@ -15,8 +15,6 @@ const fetchShopItems = async () => {
       `)
         );
 
-        console.log('Query result:', result.records);
-
         const items = result.records.map((record) => {
             const itemData = record.get('item').properties;
             return {
@@ -43,7 +41,6 @@ exports.handler = async (event, context) => {
             body: JSON.stringify(items),
         };
     } catch (error) {
-        console.error('Error fetching shop items:', error);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Failed to fetch shop items' }),

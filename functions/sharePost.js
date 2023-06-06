@@ -14,10 +14,6 @@ exports.handler = async (event, context) => {
 
     const session = driver.session();
 
-    console.log('sharerEmail: ', sharerEmail);
-    console.log('postId: ', postId);
-    console.log('receiverEmail: ', receiverEmail);
-
     try {
         await session.writeTransaction((tx) =>
             tx.run(`
@@ -31,10 +27,6 @@ exports.handler = async (event, context) => {
 
         return { statusCode: 200, body: 'Post Shared Successfully' };
     } catch (error) {
-        console.log('sharerEmail: ', sharerEmail);
-        console.log('postId: ', postId);
-        console.log('receiverEmail: ', receiverEmail);
-        console.log('Error: ', error);
         return { statusCode: 500, body: JSON.stringify({ error: 'Failed to share the post' }) };
     } finally {
         await session.close();
