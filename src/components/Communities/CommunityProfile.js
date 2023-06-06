@@ -69,7 +69,24 @@ const CommunityProfile = () => {
 
         fetchPosts();
 
-    }, [communityId]);
+        const checkMembership = async () => {
+            const response = await fetch('/.netlify/functions/checkMembership', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: user.email,
+                    communityId: communityId,
+                }),
+            });
+            const data = await response.json();
+            setIsJoined(data.isMember);
+        };
+
+        checkMembership();
+
+    }, [communityId, user]);
 
     const handleBookmarkClick = async () => {
         if (user) {
