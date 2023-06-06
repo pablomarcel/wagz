@@ -1,9 +1,12 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Container, Grid } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Container, Grid, IconButton, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import PostByCommunity from '../Communities/PostByCommunity';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9
@@ -29,6 +32,8 @@ const CommunityProfile = () => {
     const [communityDetails, setCommunityDetails] = useState(null);
     const [posts, setPosts] = useState([]);
     const { communityId } = useParams();
+    const { user } = useAuth0();
+    const [isJoined, setIsJoined] = useState(false);
 
     useEffect(() => {
 
@@ -64,7 +69,47 @@ const CommunityProfile = () => {
 
         fetchPosts();
 
-    }, [communityId]);
+        const checkMembership = async () => {
+            const response = await fetch('/.netlify/functions/checkMembership', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: user.email,
+                    communityId: communityId,
+                }),
+            });
+            const data = await response.json();
+            setIsJoined(data.isMember);
+        };
+
+        checkMembership();
+
+    }, [communityId, user]);
+
+    const handleBookmarkClick = async () => {
+        if (user) {
+            const response = await fetch(`/.netlify/functions/${isJoined ? 'unjoin' : 'join'}`, { // use the appropriate backend function based on the user's join status
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: user.email,
+                    communityId: communityId,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            console.log(`${isJoined ? 'Unjoined' : 'Joined'} community:`, data);
+            setIsJoined(!isJoined); // update the user's join status
+        } else {
+            console.log('No user is authenticated');
+        }
+    };
 
     if (!communityDetails) {
         return <div>Loading...</div>;
@@ -78,10 +123,17 @@ const CommunityProfile = () => {
                     title="Community image"
                 />
                 <CardContent>
-                    <Typography variant="h4">{communityDetails.name}</Typography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>About: </strong> {communityDetails.about}
-                    </TruncatedTypography>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <div>
+                            <Typography variant="h4">{communityDetails.name}</Typography>
+                            <TruncatedTypography variant="body2" color="text.secondary">
+                                <strong>About: </strong> {communityDetails.about}
+                            </TruncatedTypography>
+                        </div>
+                        <IconButton onClick={handleBookmarkClick} color="primary" aria-label="add to bookmarks" sx={{ fontSize: 40 }}>
+                            {isJoined ? <BookmarkIcon sx={{ fontSize: 30 }} /> : <BookmarkBorderIcon sx={{ fontSize: 30 }} />}
+                        </IconButton>
+                    </Box>
                 </CardContent>
             </StyledCard>
 
@@ -94,9 +146,9 @@ const CommunityProfile = () => {
                     </Grid>
                 ))}
             </Grid>
-
         </Container>
     );
+
 };
 
 export default CommunityProfile;
