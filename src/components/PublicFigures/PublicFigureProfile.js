@@ -1,17 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardMedia, CardContent, Typography, Container, Grid } from '@mui/material';
+import { Card, CardMedia, CardContent, Typography, Container, Grid, IconButton, Box } from '@mui/material';
 import { styled } from '@mui/system';
 import PostByPublicFigure from '../PublicFigures/PostByPublicFigure';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { useAuth0 } from "@auth0/auth0-react";
 
 const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9
-});
-
-const StyledCardVideo = styled('video')({
-    width: '100%',
-    height: 'auto',
 });
 
 const TruncatedTypography = styled(Typography)({
@@ -34,6 +32,8 @@ const PublicFigureProfile = () => {
     const [publicFigureDetails, setPublicFigureDetails] = useState(null);
     const [posts, setPosts] = useState([]);
     const { publicFigureId } = useParams();
+    const { user } = useAuth0();
+    const [isSubscribed, setIsSubscribed] = useState(false);
 
     useEffect(() => {
 
@@ -69,7 +69,47 @@ const PublicFigureProfile = () => {
 
         fetchPosts();
 
-    }, [publicFigureId]);
+        const checkSubscription = async () => {
+            const response = await fetch('/.netlify/functions/checkSubscription', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: user.email,
+                    publicFigureId: publicFigureId,
+                }),
+            });
+            const data = await response.json();
+            setIsSubscribed(data.isMember);
+        };
+
+        checkSubscription();
+
+    }, [publicFigureId, user]);
+
+    const handleBookmarkClick = async () => {
+        if (user) {
+            const response = await fetch(`/.netlify/functions/${isSubscribed ? 'unsubscribe' : 'subscribe'}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userEmail: user.email,
+                    publicFigureId: publicFigureId,
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+
+            setIsSubscribed(!isSubscribed);
+        } else {
+            console.log('No user is authenticated');
+        }
+    };
 
     if (!publicFigureDetails) {
         return <div>Loading...</div>;
@@ -83,25 +123,15 @@ const PublicFigureProfile = () => {
                     title="Public Figure image"
                 />
                 <CardContent>
-                    <Typography variant="h4">{publicFigureDetails.name}</Typography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>Occupation: </strong> {publicFigureDetails.occupation}
-                    </TruncatedTypography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>BirthDate: </strong> {publicFigureDetails.birthDate}
-                    </TruncatedTypography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>BirthPlace: </strong> {publicFigureDetails.birthPlace}
-                    </TruncatedTypography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>Nationality: </strong> {publicFigureDetails.nationality}
-                    </TruncatedTypography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>Known for: </strong> {publicFigureDetails.knownFor}
-                    </TruncatedTypography>
-                    <TruncatedTypography variant="body2" color="text.secondary">
-                        <strong>Bio: </strong> {publicFigureDetails.bio}
-                    </TruncatedTypography>
+                    <Box display="flex" justifyContent="space-between" alignItems="center">
+                        <div>
+                            <Typography variant="h4">{publicFigureDetails.name}</Typography>
+                            {/* Rest of your profile details */}
+                        </div>
+                        <IconButton onClick={handleBookmarkClick} color="primary" aria-label="add to bookmarks" sx={{ fontSize: 40 }}>
+                            {isSubscribed ? <BookmarkIcon sx={{ fontSize: 30 }} /> : <BookmarkBorderIcon sx={{ fontSize: 30 }} />}
+                        </IconButton>
+                    </Box>
                 </CardContent>
             </StyledCard>
 
@@ -114,7 +144,6 @@ const PublicFigureProfile = () => {
                     </Grid>
                 ))}
             </Grid>
-
         </Container>
     );
 };
