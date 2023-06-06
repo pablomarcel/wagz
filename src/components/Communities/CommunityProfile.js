@@ -104,7 +104,7 @@ const CommunityProfile = () => {
                 throw new Error('Network response was not ok');
             }
             const data = await response.json();
-            console.log(`${isJoined ? 'Unjoined' : 'Joined'} community:`, data);
+
             setIsJoined(!isJoined); // update the user's join status
         } else {
             console.log('No user is authenticated');

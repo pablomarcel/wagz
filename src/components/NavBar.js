@@ -160,7 +160,7 @@ const NavBar = () => {
                         onClick={handleDrawerToggle}
                         sx={{ mr: 2 }}
                     >
-                        <MenuIcon style={{ color: '#1976d2'}}/>
+                        <MenuIcon style={{ color: '#ed6c02'}}/>
                     </IconButton>
                     <Avatar
                         alt="Wagzters Logo"
@@ -197,14 +197,14 @@ const NavBar = () => {
                         {!isAuthenticated ? (
                             <ListItem button onClick={loginWithRedirect}>
                                 <ListItemIcon>
-                                    <LockOpenIcon style={{ color: '#1976d2'}}/>
+                                    <LockOpenIcon style={{ color: '#ed6c02'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Login" />
                             </ListItem>
                         ) : (
                             <ListItem button onClick={() => logout({ returnTo: window.location.origin })}>
                                 <ListItemIcon>
-                                    <ExitToAppIcon style={{ color: '#d32f2f'}}/>
+                                    <ExitToAppIcon style={{ color: '#ed6c02'}}/>
                                 </ListItemIcon>
                                 <ListItemText primary="Logout" />
                             </ListItem>
