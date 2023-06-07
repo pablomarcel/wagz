@@ -60,6 +60,11 @@ const Home = ({ filterPosts }) => {
     const [likeCounts, setLikeCounts] = useState({});
     const [petOwnerName, setPetOwnerName] = useState('');
     const [hasFetched, setHasFetched] = useState(false);
+    const [petOwnerProfile, setPetOwnerProfile] = useState({
+        name: '',
+        bio: '',
+        fileUrl: '',
+    });
 
 
     const openComments = (postId) => {
@@ -82,6 +87,34 @@ const Home = ({ filterPosts }) => {
         setCurrentPet(pet);
         setAboutPetOpen(true);
     };
+
+    useEffect(() => {
+        const fetchPetOwnerProfile = async () => {
+            if (isAuthenticated && user) {
+                try {
+                    const response = await fetch('/.netlify/functions/getPetOwnerProfile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error ${response.status}`);
+                    }
+
+                    const petOwnerProfileData = await response.json();
+
+                    setPetOwnerProfile(petOwnerProfileData);
+                } catch (error) {
+                    console.error('Error fetching pet owner profile:', error);
+                }
+            }
+        };
+
+        fetchPetOwnerProfile();
+    }, [user, isAuthenticated]);
 
     useEffect(() => {
         const fetchPosts = async () => {
@@ -232,9 +265,9 @@ const Home = ({ filterPosts }) => {
             {isAuthenticated && user && (
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2, mb: 4 }}>
                     <Avatar
-                        alt={user.name}
-                        src={user.picture}
-                        sx={{ width: 40, height: 40, marginRight: 1 }}
+                        alt={petOwnerProfile.name || ''}
+                        src={petOwnerProfile.fileUrl || user.picture}
+                        sx={{ width: 40, height: 40, marginRight: '1rem' }}
                     />
                     <Typography variant="h6">
                         {petOwnerName}
@@ -261,7 +294,7 @@ const Home = ({ filterPosts }) => {
                                         <CardHeader
                                             action={
                                                 <IconButton onClick={() => handleAboutPet(pet)}>
-                                                    <MoreVertIcon style={{ color: '#607d8b' }}/>
+                                                    <MoreVertIcon style={{ color: '#e91e63' }}/>
                                                 </IconButton>
                                             }
                                             title={`${pet ? pet.name : 'Unknown'}`}

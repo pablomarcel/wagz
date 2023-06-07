@@ -1,6 +1,5 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../App.css';
@@ -93,7 +92,7 @@ const Create = () => {
                                     </MenuItem>
                                     {owners.map((owner) => (
                                         <MenuItem key={owner.id} value={owner.id}>
-                                            {owner.name} ({owner.email})
+                                            {owner.name}
                                         </MenuItem>
                                     ))}
                                 </Select>

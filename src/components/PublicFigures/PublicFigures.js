@@ -93,10 +93,10 @@ const Events = () => {
 
                         <CardContent>
                             <StyledTypography variant="h5">
-                                {'Public Figures' || ''}
+                                {'Notables' || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
-                                {'Browse Public Figures'}
+                                {'Browse Notables'}
                             </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>

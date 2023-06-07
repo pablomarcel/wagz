@@ -103,7 +103,7 @@ const CreateCommunityPost = () => {
                                 <Select labelId="owner-label" id="owner" value={selectedOwner} onChange={handleOwnerChange} label="Owner">
                                     <MenuItem value=""><em>Select an owner</em></MenuItem>
                                     {owners.map((owner) => (
-                                        <MenuItem key={owner.id} value={owner.id}>{owner.name} ({owner.email})</MenuItem>
+                                        <MenuItem key={owner.id} value={owner.id}>{owner.name}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>

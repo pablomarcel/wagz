@@ -96,7 +96,7 @@ const CreateCommunity = () => {
                                     </MenuItem>
                                     {owners.map((owner) => (
                                         <MenuItem key={owner.id} value={owner.id}>
-                                            {owner.name} ({owner.email})
+                                            {owner.name}
                                         </MenuItem>
                                     ))}
                                 </Select>

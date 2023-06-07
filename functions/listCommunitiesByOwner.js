@@ -21,7 +21,10 @@ exports.handler = async (event, context) => {
     try {
         const result = await session.run(
             `MATCH (owner:PetOwner {id: $ownerId})<-[:CREATED_BY]-(community:Community) 
-     RETURN community`,
+             RETURN community
+             UNION
+             MATCH (owner:PetOwner {id: $ownerId})-[:JOINED]->(community:Community)
+             RETURN community`,
             { ownerId }
         );
 
