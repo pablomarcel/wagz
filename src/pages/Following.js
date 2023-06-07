@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
-import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper, Button } from '@mui/material';
+import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper, Button, Avatar } from '@mui/material';
 import { styled } from '@mui/system';
 import Alert from '@mui/lab/Alert';
 import { useNavigate } from 'react-router-dom';
@@ -11,12 +11,10 @@ const StyledTypography = styled(Typography)({
 
 const StyledPaper = styled(Paper)({
     padding: '10px',
-
     textAlign: 'center',
     backgroundColor: '#f5f5f5',
     borderRadius: '15px',
     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
-
 });
 
 const Following = () => {
@@ -28,6 +26,32 @@ const Following = () => {
 
     const handleProfileClick = (email) => {
         navigate(`/petownerprofile/${email}`);
+    }
+
+    const handleFollow = async (owner) => {
+        const response = await fetch('/.netlify/functions/follow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ followerEmail: user.email, followeeEmail: owner.email }),
+        });
+        if (response.ok) {
+            setOwners(owners.map(o => o.email === owner.email ? { ...o, isFollowing: true } : o));
+        }
+    }
+
+    const handleUnfollow = async (owner) => {
+        const response = await fetch('/.netlify/functions/unfollow', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ followerEmail: user.email, unfolloweeEmail: owner.email }),
+        });
+        if (response.ok) {
+            setOwners(owners.map(o => o.email === owner.email ? { ...o, isFollowing: false } : o));
+        }
     }
 
     useEffect(() => {
@@ -47,6 +71,21 @@ const Following = () => {
                     }
 
                     const data = await response.json();
+
+                    for (let owner of data) {
+                        const followStatusResponse = await fetch('/.netlify/functions/getFollowStatus', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ followerEmail: user.email, followeeEmail: owner.email }),
+                        });
+                        if (followStatusResponse.ok) {
+                            const followStatusData = await followStatusResponse.json();
+                            owner.isFollowing = followStatusData.isFollowing;
+                        }
+                    }
+
                     setOwners(data);
                     setLoading(false);
                 } catch (error) {
@@ -72,9 +111,30 @@ const Following = () => {
                             <Grid container justifyContent="center">
                                 <Grid item xs={12} sm={8} md={6}>
                                     <StyledPaper elevation={3}>
-                                        <Button onClick={() => handleProfileClick(owner.email)}> {/* Updated */}
-                                            <Typography variant="body1">{owner.name}</Typography>
-                                        </Button>
+                                        <Grid container alignItems="center">
+                                            <Grid item xs={2}>
+                                                <Avatar alt={owner.name} src={owner.fileUrl} />
+                                            </Grid>
+                                            <Grid item xs={6}>
+                                                <Button onClick={() => handleProfileClick(owner.email)}>
+                                                    <Typography variant="body1">{owner.name}</Typography>
+                                                </Button>
+                                            </Grid>
+                                            <Grid item xs={3}>
+                                                <Button
+                                                    variant="contained"
+                                                    sx={{
+                                                        backgroundColor: owner.isFollowing ? '#607d8b' : '#1976d2',
+                                                        color: '#ffffff',
+                                                        marginLeft: '10px',
+                                                        marginRight: '5px',
+                                                    }}
+                                                    onClick={() => owner.isFollowing ? handleUnfollow(owner) : handleFollow(owner)}
+                                                >
+                                                    {owner.isFollowing ? 'Unfollow' : 'Follow'}
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
                                     </StyledPaper>
                                 </Grid>
                             </Grid>
