@@ -68,12 +68,12 @@ const NavBar = () => {
                     route: '/mypets',
                 },
                 {
-                    text: 'Owners',
+                    text: 'Owner',
                     icon: <PersonIcon style={{ color: '#1976d2'}}/>,
                     route: '/createPetOwner',
                 },
                 {
-                    text: 'Pets',
+                    text: 'Pet',
                     icon: <PetsIcon style={{ color: '#1976d2'}}/>,
                     route: '/createPet',
                 },
