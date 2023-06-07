@@ -1,5 +1,6 @@
-// src/components/AboutPet.js
+/* eslint-disable no-unused-vars */
 import { Dialog, DialogTitle, DialogContent, DialogActions, Button, Typography } from '@mui/material';
+import { useAuth0 } from "@auth0/auth0-react";
 import { styled } from '@mui/system';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -21,9 +22,44 @@ const StyledButton = styled(Button)({
 });
 
 const AboutPet = ({ open, onClose, pet }) => {
+    const { user, isAuthenticated } = useAuth0();
+    const [petOwnerProfile, setPetOwnerProfile] = useState({
+        name: '',
+        bio: '',
+        fileUrl: '',
+    });
     const [petDetails, setPetDetails] = useState(null);
     const [showDetails, setShowDetails] = useState(false);
+    const [followStatus, setFollowStatus] = useState(false);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const fetchPetOwnerProfile = async () => {
+            if (isAuthenticated && user) {
+                try {
+                    const response = await fetch('/.netlify/functions/getPetOwnerProfile', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error ${response.status}`);
+                    }
+
+                    const petOwnerProfileData = await response.json();
+
+                    setPetOwnerProfile(petOwnerProfileData);
+                } catch (error) {
+                    console.error('Error fetching pet owner profile:', error);
+                }
+            }
+        };
+
+        fetchPetOwnerProfile();
+    }, [user, isAuthenticated]);
 
     useEffect(() => {
         const fetchPetDetails = async () => {
@@ -48,8 +84,64 @@ const AboutPet = ({ open, onClose, pet }) => {
         return () => {
             setShowDetails(false);
             setPetDetails(null);
+            setFollowStatus(false);
         };
     }, [pet, open]);
+
+    useEffect(() => {
+        const fetchFollowStatus = async () => {
+            if (petDetails && user) {
+                const response = await fetch('/.netlify/functions/getFollowPetStatus', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        petId: petDetails.id,
+                        followerEmail: user.email,
+                    }),
+                });
+                const data = await response.json();
+                setFollowStatus(data.isFollowing);
+            }
+        };
+
+        fetchFollowStatus();
+    }, [petDetails, user]);
+
+    const followPet = async () => {
+        const response = await fetch('/.netlify/functions/followPet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                petId: petDetails.id,
+                followerEmail: user.email,
+            }),
+        });
+
+        if (response.ok) {
+            setFollowStatus(true);
+        }
+    };
+
+    const unfollowPet = async () => {
+        const response = await fetch('/.netlify/functions/unfollowPet', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                petId: petDetails.id,
+                followerEmail: user.email,
+            }),
+        });
+
+        if (response.ok) {
+            setFollowStatus(false);
+        }
+    };
 
     if (!petDetails) {
         return null; // or a loading indicator
@@ -87,6 +179,9 @@ const AboutPet = ({ open, onClose, pet }) => {
                         </StyledButton>
                         <StyledButton variant="text" onClick={() => navigate(`/petprofile/${petDetails.id}`)}>
                             Pet Profile
+                        </StyledButton>
+                        <StyledButton variant="text" onClick={followStatus ? unfollowPet : followPet}>
+                            {followStatus ? 'Unfollow Pet' : 'Follow Pet'}
                         </StyledButton>
                     </DialogContent>
                 </>

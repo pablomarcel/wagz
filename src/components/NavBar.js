@@ -128,7 +128,7 @@ const NavBar = () => {
                     route: '/events',
                 },
                 {
-                    text: 'Notables',
+                    text: 'People',
                     icon: <PortraitIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/publicfigures',
                 },
