@@ -2,32 +2,41 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import '../App.css';
-import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
-import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Chip } from '@mui/material';
 import UploadComponent from './UploadComponent';
+
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
 
 const Create = () => {
     const { user } = useAuth0();
     const currentUserEmail = user.email;
-    const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
+
     const [owners, setOwners] = useState([]);
-    const [pets, setPets] = useState([]);
     const [selectedOwner, setSelectedOwner] = useState('');
-    const [ownerName, setOwnerName] = useState('');
-    const [ownerEmail, setOwnerEmail] = useState('');
     const [petName, setPetName] = useState('');
     const [petBreed, setPetBreed] = useState('');
     const [petAge, setPetAge] = useState('');
     const [petBio, setPetBio] = useState('');
     const [fileUrl, setFileUrl] = useState(null);
     const [isUploading, setIsUploading] = useState(false);
-
+    const [chipData, setChipData] = useState([]);
+    const chipColors = ['primary', 'secondary', 'success', 'error', 'warning', 'info'];
 
     useEffect(() => {
         fetchOwners();
     }, []);
+
+    const handleDelete = (chipToDelete) => () => {
+        setChipData((chips) => chips.filter((chip) => chip.key !== chipToDelete.key));
+    };
+
+    const handleAddChip = (event) => {
+        if (event.key === 'Enter') {
+            setChipData([...chipData, { key: chipData.length, label: event.target.value, color: chipColors[chipData.length % chipColors.length] }]);
+            event.target.value = '';
+        }
+    };
 
     const fetchOwners = async () => {
         try {
@@ -39,44 +48,40 @@ const Create = () => {
         }
     };
 
-
-
     const handleAddPet = async () => {
-        if (!selectedOwner) {
-            alert('Please select a pet owner first');
+        if (!selectedOwner || !petName) {
+            alert('Please select a pet owner and enter a pet name');
             return;
         }
 
         try {
-            const response = await axios.post(`${API_BASE_URL}/.netlify/functions/addPet/${selectedOwner}`, {
+            await axios.post(`${API_BASE_URL}/.netlify/functions/addPet/${selectedOwner}`, {
                 name: petName,
                 breed: petBreed,
                 age: petAge,
-                bio: petBio,
                 fileUrl,
+                bio: petBio,
+                tags: chipData.map(chip => chip.label),
             });
 
+            setSelectedOwner('');
             setPetName('');
             setPetBreed('');
             setPetAge('');
             setPetBio('');
             setFileUrl(null);
+            setChipData([]);
         } catch (error) {
-            console.error('Error creating pet', error);
+            console.error('Error adding pet', error);
         }
     };
 
-
     return (
         <Container maxWidth="xs">
-            <Box sx={{ display: 'flex', justifyContent: 'center'}}>
-                <Card sx={{
-                    boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',
-                    backgroundColor: '#f5f5f5',
-                    borderRadius: '15px',
-                }}>
+            <Box sx={{display: 'flex',justifyContent: 'center'}}>
+                <Card sx={{boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',backgroundColor: '#f5f5f5',borderRadius: '15px'}}>
                     <CardContent>
-                        <h2>Select Pet Owner and Create Pet</h2>
+                        <h2>Create Pet</h2>
                         <form>
                             <FormControl fullWidth margin="normal">
                                 <InputLabel id="petOwner-label">Pet Owner</InputLabel>
@@ -87,49 +92,66 @@ const Create = () => {
                                     onChange={(e) => setSelectedOwner(e.target.value)}
                                     label="Pet Owner"
                                 >
-                                    <MenuItem value="">
-                                        <em>Select a pet owner</em>
-                                    </MenuItem>
+                                    <MenuItem value=""><em>Select a pet owner</em></MenuItem>
                                     {owners.map((owner) => (
-                                        <MenuItem key={owner.id} value={owner.id}>
-                                            {owner.name}
-                                        </MenuItem>
+                                        <MenuItem key={owner.id} value={owner.id}>{owner.name}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="petName"
-                                label="Pet Name"
-                                value={petName}
-                                onChange={(e) => setPetName(e.target.value)}
-                            />
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="petBreed"
-                                label="Pet Breed"
-                                value={petBreed}
-                                onChange={(e) => setPetBreed(e.target.value)}
-                            />
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="petAge"
-                                label="Pet Age"
-                                type="number"
-                                value={petAge}
-                                onChange={(e) => setPetAge(e.target.value)}
-                            />
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="petBio"
-                                label="Pet Bio"
-                                value={petBio}
-                                onChange={(e) => setPetBio(e.target.value)}
-                            />
+                            <FormControl fullWidth margin="normal">
+                                <TextField
+                                    id="petName"
+                                    label="Pet Name"
+                                    value={petName}
+                                    onChange={(e) => setPetName(e.target.value)}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <TextField
+                                    id="petBreed"
+                                    label="Pet Breed"
+                                    value={petBreed}
+                                    onChange={(e) => setPetBreed(e.target.value)}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <TextField
+                                    id="petAge"
+                                    label="Pet Age"
+                                    value={petAge}
+                                    onChange={(e) => setPetAge(e.target.value)}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <TextField
+                                    id="petBio"
+                                    label="Pet Bio"
+                                    value={petBio}
+                                    onChange={(e) => setPetBio(e.target.value)}
+                                    multiline
+                                    rows={4}
+                                />
+                            </FormControl>
+                            <FormControl fullWidth margin="normal">
+                                <Box component="span">
+                                    <TextField
+                                        id="standard-basic"
+                                        label="Add a tag"
+                                        onKeyDown={handleAddChip}
+                                    />
+                                </Box>
+                                <Box component="span">
+                                    {chipData.map((data, index) => (
+                                        <Chip
+                                            key={data.key}
+                                            label={data.label}
+                                            onDelete={handleDelete(data)}
+                                            style={{ margin: '5px' }}
+                                            color={data.color}
+                                        />
+                                    ))}
+                                </Box>
+                            </FormControl>
                             <FormControl fullWidth margin="normal">
                                 <UploadComponent setFileUrl={setFileUrl} setIsUploading={setIsUploading}/>
                             </FormControl>
@@ -150,7 +172,6 @@ const Create = () => {
             </Box>
         </Container>
     );
-
 };
 
 export default withAuthenticationRequired(Create, {
