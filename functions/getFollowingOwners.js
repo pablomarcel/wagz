@@ -25,7 +25,7 @@ exports.handler = async (event) => {
         const result = await session.run(
             `
                     MATCH (follower:PetOwner {email: $userEmail})-[:FOLLOWS]->(followee:PetOwner)
-                    RETURN followee.email as followeeEmail, followee.name as followeeName
+                    RETURN followee.email as followeeEmail, followee.name as followeeName, followee.fileUrl as fileUrl, followee.bio as bio
                     `,
             { userEmail }
         );
@@ -33,6 +33,8 @@ exports.handler = async (event) => {
         const followingOwners = result.records.map((record) => ({
             email: record.get('followeeEmail'),
             name: record.get('followeeName'),
+            fileUrl: record.get('fileUrl'),
+            bio: record.get('bio'),
         }));
 
 
