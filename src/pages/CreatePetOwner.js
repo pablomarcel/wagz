@@ -55,6 +55,9 @@ const Create = () => {
             console.error('Error creating pet owner', error);
         }
     };
+    const maskEmail = (email) => {
+        return "*".repeat(email.length);
+    }
 
     return (
         <Container maxWidth="xs">
@@ -86,7 +89,7 @@ const Create = () => {
                                 id="ownerEmail"
                                 label="Owner Email"
                                 type="email"
-                                value={ownerEmail}
+                                value={maskEmail(ownerEmail)}
                                 InputProps={{
                                     readOnly: true,
                                 }}

@@ -88,7 +88,7 @@ const MyPets = () => {
                         />
                         <CardContent>
                             <StyledTypography variant="h5">
-                                {'Shop' || ''}
+                                {'Shopping' || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
                                 {'Browse Pawesome Deals'}

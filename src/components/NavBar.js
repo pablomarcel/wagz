@@ -118,7 +118,7 @@ const NavBar = () => {
                     route: '/communities',
                 },
                 {
-                    text: 'Shop',
+                    text: 'Shopping',
                     icon: <StorefrontIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/shop',
                 },
@@ -128,7 +128,7 @@ const NavBar = () => {
                     route: '/events',
                 },
                 {
-                    text: 'Public Figures',
+                    text: 'Notables',
                     icon: <PortraitIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/publicfigures',
                 },
