@@ -31,6 +31,7 @@ import ItemPost from './components/Commerce/ItemPost';
 import EventPost from './components/Events/EventPost';
 import PublicFigurePost from './components/PublicFigures/PublicFigurePost';
 import CommunityPost from './components/Communities/CommunityPost';
+import Payments from './components/Payments/Payments';
 
 function App() {
   return (
@@ -66,6 +67,7 @@ function App() {
             <Route path="/communityPost/:communityPostId" element={<CommunityPost />} />
             <Route path="/publicfigureprofile/:publicFigureId" element={<PublicFigureProfile />} />
             <Route path="/communityProfile/:communityId" element={<CommunityProfile />} />
+            <Route path="/payments" element={<Payments />} />
           </Routes>
         </Router>
       </div>

@@ -38,6 +38,7 @@ import ForumIcon from '@mui/icons-material/Forum';
 import AddBoxIcon from '@mui/icons-material/AddBox';
 import AddIcon from '@mui/icons-material/Add';
 import GroupsIcon from '@mui/icons-material/Groups';
+import PaymentIcon from '@mui/icons-material/Payment';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 const drawerWidth = 240;
 
@@ -131,6 +132,11 @@ const NavBar = () => {
                     text: 'People',
                     icon: <PortraitIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/publicfigures',
+                },
+                {
+                    text: 'Payments',
+                    icon: <PaymentIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/payments',
                 },
                 {
                     text: 'Feedback',

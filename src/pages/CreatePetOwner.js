@@ -83,17 +83,17 @@ const Create = () => {
                                 value={ownerName}
                                 onChange={(e) => setOwnerName(e.target.value)}
                             />
-                            <TextField
-                                fullWidth
-                                margin="normal"
-                                id="ownerEmail"
-                                label="Owner Email"
-                                type="email"
-                                value={maskEmail(ownerEmail)}
-                                InputProps={{
-                                    readOnly: true,
-                                }}
-                            />
+                            {/*<TextField*/}
+                            {/*    fullWidth*/}
+                            {/*    margin="normal"*/}
+                            {/*    id="ownerEmail"*/}
+                            {/*    label="Owner Email"*/}
+                            {/*    type="email"*/}
+                            {/*    value={maskEmail(ownerEmail)}*/}
+                            {/*    InputProps={{*/}
+                            {/*        readOnly: true,*/}
+                            {/*    }}*/}
+                            {/*/>*/}
                             <TextField
                                 fullWidth
                                 margin="normal"

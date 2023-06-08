@@ -7,6 +7,8 @@ import PostByPublicFigure from '../PublicFigures/PostByPublicFigure';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import { useAuth0 } from "@auth0/auth0-react";
+import {CardHeader, MoreVertIcon} from "../../pages/imports";
+import AboutPublicFigure from '../MorePublicFigure/AboutPublicFigure';
 
 const StyledCardMedia = styled(CardMedia)({
     paddingTop: '56.25%', // 16:9
@@ -34,6 +36,8 @@ const PublicFigureProfile = () => {
     const { publicFigureId } = useParams();
     const { user } = useAuth0();
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const [currentPublicFigure, setCurrentPublicFigure] = useState(null);
+    const [aboutPublicFigureOpen, setAboutPublicFigureOpen] = useState(false);
 
     useEffect(() => {
 
@@ -111,6 +115,11 @@ const PublicFigureProfile = () => {
         }
     };
 
+    const handleAboutPublicFigure = (publicFigureDetails) => {
+        setCurrentPublicFigure(publicFigureDetails);
+        setAboutPublicFigureOpen(true);
+    };
+
     if (!publicFigureDetails) {
         return <div>Loading...</div>;
     }
@@ -118,6 +127,15 @@ const PublicFigureProfile = () => {
     return (
         <Container maxWidth="md">
             <StyledCard>
+                <CardHeader
+                    action={
+                        <IconButton onClick={() => handleAboutPublicFigure(publicFigureDetails)}>
+                            <MoreVertIcon style={{ color: '#e91e63' }}/>
+                        </IconButton>
+                    }
+                    title={publicFigureDetails.name}
+                    subheader={`Occupation: ${publicFigureDetails.occupation}`}
+                />
                 <StyledCardMedia
                     image={publicFigureDetails.imageUrl ? publicFigureDetails.imageUrl : "https://via.placeholder.com/640x360"}
                     title="Public Figure image"
@@ -125,7 +143,7 @@ const PublicFigureProfile = () => {
                 <CardContent>
                     <Box display="flex" justifyContent="space-between" alignItems="center">
                         <div>
-                            <Typography variant="h4">{publicFigureDetails.name}</Typography>
+                            <Typography variant="h6">{publicFigureDetails.bio}</Typography>
                             {/* Rest of your profile details */}
                         </div>
                         <IconButton onClick={handleBookmarkClick} color="primary" aria-label="add to bookmarks" sx={{ fontSize: 40 }}>
@@ -144,6 +162,15 @@ const PublicFigureProfile = () => {
                     </Grid>
                 ))}
             </Grid>
+
+            {aboutPublicFigureOpen && currentPublicFigure && (
+                <AboutPublicFigure
+                    open={aboutPublicFigureOpen}
+                    onClose={() => setAboutPublicFigureOpen(false)}
+                    publicFigure={currentPublicFigure}
+                />
+            )}
+
         </Container>
     );
 };
