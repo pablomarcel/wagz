@@ -25,6 +25,8 @@ import Feedback from './pages/Feedback';
 import Shop from './components/Commerce/Shop';
 import Events from './components/Events/Events';
 import PublicFigures from './components/PublicFigures/PublicFigures';
+import PublicFigureForm from './components/PublicFigures/PublicFigureForm';
+import PublicFigurePostForm from './components/PublicFigures/PublicFigurePostForm';
 import Communities from './components/Communities/Communities';
 import MyPets from './components/Pets/MyPets';
 import ItemPost from './components/Commerce/ItemPost';
@@ -68,6 +70,8 @@ function App() {
             <Route path="/publicfigureprofile/:publicFigureId" element={<PublicFigureProfile />} />
             <Route path="/communityProfile/:communityId" element={<CommunityProfile />} />
             <Route path="/payments/*" element={<Payments />} />
+            <Route path="/publicfigureform" element={<PublicFigureForm />} />
+            <Route path="/publicfigurepostform" element={<PublicFigurePostForm />} />
           </Routes>
         </Router>
       </div>
