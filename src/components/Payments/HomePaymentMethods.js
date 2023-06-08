@@ -1,12 +1,12 @@
 import React from 'react';
 
-const TermsAndPrivacy = () => {
+const HomePaymentMethods = () => {
     return (
         <div>
-            Terms and Privacy
+            Payment Methods
             {/* Your component code goes here */}
         </div>
     );
 };
 
-export default TermsAndPrivacy;
+export default HomePaymentMethods;

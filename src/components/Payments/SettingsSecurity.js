@@ -1,12 +1,12 @@
 import React from 'react';
 
-const TermsAndPrivacy = () => {
+const SettingsSecurity = () => {
     return (
         <div>
-            Terms and Privacy
+            Security Info
             {/* Your component code goes here */}
         </div>
     );
 };
 
-export default TermsAndPrivacy;
+export default SettingsSecurity;
