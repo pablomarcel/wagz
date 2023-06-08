@@ -67,7 +67,7 @@ function App() {
             <Route path="/communityPost/:communityPostId" element={<CommunityPost />} />
             <Route path="/publicfigureprofile/:publicFigureId" element={<PublicFigureProfile />} />
             <Route path="/communityProfile/:communityId" element={<CommunityProfile />} />
-            <Route path="/payments" element={<Payments />} />
+            <Route path="/payments/*" element={<Payments />} />
           </Routes>
         </Router>
       </div>
