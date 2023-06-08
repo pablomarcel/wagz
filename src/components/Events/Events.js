@@ -1,11 +1,13 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
+import { Avatar, Typography, Box, Card, CardHeader, CardContent, IconButton } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EventList from '../Events/EventList';
 import EventIcon from '@mui/icons-material/Event';
+import AboutEvents from '../MoreEvents/AboutEvents';
 
 
 const StyledTypography = styled(Typography)({
@@ -43,6 +45,12 @@ const Events = () => {
         bio: '',
         fileUrl: '',
     });
+    const [aboutEventsOpen, setAboutEventsOpen] = useState(false);
+
+    const handleAboutEvents = () => {
+        //setCurrentPublicFigure(publicFigureDetails);
+        setAboutEventsOpen(true);
+    };
 
     useEffect(() => {
         const fetchPetOwnerProfile = async () => {
@@ -83,10 +91,31 @@ const Events = () => {
                 }}>
                 {isAuthenticated && user && (
                     <StyledCard>
-                        <EventIcon
-                            sx={{ fontSize: 80, marginTop: '1rem' }}
-                            color="primary"
-                        />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                padding: '0 1rem',
+                            }}
+                        >
+                            <IconButton
+                                style={{ visibility: 'hidden' }} // This is the "spacer" element.
+                            >
+                                <MoreVertIcon style={{ color: '#e91e63' }}/>
+                            </IconButton>
+
+                            <EventIcon
+                                sx={{ fontSize: 80, marginTop: '1rem' }}
+                                color="primary"
+                            />
+
+                            <IconButton onClick={() => handleAboutEvents()}>
+                                <MoreVertIcon style={{ color: '#e91e63' }}/>
+                            </IconButton>
+                        </Box>
+
                         <CardContent>
                             <StyledTypography variant="h5">
                                 {'Events' || ''}
@@ -99,6 +128,12 @@ const Events = () => {
                 )}
                 <EventList />
             </Box>
+            {aboutEventsOpen && (
+                <AboutEvents
+                    open={aboutEventsOpen}
+                    onClose={() => setAboutEventsOpen(false)}
+                />
+            )}
         </Container>
     );
 };

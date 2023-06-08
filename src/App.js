@@ -26,6 +26,7 @@ import Shop from './components/Commerce/Shop';
 import Events from './components/Events/Events';
 import PublicFigures from './components/PublicFigures/PublicFigures';
 import PublicFigureForm from './components/PublicFigures/PublicFigureForm';
+import EventForm from './components/Events/EventForm';
 import PublicFigurePostForm from './components/PublicFigures/PublicFigurePostForm';
 import Communities from './components/Communities/Communities';
 import MyPets from './components/Pets/MyPets';
@@ -72,6 +73,7 @@ function App() {
             <Route path="/payments/*" element={<Payments />} />
             <Route path="/publicfigureform" element={<PublicFigureForm />} />
             <Route path="/publicfigurepostform" element={<PublicFigurePostForm />} />
+            <Route path="/eventform" element={<EventForm />} />
           </Routes>
         </Router>
       </div>
