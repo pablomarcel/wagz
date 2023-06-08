@@ -1,12 +1,12 @@
 import React from 'react';
 
-const TermsAndPrivacy = () => {
+const HomeActivity = () => {
     return (
         <div>
-            Terms and Privacy
+            Activity
             {/* Your component code goes here */}
         </div>
     );
 };
 
-export default TermsAndPrivacy;
+export default HomeActivity;

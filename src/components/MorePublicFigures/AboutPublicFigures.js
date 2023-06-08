@@ -100,10 +100,10 @@ const AboutPublicFigures = ({ open, onClose}) => {
                     <DialogTitle></DialogTitle>
                     <DialogContent>
                         <StyledButton variant="text" onClick={() => navigate(`/publicfigureform/`)}>
-                            Create a Public Figure
+                            Create People
                         </StyledButton>
                         <StyledButton variant="text" onClick={() => navigate(`/publicfigurepostform/`)}>
-                            Create Public Figure Post
+                            Create People Post
                         </StyledButton>
                         {/*<StyledButton variant="text" onClick={() => navigate(`/publicfigureprofile/${publicFigureDetails.id}`)}>*/}
                         {/*    Public Figure Profile*/}
