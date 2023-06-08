@@ -1,14 +1,15 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from "@auth0/auth0-react";
-import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
+import { Avatar, Typography, Box, Card, CardHeader, CardContent, IconButton } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
-//import EventList from '../Events/EventList';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EventIcon from '@mui/icons-material/Event';
 import PeopleIcon from '@mui/icons-material/People';
 import PublicFigureList from '../PublicFigures/PublicFigureList';
 import PortraitIcon from "@mui/icons-material/Portrait";
+import AboutPublicFigures from '../MorePublicFigures/AboutPublicFigures';
 
 
 const StyledTypography = styled(Typography)({
@@ -39,13 +40,19 @@ const StyledCard = styled(Card)({
     marginBottom: '2rem'
 });
 
-const Events = () => {
+const PublicFigures = () => {
     const { user, isAuthenticated } = useAuth0();
     const [petOwnerProfile, setPetOwnerProfile] = useState({
         name: '',
         bio: '',
         fileUrl: '',
     });
+    const [aboutPublicFiguresOpen, setAboutPublicFiguresOpen] = useState(false);
+
+    const handleAboutPublicFigures = () => {
+        //setCurrentPublicFigure(publicFigureDetails);
+        setAboutPublicFiguresOpen(true);
+    };
 
     useEffect(() => {
         const fetchPetOwnerProfile = async () => {
@@ -75,6 +82,8 @@ const Events = () => {
         fetchPetOwnerProfile();
     }, [user, isAuthenticated]);
 
+
+
     return (
         <Container maxWidth="md">
             <Box
@@ -86,26 +95,54 @@ const Events = () => {
                 }}>
                 {isAuthenticated && user && (
                     <StyledCard>
-                        <PortraitIcon
-                            sx={{ fontSize: 80, marginTop: '1rem' }}
-                            color="primary"
-                        />
+                        <Box
+                            sx={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'space-between',
+                                width: '100%',
+                                padding: '0 1rem',
+                            }}
+                        >
+                            <IconButton
+                                style={{ visibility: 'hidden' }} // This is the "spacer" element.
+                            >
+                                <MoreVertIcon style={{ color: '#e91e63' }}/>
+                            </IconButton>
+
+                            <PortraitIcon
+                                sx={{ fontSize: 80, marginTop: '1rem' }}
+                                color="primary"
+                            />
+
+                            <IconButton onClick={() => handleAboutPublicFigures()}>
+                                <MoreVertIcon style={{ color: '#e91e63' }}/>
+                            </IconButton>
+                        </Box>
 
                         <CardContent>
                             <StyledTypography variant="h5">
                                 {'People' || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
-                                {'Browse People'}
+                                {'Browse Public Figures, Influencers and Notables'}
                             </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>
                 )}
                 <PublicFigureList />
             </Box>
+            {aboutPublicFiguresOpen && (
+                <AboutPublicFigures
+                    open={aboutPublicFiguresOpen}
+                    onClose={() => setAboutPublicFiguresOpen(false)}
+                />
+            )}
         </Container>
     );
+
+
 };
 
-export default Events;
+export default PublicFigures;
 
