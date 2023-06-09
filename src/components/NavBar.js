@@ -159,25 +159,45 @@ const NavBar = () => {
                         justifyContent: 'space-between',
                     }}
                 >
-                    <IconButton
-                        edge="start"
-                        color="gray"
-                        aria-label="menu"
-                        onClick={handleDrawerToggle}
-                        sx={{ mr: 2 }}
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
                     >
-                        <MenuIcon style={{ color: '#ed6c02'}}/>
-                    </IconButton>
+                        <IconButton
+                            edge="start"
+                            color="gray"
+                            aria-label="menu"
+                            onClick={handleDrawerToggle}
+                            sx={{ mr: 2 }}
+                        >
+                            <MenuIcon style={{ color: '#ed6c02' }} />
+                        </IconButton>
+                        <Typography variant="h6" component="div"
+                                    sx={{
+                                        flexGrow: 1,
+                                        color: "#ed6c02"
+                        }}
+                        >
+                            Wagzters
+                        </Typography>
+                    </Box>
+
                     <Avatar
                         alt="Wagzters Logo"
                         src="/wagzter-002.png"
                         sx={{
                             width: 56,
                             height: 56,
+                            position: 'absolute',  // Add this
+                            left: '50%',  // Add this
+                            transform: 'translateX(-50%)',  // Add this
                         }}
                     />
                     <Box sx={{ width: '56px' }} /> {/* Add an empty box to balance the IconButton space */}
                 </Toolbar>
+
 
             </AppBar>
             <Box component="nav" sx={{ width: { md: drawerWidth }, flexShrink: { md: 0 } }}>
