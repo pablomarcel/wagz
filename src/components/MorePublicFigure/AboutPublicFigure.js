@@ -191,7 +191,7 @@ const AboutPublicFigure = ({ open, onClose, publicFigure }) => {
                         {/*    Public Figure Profile*/}
                         {/*</StyledButton>*/}
                         <StyledButton variant="text" onClick={subscribeStatus ? unsubscribePublicFigure : subscribePublicFigure}>
-                            {subscribeStatus ? 'Unsubscribe' : 'Subscribe ($4.99)'}
+                            {subscribeStatus ? 'Unsubscribe' : 'Subscribe ($0.00)'}
                         </StyledButton>
                     </DialogContent>
                 </>
