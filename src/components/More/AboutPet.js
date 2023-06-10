@@ -21,7 +21,7 @@ const StyledButton = styled(Button)({
     fontSize: '1rem',
 });
 
-const AboutPet = ({ open, onClose, pet }) => {
+const AboutPet = ({ open, onClose, pet, post }) => {
     const { user, isAuthenticated } = useAuth0();
     const [petOwnerProfile, setPetOwnerProfile] = useState({
         name: '',
@@ -182,6 +182,9 @@ const AboutPet = ({ open, onClose, pet }) => {
                         </StyledButton>
                         <StyledButton variant="text" onClick={followStatus ? unfollowPet : followPet}>
                             {followStatus ? 'Unfollow Pet' : 'Follow Pet'}
+                        </StyledButton>
+                        <StyledButton variant="text" onClick={() => navigate(`/postprofile/${post}`)}>
+                            Go to Post
                         </StyledButton>
                     </DialogContent>
                 </>

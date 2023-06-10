@@ -83,8 +83,9 @@ const Home = ({ filterPosts }) => {
         handleSharePost(shareToEmail, user, currentPostToShare);
     };
 
-    const handleAboutPet = (pet) => {
+    const handleAboutPet = (pet, id) => {
         setCurrentPet(pet);
+        setCurrentPostId(id);
         setAboutPetOpen(true);
     };
 
@@ -262,8 +263,15 @@ const Home = ({ filterPosts }) => {
 
     return (
         <Container maxWidth="md">
+            <Typography variant="h6" sx={{
+                marginBottom: 6
+            }}>
+                {`Playing fetch in the park is my favorite!`}
+            </Typography>
+
             {isAuthenticated && user && (
                 <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center', mt: 2, mb: 4 }}>
+
                     <Avatar
                         alt={petOwnerProfile.name || ''}
                         src={petOwnerProfile.fileUrl || user.picture}
@@ -293,7 +301,7 @@ const Home = ({ filterPosts }) => {
                                     <StyledCard>
                                         <CardHeader
                                             action={
-                                                <IconButton onClick={() => handleAboutPet(pet)}>
+                                                <IconButton onClick={() => handleAboutPet(pet, id)}>
                                                     <MoreVertIcon style={{ color: '#e91e63' }}/>
                                                 </IconButton>
                                             }
@@ -375,6 +383,7 @@ const Home = ({ filterPosts }) => {
                     open={aboutPetOpen}
                     onClose={() => setAboutPetOpen(false)}
                     pet={currentPet}
+                    post={currentPostId}
                 />
             )}
         </Container>
