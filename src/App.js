@@ -18,6 +18,7 @@ import Following from './pages/Following';
 import SharedWithMe from './pages/SharedWithMe';
 import PetOwnerProfile from './components/Profile/PetOwnerProfile';
 import PetPost from './components/Pets/PetPost';
+import PostProfile from './components/Posts/PostProfile';
 import PetProfile from './components/Pets/PetProfile';
 import PublicFigureProfile from './components/PublicFigures/PublicFigureProfile';
 import CommunityProfile from './components/Communities/CommunityProfile';
@@ -57,6 +58,7 @@ function App() {
             <Route path="/sharedwithme" element={<SharedWithMe />} />
             <Route path="/petownerprofile/:email" element={<PetOwnerProfile />} />
             <Route path="/petpost/:postId" element={<PetPost />} />
+            <Route path="/postprofile/:postId" element={<PostProfile />} />
             <Route path="/petprofile/:petId" element={<PetProfile />} />
             <Route path="/feedback" element={<Feedback />} />
             <Route path="/shop" element={<Shop />} />
