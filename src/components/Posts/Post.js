@@ -1,5 +1,3 @@
-// Post.js
-
 import React from 'react';
 import { Card, CardMedia, CardContent, Typography } from '@mui/material';
 import { styled } from '@mui/system';
