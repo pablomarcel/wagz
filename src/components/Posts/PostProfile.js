@@ -1,7 +1,8 @@
+/* eslint-disable no-unused-vars */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-import { Card, CardMedia, CardContent, CardHeader, CardActions, Typography, Container, CircularProgress, Box, IconButton } from '@mui/material';
+import { Card, CardMedia, CardContent, CardHeader, CardActions, Typography, Container, CircularProgress, Box, IconButton, Grid } from '@mui/material';
 import { styled } from '@mui/system';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import AboutPet from '../More/AboutPet'
@@ -19,6 +20,7 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { useAuth0 } from '@auth0/auth0-react';
 import likeComment from "../../pages/likeComment";
 import Comments from '../Comments/Comments';
+import Post from '../Posts/Post';
 
 
 const StyledCardMedia = styled(CardMedia)({
@@ -64,6 +66,8 @@ function PostProfile() {
     const [shareFormOpen, setShareFormOpen] = useState(false);
     const [currentPostToShare, setCurrentPostToShare] = useState(null);
     const [likeCounts, setLikeCounts] = useState({});
+    const [recommendedPosts, setRecommendedPosts] = useState([]);
+
 
     const handleAboutPet = (pet, id) => {
         setCurrentPet(pet);
@@ -86,6 +90,22 @@ function PostProfile() {
     const handlePostSharing = (shareToEmail) => {
         handleSharePost(shareToEmail, user, currentPostToShare);
     };
+
+
+    useEffect(() => {
+        const fetchPostRecommendations = async () => {
+            try {
+                const response = await axios.post('/.netlify/functions/getPostRecommendations', { postId });
+                setRecommendedPosts(response.data);
+            } catch (error) {
+                console.error('Error fetching post recommendations:', error);
+            }
+        };
+
+        fetchPostRecommendations();
+    }, [postId]);
+
+
 
     useEffect(() => {
         const fetchPostPetOwnerAndLikeStatus = async () => {
@@ -193,6 +213,17 @@ function PostProfile() {
 
 
             </StyledCard>
+
+            <Grid container spacing={2}>
+                {recommendedPosts.map(recommendedPost => (
+                    <Grid item xs={12} sm={6} md={4} key={recommendedPost.id} style={{ minHeight: '500px' }}>
+                        <StyledCard>
+                            {/* Render the Post component with the recommended post */}
+                            <Post post={recommendedPost} />
+                        </StyledCard>
+                    </Grid>
+                ))}
+            </Grid>
 
             {commentsOpen && user && (
                 <Comments

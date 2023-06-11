@@ -40,6 +40,7 @@ import AddIcon from '@mui/icons-material/Add';
 import GroupsIcon from '@mui/icons-material/Groups';
 import PaymentIcon from '@mui/icons-material/Payment';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
+import ExploreIcon from '@mui/icons-material/Explore';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -142,6 +143,11 @@ const NavBar = () => {
                     text: 'Feedback',
                     icon: <FeedbackIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/feedback',
+                },
+                {
+                    text: 'Post Recommendations',
+                    icon: <ExploreIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/postrecommendations',
                 },
             ]
             : []),

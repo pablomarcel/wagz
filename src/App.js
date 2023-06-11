@@ -28,6 +28,7 @@ import Events from './components/Events/Events';
 import PublicFigures from './components/PublicFigures/PublicFigures';
 import PublicFigureForm from './components/PublicFigures/PublicFigureForm';
 import EventForm from './components/Events/EventForm';
+import PostRecommendations from './components/PostRecommendations/PostRecommendations';
 import PublicFigurePostForm from './components/PublicFigures/PublicFigurePostForm';
 import Communities from './components/Communities/Communities';
 import MyPets from './components/Pets/MyPets';
@@ -76,6 +77,7 @@ function App() {
             <Route path="/publicfigureform" element={<PublicFigureForm />} />
             <Route path="/publicfigurepostform" element={<PublicFigurePostForm />} />
             <Route path="/eventform" element={<EventForm />} />
+            <Route path="/postrecommendations" element={<PostRecommendations />} />
           </Routes>
         </Router>
       </div>
