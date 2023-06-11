@@ -30,6 +30,9 @@ const updateSubscriptionInDatabase = async (client_reference_id) => {
 exports.handler = async ({ body, headers }, context) => {
     let event;
     const rawBody = Buffer.from(body, 'utf8').toString();
+    console.log('Body:', rawBody.substring(0, 200), '...'); // Only log first 200 characters
+    console.log('Stripe-signature:', headers["stripe-signature"].substring(0, 5), '...'); // Only log first 5 characters
+    console.log('Webhook secret:', process.env.STRIPE_WEBHOOK_SECRET.substring(0, 5), '...'); // Only log first 5 characters
 
     try {
         event = stripe.webhooks.constructEvent(
