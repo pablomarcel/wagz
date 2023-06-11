@@ -144,11 +144,6 @@ const NavBar = () => {
                     icon: <FeedbackIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/feedback',
                 },
-                {
-                    text: 'Post Recommendations',
-                    icon: <ExploreIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
-                    route: '/postrecommendations',
-                },
             ]
             : []),
     ];
