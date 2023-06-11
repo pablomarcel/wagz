@@ -27,7 +27,7 @@ const StyledLink = styled(Link)({
 });
 
 const Post = ({ post }) => (
-    <StyledLink to={`/petpost/${post.id}`}>
+    <StyledLink to={`/postprofile/${post.id}`}>
         <Card
             sx={{
                 maxWidth: '100%',

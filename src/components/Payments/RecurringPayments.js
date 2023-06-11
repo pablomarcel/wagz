@@ -3,5 +3,5 @@ import { Typography } from '@mui/material';
 
 export default function RecurringPayments() {
     // Fetch and display your recurring payments here.
-    return <Typography>No Recurring Payments</Typography>;
+    return <Typography>Subscriptions</Typography>;
 }

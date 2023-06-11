@@ -16,7 +16,7 @@ export default function Home() {
     const listItems = [
         { name: 'Home', route: 'home' },
         { name: 'Activity', route: 'activity' },
-        { name: 'Recurring Payments', route: 'recurringpayments' },
+        { name: 'Subscriptions', route: 'recurringpayments' },
         { name: 'Settings', route: 'settings' },
         { name: 'Help', route: 'help' },
         { name: 'Terms And Privacy', route: 'termsandprivacy'},

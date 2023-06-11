@@ -214,6 +214,10 @@ function PostProfile() {
 
             </StyledCard>
 
+            <Typography variant="h6" component="div" style={{marginTop: '1em'}}>
+                Suggested Posts
+            </Typography>
+
             <Grid container spacing={2}>
                 {recommendedPosts.map(recommendedPost => (
                     <Grid item xs={12} sm={6} md={4} key={recommendedPost.id} style={{ minHeight: '500px' }}>
