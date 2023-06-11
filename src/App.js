@@ -37,6 +37,7 @@ import EventPost from './components/Events/EventPost';
 import PublicFigurePost from './components/PublicFigures/PublicFigurePost';
 import CommunityPost from './components/Communities/CommunityPost';
 import Payments from './components/Payments/Payments';
+import StripePayments from './components/StripePayments/StripePayments';
 
 function App() {
   return (
@@ -78,6 +79,7 @@ function App() {
             <Route path="/publicfigurepostform" element={<PublicFigurePostForm />} />
             <Route path="/eventform" element={<EventForm />} />
             <Route path="/postrecommendations" element={<PostRecommendations />} />
+            <Route path="/stripepayments/*" element={<StripePayments />} />
           </Routes>
         </Router>
       </div>

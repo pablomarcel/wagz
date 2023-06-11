@@ -140,6 +140,12 @@ const NavBar = () => {
                     route: '/payments',
                 },
                 {
+                    text: 'Stripe Payments',
+                    icon: <PaymentIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/stripepayments',
+                },
+
+                {
                     text: 'Feedback',
                     icon: <FeedbackIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
                     route: '/feedback',
