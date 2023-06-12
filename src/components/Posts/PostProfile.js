@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
@@ -21,6 +22,8 @@ import { useAuth0 } from '@auth0/auth0-react';
 import likeComment from "../../pages/likeComment";
 import Comments from '../Comments/Comments';
 import Post from '../Posts/Post';
+import countLikes from "../../pages/countLikes";
+
 
 
 const StyledCardMedia = styled(CardMedia)({
@@ -67,6 +70,16 @@ function PostProfile() {
     const [currentPostToShare, setCurrentPostToShare] = useState(null);
     const [likeCounts, setLikeCounts] = useState({});
     const [recommendedPosts, setRecommendedPosts] = useState([]);
+    const [likesCount, setLikesCount] = useState(0);
+
+    const fetchLikesCount = async () => {
+        try {
+            const response = await countLikes(postId);
+            setLikesCount(response);
+        } catch (error) {
+            console.error('Failed to fetch likes count:', error);
+        }
+    };
 
 
     const handleAboutPet = (pet, id) => {
@@ -136,6 +149,9 @@ function PostProfile() {
                     setFollowedUsers(followObj);
                 }
 
+                // Fetch likes count here
+                fetchLikesCount();
+
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching post profile:', error);
@@ -187,7 +203,7 @@ function PostProfile() {
                     </TruncatedTypography>
                 </CardContent>
                 <CardActions disableSpacing>
-                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, postId, likedPosts[postId], setLikedPosts, setLikeCounts)}>
+                    <IconButton aria-label="add to favorites" onClick={() => likePost(user, postId, likedPosts[postId], setLikedPosts, setLikesCount)}>
                         {likedPosts[postId] ? <FavoriteIcon style={{ color: '#e91e63'}}/> : <FavoriteBorderIcon style={{ color: '#607d8b'}}/>}
                     </IconButton>
                     <IconButton aria-label="comment" onClick={() => openComments(postId)}>
@@ -206,8 +222,9 @@ function PostProfile() {
                         {followedUsers[petOwner.email] ? <PersonAdd style={{ color: '#1976d2'}}/> : <PersonAdd style={{ color: '#607d8b'}}/>}
                     </IconButton>
                     <Typography variant="body2">
-                        {likeCounts[postId] || 0} Likes
+                        {likesCount || 0} Likes
                     </Typography>
+
                 </CardActions>
 
 

@@ -33,7 +33,7 @@ import {
     AboutPet
 } from './imports';
 import { StyledCard, StyledCardMedia, StyledCardVideo } from './styledComponents';
-import likePost from './likePost';
+import likePostHome from './likePostHome';
 import savePost from './savePost';
 import likeComment from './likeComment';
 import followUser from './followUser';
@@ -323,7 +323,7 @@ const Home = ({ filterPosts }) => {
                                             <Typography variant="body1">{caption}</Typography>
                                         </CardContent>
                                         <CardActions disableSpacing>
-                                            <IconButton aria-label="add to favorites" onClick={() => likePost(user, id, likedPosts[id], setLikedPosts, setLikeCounts)}>
+                                            <IconButton aria-label="add to favorites" onClick={() => likePostHome(user, id, likedPosts[id], setLikedPosts, setLikeCounts)}>
                                                 {likedPosts[id] ? <FavoriteIcon style={{ color: '#e91e63'}}/> : <FavoriteBorderIcon style={{ color: '#607d8b'}}/>}
                                             </IconButton>
                                             <IconButton aria-label="comment" onClick={() => openComments(id)}>
@@ -341,9 +341,9 @@ const Home = ({ filterPosts }) => {
                                             <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email, user, followedUsers, setFollowedUsers)}>
                                                 {followedUsers[owner.email] ? <PersonAdd style={{ color: '#1976d2'}}/> : <PersonAdd style={{ color: '#607d8b'}}/>}
                                             </IconButton>
-                                            <Typography variant="body2">
-                                                {likeCounts[id] || 0} Likes
-                                            </Typography>
+                                            {/*<Typography variant="body2">*/}
+                                            {/*    {likeCounts[id] || 0} Likes*/}
+                                            {/*</Typography>*/}
                                         </CardActions>
                                     </StyledCard>
                                 </Grid>

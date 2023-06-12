@@ -41,6 +41,7 @@ import GroupsIcon from '@mui/icons-material/Groups';
 import PaymentIcon from '@mui/icons-material/Payment';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 import ExploreIcon from '@mui/icons-material/Explore';
+import HowToVoteIcon from '@mui/icons-material/HowToVote';
 const drawerWidth = 240;
 
 const NavBar = () => {
@@ -140,9 +141,9 @@ const NavBar = () => {
                     route: '/payments',
                 },
                 {
-                    text: 'Stripe Payments',
-                    icon: <PaymentIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
-                    route: '/stripepayments',
+                    text: 'Polls',
+                    icon: <HowToVoteIcon style={{ color: '#1976d2'}}/>, // import BookmarkIcon from '@mui/icons-material/Bookmark';
+                    route: '/polls',
                 },
 
                 {

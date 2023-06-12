@@ -1,4 +1,4 @@
-const likePost = (user, postId, alreadyLiked, setLikedPosts, setLikesCount) => {
+const likePostHome = (user, postId, alreadyLiked, setLikedPosts, setLikeCounts) => {
     const endpoint = alreadyLiked
         ? '/.netlify/functions/unlikePost'
         : '/.netlify/functions/likesPost';
@@ -36,11 +36,15 @@ const likePost = (user, postId, alreadyLiked, setLikedPosts, setLikesCount) => {
         })
         .then((data) => {
             // Update the likes count
-            setLikesCount(data.likesCount);
+            setLikeCounts((prev) => ({
+                ...prev,
+                [postId]: data.likesCount,
+            }));
         })
         .catch((error) => {
             console.error('Error updating like status:', error);
         });
 };
 
-export default likePost;
+export default likePostHome;
+
