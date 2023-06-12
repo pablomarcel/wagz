@@ -137,6 +137,14 @@ const CommunityProfile = () => {
                 </CardContent>
             </StyledCard>
 
+            <Typography variant="h6" component="div"
+                        style={{
+                            marginTop: '1em',
+                            marginBottom: '1em'
+                        }}>
+                Posts in this Community
+            </Typography>
+
             <Grid container spacing={2}>
                 {posts.map(post => (
                     <Grid item xs={12} sm={6} md={4} key={post.id}>

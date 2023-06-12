@@ -96,6 +96,12 @@ const Profile = () => {
                         </CardContent>
                     </StyledCard>
                 )}
+                <Typography variant="h6" component="div"
+                            style={{
+                                marginBottom: '1em'
+                }}>
+                    My Posts
+                </Typography>
                 <PostList />
             </Box>
         </Container>
