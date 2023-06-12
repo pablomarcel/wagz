@@ -6,16 +6,19 @@ const driver = neo4j.driver(
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const updateSubscriptionInDatabase = async (client_reference_id) => {
-    if (!client_reference_id) {
-        console.error("client_reference_id is null or undefined");
-        return;
-    }
+const updateSubscriptionInDatabase = async (client_reference_id, customer_email) => {
+    // if (!client_reference_id) {
+    //     console.error("client_reference_id is null or undefined");
+    //     return;
+    // }
 
     // Decompose client_reference_id
-    const [petOwnerEmail, publicFigureId] = client_reference_id.split("#");
-    console.log("petOwnerEmail:", petOwnerEmail);
-    console.log("publicFigureId:", publicFigureId);
+    // const [petOwnerEmail, publicFigureId] = client_reference_id.split("#");
+    console.log("petOwnerEmail:", customer_email);
+    console.log("publicFigureId:", client_reference_id);
+
+    const petOwnerEmail = customer_email;
+    const publicFigureId = client_reference_id;
 
     const session = driver.session();
     try {
@@ -67,7 +70,8 @@ exports.handler = async ({ body, headers }, context) => {
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
         console.log("client_reference_id:", session.client_reference_id);
-        await updateSubscriptionInDatabase(session.client_reference_id);
+        console.log("customer_email:", session.customer_email);
+        await updateSubscriptionInDatabase(session.client_reference_id, session.customer_email);
     }
 
     // Return a 200 response to acknowledge receipt of the event
