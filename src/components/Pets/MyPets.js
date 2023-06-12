@@ -95,6 +95,12 @@ const MyPets = () => {
                         </CardContent>
                     </StyledCard>
                 )}
+                <Typography variant="h6" component="div"
+                            style={{
+                                marginBottom: '1em'
+                            }}>
+                    My Pets
+                </Typography>
                 <PetList />
             </Box>
         </Container>
