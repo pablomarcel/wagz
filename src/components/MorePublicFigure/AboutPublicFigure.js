@@ -217,7 +217,7 @@ const AboutPublicFigure = ({ open, onClose, publicFigure }) => {
                     Purchase Subscription
                 </StyledDialogTitle>
                 <DialogContent>
-                    <BuyButtonComponent userEmail={user.email} publicFigureId={publicFigureDetails.id}/>
+                    <BuyButtonComponent userEmail={user.email} publicFigureId={publicFigure.id}/>
                 </DialogContent>
                 <DialogActions>
                     <StyledButton variant="text" onClick={handleBuyDialogClose}>Close</StyledButton>
