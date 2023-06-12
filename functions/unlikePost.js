@@ -1,4 +1,3 @@
-// unlikePost.js
 const neo4j = require('neo4j-driver');
 
 exports.handler = async (event) => {
