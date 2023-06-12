@@ -7,6 +7,11 @@ const driver = neo4j.driver(
 );
 
 const updateSubscriptionInDatabase = async (client_reference_id) => {
+    if (!client_reference_id) {
+        console.error("client_reference_id is null or undefined");
+        return;
+    }
+
     // Decompose client_reference_id
     const [petOwnerEmail, publicFigureId] = client_reference_id.split("#");
     console.log("petOwnerEmail:", petOwnerEmail);
