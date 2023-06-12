@@ -129,7 +129,7 @@ const PetProfile = () => {
             </StyledCard>
 
             <Typography variant="h6" component="div" style={{marginTop: '1em'}}>
-                Posts by this Pet
+                Posts by {petDetails.name}
             </Typography>
 
             <Grid container spacing={2}>

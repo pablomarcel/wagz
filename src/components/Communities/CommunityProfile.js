@@ -142,7 +142,7 @@ const CommunityProfile = () => {
                             marginTop: '1em',
                             marginBottom: '1em'
                         }}>
-                Posts in this Community
+                Posts in {communityDetails.name}
             </Typography>
 
             <Grid container spacing={2}>

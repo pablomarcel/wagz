@@ -95,6 +95,13 @@ const PetOwnerProfile = () => {
                         </CardContent>
                     </StyledCard>
                 )}
+                <Typography variant="h6" component="div"
+                            style={{
+                                marginTop: '1em',
+                                marginBottom: '1em'
+                            }}>
+                    Posts by {profile.name}
+                </Typography>
                 <Grid container spacing={2}>
                     {profile.posts.map((post, index) => (
                         <Grid item xs={12} sm={6} md={4} key={index} style={{ minHeight: '500px' }}>
