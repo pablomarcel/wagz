@@ -125,7 +125,7 @@ const PublicFigures = () => {
                                 {'People' || ''}
                             </StyledTypography>
                             <StyledTypographyBio variant="body2" color="text.secondary">
-                                {'Browse Public Figures, Influencers and Notables'}
+                                {'Browse People'}
                             </StyledTypographyBio>
                         </CardContent>
                     </StyledCard>

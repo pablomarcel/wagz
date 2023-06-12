@@ -7,32 +7,21 @@ const driver = neo4j.driver(
 );
 
 const updateSubscriptionInDatabase = async (client_reference_id) => {
-    // Decompose client_reference_id
-    const [petOwnerEmail, publicFigureId] = client_reference_id.split("#");
-    console.log("petOwnerEmail:", petOwnerEmail);
-    console.log("publicFigureId:", publicFigureId);
-
     const session = driver.session();
     try {
+        // Replace this with the actual query to update your database
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-                MATCH (owner:PetOwner {email: $petOwnerEmail})
-                MATCH (figure:PublicFigure {id: $publicFigureId})
-                MERGE (owner)-[:HAS_SUBSCRIBED_TO]->(figure)
-                RETURN owner, figure
-            `,
-                { petOwnerEmail, publicFigureId }
-            )
+          MATCH (owner:PetOwner { id: $client_reference_id })
+          SET owner.hasActiveSubscription = true
+          RETURN owner
+      `, { client_reference_id })
         );
-        console.log("Database transaction result:", result);
-
         if (result.records.length === 0) {
-            console.error("Failed to update subscription status for owner:", petOwnerEmail, "and public figure:", publicFigureId);
+            console.error("Failed to update subscription status for owner:", client_reference_id);
         } else {
-            console.log("Updated subscription status for owner:", petOwnerEmail, "and public figure:", publicFigureId);
+            console.log("Updated subscription status for owner:", client_reference_id);
         }
-    } catch (error) {
-        console.error("Error updating database:", error);
     } finally {
         await session.close();
     }
@@ -61,7 +50,6 @@ exports.handler = async ({ body, headers }, context) => {
 
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
-        console.log("client_reference_id:", session.client_reference_id);
         await updateSubscriptionInDatabase(session.client_reference_id);
     }
 

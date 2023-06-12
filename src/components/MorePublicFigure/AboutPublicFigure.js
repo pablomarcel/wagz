@@ -4,6 +4,7 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { styled } from '@mui/system';
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import BuyButtonComponent from '../StripePayments/BuyButtonComponent';
 
 const StyledDialogTitle = styled(DialogTitle)({
     textAlign: 'center',
@@ -33,6 +34,7 @@ const AboutPublicFigure = ({ open, onClose, publicFigure }) => {
     const [showDetails, setShowDetails] = useState(false);
     const [subscribeStatus, setSubscribeStatus] = useState(false);
     const navigate = useNavigate();
+    const [buyDialogOpen, setBuyDialogOpen] = useState(false);
 
     useEffect(() => {
         const fetchPetOwnerProfile = async () => {
@@ -147,60 +149,83 @@ const AboutPublicFigure = ({ open, onClose, publicFigure }) => {
     if (!publicFigureDetails) {
         return null; // or a loading indicator
     }
+    const handleSubscribeClick = () => {
+        if (!subscribeStatus) {
+            setBuyDialogOpen(true);
+        } else {
+            unsubscribePublicFigure();
+        }
+    };
+
+    const handleBuyDialogClose = () => {
+        setBuyDialogOpen(false);
+    };
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth='sm'>
-            {showDetails ? (
-                <>
-                    <StyledDialogTitle>
-                        About This Public Figure
-                    </StyledDialogTitle>
-                    <DialogContent>
-                        <Typography variant="subtitle1">
-                            <strong>Name:</strong> {publicFigureDetails.name}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <strong>Occupation:</strong> {publicFigureDetails.occupation}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <strong>Known for:</strong> {publicFigureDetails.knownFor}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <strong>Bio:</strong> {publicFigureDetails.bio}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <strong>Nationality:</strong> {publicFigureDetails.nationality}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <strong>Birth Place:</strong> {publicFigureDetails.birthPlace}
-                        </Typography>
-                        <Typography variant="subtitle1">
-                            <strong>Birth Date:</strong> {publicFigureDetails.birthDate}
-                        </Typography>
-                        {/* Add more pet attributes if you have them */}
-                    </DialogContent>
-                </>
-            ) : (
-                <>
-                    <DialogTitle></DialogTitle>
-                    <DialogContent>
-                        <StyledButton variant="text" onClick={() => setShowDetails(true)}>
+        <>
+            <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth='sm'>
+                {showDetails ? (
+                    <>
+                        <StyledDialogTitle>
                             About This Public Figure
-                        </StyledButton>
-                        {/*<StyledButton variant="text" onClick={() => navigate(`/publicfigureprofile/${publicFigureDetails.id}`)}>*/}
-                        {/*    Public Figure Profile*/}
-                        {/*</StyledButton>*/}
-                        <StyledButton variant="text" onClick={subscribeStatus ? unsubscribePublicFigure : subscribePublicFigure}>
-                            {subscribeStatus ? 'Unsubscribe' : 'Subscribe ($0.00)'}
-                        </StyledButton>
-                    </DialogContent>
-                </>
-            )}
-            <DialogActions>
-                <StyledButton variant="text" onClick={onClose}>Close</StyledButton>
-            </DialogActions>
-        </Dialog>
+                        </StyledDialogTitle>
+                        <DialogContent>
+                            <Typography variant="subtitle1">
+                                <strong>Name:</strong> {publicFigureDetails.name}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                <strong>Occupation:</strong> {publicFigureDetails.occupation}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                <strong>Known for:</strong> {publicFigureDetails.knownFor}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                <strong>Bio:</strong> {publicFigureDetails.bio}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                <strong>Nationality:</strong> {publicFigureDetails.nationality}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                <strong>Birth Place:</strong> {publicFigureDetails.birthPlace}
+                            </Typography>
+                            <Typography variant="subtitle1">
+                                <strong>Birth Date:</strong> {publicFigureDetails.birthDate}
+                            </Typography>
+                            {/* Add more pet attributes if you have them */}
+                        </DialogContent>
+                    </>
+                ) : (
+                    <>
+                        <DialogTitle></DialogTitle>
+                        <DialogContent>
+                            <StyledButton variant="text" onClick={() => setShowDetails(true)}>
+                                About This Public Figure
+                            </StyledButton>
+                            <StyledButton variant="text" onClick={handleSubscribeClick}>
+                                {subscribeStatus ? 'Unsubscribe' : 'Subscribe ($0.00)'}
+                            </StyledButton>
+                        </DialogContent>
+                    </>
+                )}
+                <DialogActions>
+                    <StyledButton variant="text" onClick={onClose}>Close</StyledButton>
+                </DialogActions>
+            </Dialog>
+
+            <Dialog open={buyDialogOpen} onClose={handleBuyDialogClose} fullWidth={true} maxWidth='sm'>
+                <StyledDialogTitle>
+                    Purchase Subscription
+                </StyledDialogTitle>
+                <DialogContent>
+                    <BuyButtonComponent userEmail={user.email} publicFigureId={publicFigureDetails.id}/>
+                </DialogContent>
+                <DialogActions>
+                    <StyledButton variant="text" onClick={handleBuyDialogClose}>Close</StyledButton>
+                </DialogActions>
+            </Dialog>
+        </>
     );
+
 };
 
 export default AboutPublicFigure;
