@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText } from '@mui/material';
 import { Link } from 'react-router-dom';
 
 export default function SideDrawer() {
-    const drawerOptions = ['Home', 'Activity', 'RecurringPayments', 'Settings', 'Help', 'TermsAndPrivacy'];
+    const drawerOptions = ['Home', 'Activity', 'Subscriptions', 'Settings', 'Help', 'TermsAndPrivacy'];
 
     return (
         <List>

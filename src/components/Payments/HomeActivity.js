@@ -3,7 +3,7 @@ import React from 'react';
 const HomeActivity = () => {
     return (
         <div>
-            Activity
+            Home Activity
             {/* Your component code goes here */}
         </div>
     );
