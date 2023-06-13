@@ -7,7 +7,7 @@ import { Container } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EventIcon from '@mui/icons-material/Event';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
-import AboutEvents from '../MoreEvents/AboutEvents';
+import AboutPolls from '../MorePolls/AboutPolls';
 import PollList from "./PollList";
 
 
@@ -130,7 +130,7 @@ const Polls = () => {
                 <PollList />
             </Box>
             {aboutEventsOpen && (
-                <AboutEvents
+                <AboutPolls
                     open={aboutEventsOpen}
                     onClose={() => setAboutEventsOpen(false)}
                 />

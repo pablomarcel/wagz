@@ -7,35 +7,6 @@ const Poll = ({ poll, user }) => {
     const [ownerId, setOwnerId] = useState(null);
     const [open, setOpen] = useState(false);
     const [message, setMessage] = useState('');
-
-    // useEffect(() => {
-    //     const fetchOwnerId = async () => {
-    //         try {
-    //             const response = await fetch('/.netlify/functions/getPetOwnerByEmail', {
-    //                 method: 'POST',
-    //                 headers: {
-    //                     'Content-Type': 'application/json',
-    //                 },
-    //                 body: JSON.stringify({ email: user.email }),
-    //             });
-    //
-    //             if (!response.ok) {
-    //                 throw new Error(`HTTP error ${response.status}`);
-    //             }
-    //
-    //             const ownerData = await response.json();
-    //             if (ownerData && ownerData.length > 0) {
-    //                 setOwnerId(ownerData[0].id);
-    //             }
-    //
-    //         } catch (error) {
-    //             console.error('Error fetching owner id:', error);
-    //         }
-    //     };
-    //
-    //     fetchOwnerId();
-    // }, [user.email]);
-
     const handleOptionClick = (option) => {
         setSelectedOption(option);
     };
