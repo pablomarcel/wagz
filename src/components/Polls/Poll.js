@@ -1,17 +1,71 @@
-import React, { useState } from 'react';
-import { Button, Card, CardContent, Typography, Box } from '@mui/material';
+/* eslint-disable no-unused-vars */
+import React, { useState, useEffect } from 'react';
+import { Button, Card, CardContent, Typography, Box, Snackbar, Alert } from '@mui/material';
 
-const Poll = ({ poll }) => {
+const Poll = ({ poll, user }) => {
     const [selectedOption, setSelectedOption] = useState(null);
+    const [ownerId, setOwnerId] = useState(null);
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+
+    useEffect(() => {
+        const fetchOwnerId = async () => {
+            try {
+                const response = await fetch('/.netlify/functions/getPetOwnerByEmail', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ email: user.email }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
+                const ownerData = await response.json();
+                if (ownerData && ownerData.length > 0) {
+                    setOwnerId(ownerData[0].id);
+                }
+
+            } catch (error) {
+                console.error('Error fetching owner id:', error);
+            }
+        };
+
+        fetchOwnerId();
+    }, [user.email]);
 
     const handleOptionClick = (option) => {
         setSelectedOption(option);
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (selectedOption) {
-            console.log(`Submitted option: ${selectedOption}`);
-            // Here you would usually call an API to save the answer.
+            try {
+                const response = await fetch('/.netlify/functions/recordPollAnswer', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        userId: ownerId,
+                        pollId: poll.id,
+                        option: selectedOption,
+                    }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error ${response.status}`);
+                }
+
+                setMessage('Answer recorded successfully!');
+                setOpen(true);
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                setMessage('Error recording answer');
+                setOpen(true);
+            }
         }
     };
 
@@ -71,6 +125,11 @@ const Poll = ({ poll }) => {
                     </Button>
                 </Box>
             </CardContent>
+            <Snackbar open={open} autoHideDuration={6000} onClose={() => setOpen(false)}>
+                <Alert onClose={() => setOpen(false)} severity="success">
+                    {message}
+                </Alert>
+            </Snackbar>
         </Card>
     );
 };

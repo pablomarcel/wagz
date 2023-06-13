@@ -1,8 +1,11 @@
+/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from 'react';
 import { Grid } from '@mui/material';
 import Poll from "./Poll";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const PollList = () => {
+    const { user, isAuthenticated } = useAuth0();
     const [polls, setPolls] = useState([]);
 
     useEffect(() => {
@@ -33,7 +36,10 @@ const PollList = () => {
         <Grid container spacing={3}>
             {polls.map((poll) => (
                 <Grid item xs={12} md={4} key={poll.id} style={{ minHeight: '500px' }}>
-                    <Poll poll={poll} />
+                    <Poll
+                        poll={poll}
+                        user={user}
+                    />
                 </Grid>
             ))}
         </Grid>
