@@ -3,7 +3,7 @@ import React from 'react';
 const ActivityTransactions = () => {
     return (
         <div>
-            Transactions
+            Activity Transactions
             {/* Your component code goes here */}
         </div>
     );
