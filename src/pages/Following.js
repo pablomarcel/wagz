@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper, Button, Avatar } from '@mui/material';
@@ -24,8 +26,32 @@ const Following = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleProfileClick = (email) => {
-        navigate(`/petownerprofile/${email}`);
+    const handleProfileClick = async (email) => {
+        try {
+            const response = await fetch('/.netlify/functions/getPetOwnerByEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error ${response.status}`);
+            }
+
+            const ownerData = await response.json();
+
+            console.log(ownerData[0].id)
+
+            if (ownerData && ownerData.length > 0) {
+                navigate(`/petownerprofile/${ownerData[0].id}`);
+            } else {
+                throw new Error('No user found with this email');
+            }
+        } catch (error) {
+            setError(error.toString());
+        }
     }
 
     const handleFollow = async (owner) => {

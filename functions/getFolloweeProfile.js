@@ -1,5 +1,3 @@
-// getFolloweeProfile.js
-
 const neo4j = require('neo4j-driver');
 
 const driver = neo4j.driver(
@@ -9,17 +7,17 @@ const driver = neo4j.driver(
 
 exports.handler = async function(event, context) {
     const body = JSON.parse(event.body);
-    const followeeEmail = body.followeeEmail; // this should be the email of the PetOwner you're interested in
+    const followeeId = body.followeeId; // this should be the id of the PetOwner you're interested in
 
     const session = driver.session();
 
     try {
         const result = await session.run(
             `
-            MATCH (po:PetOwner {email: $followeeEmail})-[r:POSTED]->(p:Post)
+            MATCH (po:PetOwner {id: $followeeId})-[r:POSTED]->(p:Post)
             RETURN po.name AS name, po.email AS email, po.bio AS bio, po.fileUrl AS fileUrl, collect(p) AS posts
             `,
-            { followeeEmail }
+            { followeeId }
         );
 
         await session.close();

@@ -59,7 +59,7 @@ function App() {
             <Route path="/saved" element={<Saved />} />
             <Route path="/following" element={<Following />} />
             <Route path="/sharedwithme" element={<SharedWithMe />} />
-            <Route path="/petownerprofile/:email" element={<PetOwnerProfile />} />
+            <Route path="/petownerprofile/:followeeId" element={<PetOwnerProfile />} />
             <Route path="/petpost/:postId" element={<PetPost />} />
             <Route path="/postprofile/:postId" element={<PostProfile />} />
             <Route path="/petprofile/:petId" element={<PetProfile />} />

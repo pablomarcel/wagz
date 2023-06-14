@@ -37,7 +37,7 @@ const PetOwnerProfile = () => {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { email } = useParams();
+    const { followeeId } = useParams();
 
     useEffect(() => {
         const fetchFolloweeProfile = async () => {
@@ -47,7 +47,7 @@ const PetOwnerProfile = () => {
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ followeeEmail: email }),
+                    body: JSON.stringify({ followeeId: followeeId }),
                 });
 
                 if (!response.ok) {
@@ -64,7 +64,7 @@ const PetOwnerProfile = () => {
         };
 
         fetchFolloweeProfile();
-    }, [email]);
+    }, [followeeId]);
 
     if (loading) return <CircularProgress />;
     if (error) return <Alert severity="error">{error}</Alert>;
