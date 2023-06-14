@@ -6,20 +6,10 @@ const driver = neo4j.driver(
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const updateSubscriptionInDatabase = async (client_reference_id, customer_email) => {
-    // if (!client_reference_id) {
-    //     console.error("client_reference_id is null or undefined");
-    //     return;
-    // }
-
-    // Decompose client_reference_id
-    // const [petOwnerEmail, publicFigureId] = client_reference_id.split("#");
-    console.log("petOwnerEmail:", customer_email);
-    console.log("publicFigureId:", client_reference_id);
-
+const updateSubscriptionInDatabase = async (client_reference_id, customer_email, mode) => {
     const petOwnerEmail = customer_email;
     const publicFigureId = client_reference_id;
-
+    const transactionType = mode;
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
@@ -27,12 +17,13 @@ const updateSubscriptionInDatabase = async (client_reference_id, customer_email)
                 MATCH (owner:PetOwner {email: $petOwnerEmail})
                 MATCH (figure:PublicFigure {id: $publicFigureId})
                 MERGE (owner)-[:HAS_SUBSCRIBED_TO]->(figure)
-                RETURN owner, figure
+                CREATE (t:Transaction {type: $transactionType, timestamp: datetime()})
+                CREATE (owner)-[:MADE]->(t)-[:TO]->(figure)
+                RETURN owner, figure, t
             `,
-                { petOwnerEmail, publicFigureId }
+                { petOwnerEmail, publicFigureId, transactionType }
             )
         );
-        console.log("Database transaction result:", result);
 
         if (result.records.length === 0) {
             console.error("Failed to update subscription status for owner:", petOwnerEmail, "and public figure:", publicFigureId);
@@ -49,9 +40,6 @@ const updateSubscriptionInDatabase = async (client_reference_id, customer_email)
 exports.handler = async ({ body, headers }, context) => {
     let event;
     const rawBody = Buffer.from(body, 'utf8').toString();
-    console.log('Body:', rawBody.substring(0, 200), '...'); // Only log first 200 characters
-    console.log('Stripe-signature:', headers["stripe-signature"].substring(0, 5), '...'); // Only log first 5 characters
-    console.log('Webhook secret:', process.env.STRIPE_WEBHOOK_SECRET.substring(0, 5), '...'); // Only log first 5 characters
 
     try {
         event = stripe.webhooks.constructEvent(
@@ -69,9 +57,9 @@ exports.handler = async ({ body, headers }, context) => {
 
     if (event.type === 'checkout.session.completed') {
         const session = event.data.object;
-        console.log("client_reference_id:", session.client_reference_id);
-        console.log("customer_email:", session.customer_email);
-        await updateSubscriptionInDatabase(session.client_reference_id, session.customer_email);
+        await updateSubscriptionInDatabase(session.client_reference_id, session.customer_email, session.mode);
+    } else {
+        console.log("Received event of type", event.type, "- not processing");
     }
 
     // Return a 200 response to acknowledge receipt of the event
