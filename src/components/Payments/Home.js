@@ -11,7 +11,7 @@ import {
 import { Link, Routes, Route } from 'react-router-dom';
 import HomeActivity from './HomeActivity';
 import ActivityTransactions from './ActivityTransactions';
-import RecurringPayments from './RecurringPayments';
+import Subscriptions from './Subscriptions';
 import SettingsContactInfo from './SettingsContactInfo';
 import HelpPayments from './HelpPayments';
 import TermsAndPrivacy from './TermsAndPrivacy';
@@ -50,7 +50,7 @@ export default function Home() {
                         <Routes>
                             <Route path="home" element={<HomeActivity />} />
                             <Route path="activity" element={<ActivityTransactions />} />
-                            <Route path="recurringpayments" element={<RecurringPayments />} />
+                            <Route path="recurringpayments" element={<Subscriptions />} />
                             <Route path="settings" element={<SettingsContactInfo />} />
                             <Route path="help" element={<HelpPayments />} />
                             <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
