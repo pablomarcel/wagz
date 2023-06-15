@@ -2,10 +2,7 @@ import * as React from 'react';
 
 function BuyButtonComponent({ userEmail, publicFigureId }) {
     // Generating client-reference-id
-    const clientReferenceId = `${userEmail}#${publicFigureId}`;
-    console.log(`clientReferenceId: ${clientReferenceId}`)
-    console.log(`userEmail: ${userEmail}`)
-    console.log(`publicFigureId: ${publicFigureId}`)
+    //const clientReferenceId = `${userEmail}#${publicFigureId}`;
 
     return (
         <stripe-buy-button
