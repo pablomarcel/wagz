@@ -7,6 +7,7 @@ import {
     Grid,
     Card,
     CardContent,
+    Box
 } from '@mui/material';
 import { Link, Routes, Route } from 'react-router-dom';
 import HomeActivity from './HomeActivity';
@@ -47,14 +48,16 @@ export default function Home() {
             <Grid item xs={12} sm={6} style={{ minWidth: '400px', display: 'flex', flexDirection: 'column' }}>
                 <Card sx={{boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)', backgroundColor: '#f5f5f5', flex: 1}}>
                     <CardContent>
-                        <Routes>
-                            <Route path="home" element={<HomeActivity />} />
-                            <Route path="activity" element={<ActivityTransactions />} />
-                            <Route path="recurringpayments" element={<Subscriptions />} />
-                            <Route path="settings" element={<SettingsContactInfo />} />
-                            <Route path="help" element={<HelpPayments />} />
-                            <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
-                        </Routes>
+                        <Box maxWidth="400px">
+                            <Routes>
+                                <Route path="home" element={<HomeActivity />} />
+                                <Route path="activity" element={<ActivityTransactions />} />
+                                <Route path="recurringpayments" element={<Subscriptions />} />
+                                <Route path="settings" element={<SettingsContactInfo />} />
+                                <Route path="help" element={<HelpPayments />} />
+                                <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
+                            </Routes>
+                        </Box>
                     </CardContent>
                 </Card>
             </Grid>

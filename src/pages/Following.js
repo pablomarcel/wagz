@@ -42,8 +42,6 @@ const Following = () => {
 
             const ownerData = await response.json();
 
-            console.log(ownerData[0].id)
-
             if (ownerData && ownerData.length > 0) {
                 navigate(`/petownerprofile/${ownerData[0].id}`);
             } else {
