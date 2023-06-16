@@ -77,9 +77,19 @@ const Subscriptions = () => {
                 <CircularProgress />
             ) : (
                 subscriptions.map((subscription, index) => (
-                    <Card key={index}>
+                    <Card
+                        key={index}
+                        sx={{
+                            marginBottom:'1em'
+                        }}
+                    >
                         <CardContent>
-                            <Typography variant="subtitle1" align="left">{subscription.properties.name}</Typography>
+                            <Typography
+                                variant="subtitle1"
+                                align="left"
+                            >
+                                {subscription.properties.name}
+                            </Typography>
                             {/*<Typography variant="body1">{subscription.properties.bio}</Typography>*/}
                             {/*<Typography variant="body2">{subscription.properties.occupation}</Typography>*/}
                         </CardContent>

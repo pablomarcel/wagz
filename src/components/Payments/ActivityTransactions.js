@@ -99,7 +99,7 @@ const ActivityTransactions = () => {
                     <Card key={index}>
                         <CardContent>
                             <Typography variant="h6" align="left">Transaction #{index + 1}</Typography>
-                            <Typography variant="subtitle1" align="left">Public Figure: {transaction.PublicFigure.properties.name}</Typography>
+                            <Typography variant="subtitle1" align="left">Subscribed to: {transaction.PublicFigure.properties.name}</Typography>
                             <Typography variant="subtitle1" align="left">Transaction type: {transaction.Transaction.properties.type}</Typography>
                             <Typography variant="subtitle1" align="left">Transaction timestamp: {transaction.Transaction.properties.formattedTimestamp}</Typography>
                         </CardContent>

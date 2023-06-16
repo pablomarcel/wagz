@@ -21,7 +21,7 @@ export default function Home() {
     const listItems = [
         { name: 'Home', route: 'home' },
         { name: 'Activity', route: 'activity' },
-        { name: 'Subscriptions', route: 'recurringpayments' },
+        { name: 'Subscriptions', route: 'subscriptions' },
         { name: 'Settings', route: 'settings' },
         { name: 'Help', route: 'help' },
         { name: 'Terms And Privacy', route: 'termsandprivacy'},
@@ -52,7 +52,7 @@ export default function Home() {
                             <Routes>
                                 <Route path="home" element={<HomeActivity />} />
                                 <Route path="activity" element={<ActivityTransactions />} />
-                                <Route path="recurringpayments" element={<Subscriptions />} />
+                                <Route path="subscriptions" element={<Subscriptions />} />
                                 <Route path="settings" element={<SettingsContactInfo />} />
                                 <Route path="help" element={<HelpPayments />} />
                                 <Route path="termsandprivacy" element={<TermsAndPrivacy />} />
