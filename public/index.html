@@ -1,13 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <head>
-      <!-- Paste the script snippet in the head of your app's index.html -->
-      <script
-              async
-              src="https://js.stripe.com/v3/buy-button.js">
-      </script>
-    </head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-EEKM8SX582"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-EEKM8SX582');
+    </script>
+
+    <!-- Paste the script snippet in the head of your app's index.html -->
+    <script
+            async
+            src="https://js.stripe.com/v3/buy-button.js">
+    </script>
+
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
