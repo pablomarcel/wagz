@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
@@ -41,12 +41,13 @@ import StripePayments from './components/StripePayments/StripePayments';
 import Polls from "./components/Polls/Polls";
 
 function App() {
+  const [searchString, setSearchString] = useState('');
   return (
       <div className="App">
         <Router>
-          <NavBar />
+          <NavBar setSearchString={setSearchString}/>
           <Routes>
-            <Route path="/" exact element={<Home />} />
+            <Route path="/" exact element={<Home searchString={searchString}/>} />
             <Route path="/create" element={<Create />} />
             <Route path="/createPetOwner" element={<CreatePetOwner />} />
             <Route path="/createPet" element={<CreatePet />} />
