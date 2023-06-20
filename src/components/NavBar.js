@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 
@@ -16,8 +16,11 @@ import {
     ListItemIcon,
     ListItemText,
     Avatar,
+    TextField, // import TextField
+    InputAdornment,
 } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
+import SearchIcon from '@mui/icons-material/Search';
 import HomeIcon from '@mui/icons-material/Home';
 import PersonIcon from '@mui/icons-material/Person';
 import PetsIcon from '@mui/icons-material/Pets';
@@ -44,9 +47,18 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 const drawerWidth = 240;
 
-const NavBar = () => {
+const NavBar = ({setSearchString}) => {
     const { isAuthenticated, loginWithRedirect, logout } = useAuth0();
     const [drawerOpen, setDrawerOpen] = useState(true);
+    const [localSearchString, setLocalSearchString] = useState('');
+
+    useEffect(() => {
+        setSearchString(localSearchString);
+    }, [localSearchString]);
+
+    const handleSearchChange = (event) => {
+        setLocalSearchString(event.target.value);
+    };
 
     const handleDrawerToggle = () => {
         setDrawerOpen(!drawerOpen);
@@ -185,11 +197,27 @@ const NavBar = () => {
                         <Typography variant="h6" component="div"
                                     sx={{
                                         flexGrow: 1,
-                                        color: "#ed6c02"
+                                        color: "#ed6c02",
+                                        marginRight: '1em'
                         }}
                         >
-                            Wagzters
+                            Wagzters - Beta
                         </Typography>
+                        <TextField
+                            sx={{ marginLeft: 'auto' }} // this makes it stick to the right side
+                            variant="outlined"
+                            size="small"
+                            placeholder="Search"
+                            onChange={handleSearchChange}
+                            InputProps={{
+                                startAdornment: (
+                                    <InputAdornment position="start">
+                                        <SearchIcon />
+                                    </InputAdornment>
+                                ),
+                            }}
+                        />
+
                     </Box>
 
                     <Avatar

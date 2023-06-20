@@ -42,7 +42,7 @@ import handleFollowUser from './handleFollowUser';
 import { handleSharePost } from './handleSharePost';
 import {PersonAdd} from "@mui/icons-material";
 
-const Home = ({ filterPosts }) => {
+const Home = ({ filterPosts, searchString }) => {
     const { user, isAuthenticated } = useAuth0();
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -65,6 +65,8 @@ const Home = ({ filterPosts }) => {
         bio: '',
         fileUrl: '',
     });
+
+    console.log(searchString)
 
 
     const openComments = (postId) => {
