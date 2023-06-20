@@ -1,18 +1,19 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const getPetOwnerByEmail = async (email) => {
+const getPetOwnerByHashedEmail = async (hashedEmail) => {
     const session = driver.session();
     try {
         const result = await session.readTransaction((tx) =>
             tx.run(`
-                MATCH (owner:PetOwner {email: $email})
+                MATCH (owner:PetOwner {hashEmail: $hashedEmail})
                 RETURN owner
-            `, { email })
+            `, { hashedEmail })
         );
 
         const ownerData = result.records.map((record) => {
@@ -35,9 +36,10 @@ const getPetOwnerByEmail = async (email) => {
 
 exports.handler = async (event, context) => {
     const { email } = JSON.parse(event.body);
+    const hashedEmail = crypto.createHash('sha256').update(email).digest('hex');
 
     try {
-        const ownerData = await getPetOwnerByEmail(email);
+        const ownerData = await getPetOwnerByHashedEmail(hashedEmail);
         return {
             statusCode: 200,
             body: JSON.stringify(ownerData),
