@@ -17,8 +17,12 @@ const checkSubscription = async (userEmail, publicFigureId) => {
             )
         );
 
-        const singleRecord = result.records[0];
-        const isMember = singleRecord.get('isMember');
+        let isMember = false; // Default to false
+
+        if (result.records.length > 0) {
+            const singleRecord = result.records[0];
+            isMember = singleRecord.get('isMember');
+        }
 
         return isMember;
     } finally {

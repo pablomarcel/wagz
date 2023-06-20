@@ -10,7 +10,7 @@ const getFollowPublicFigureStatus = async (followerEmail, publicFigureId) => {
     try {
         const result = await session.readTransaction((tx) =>
             tx.run(`
-                MATCH (follower:PetOwner {email: $followerEmail})-[r:PAID_SUBSCRIBE_TO]->(followee:PublicFigure {id: $publicFigureId})
+                MATCH (follower:PetOwner {email: $followerEmail})-[r:HAS_SUBSCRIBED_TO]->(followee:PublicFigure {id: $publicFigureId})
                 RETURN r IS NOT NULL AS isSubscribed
             `,
                 { followerEmail, publicFigureId }
