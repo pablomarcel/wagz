@@ -65,8 +65,9 @@ const Home = ({ filterPosts, searchString }) => {
         bio: '',
         fileUrl: '',
     });
+    const [searchResults, setSearchResults] = useState([]);
 
-    console.log(searchString)
+    //console.log(searchString)
 
 
     const openComments = (postId) => {
@@ -90,6 +91,41 @@ const Home = ({ filterPosts, searchString }) => {
         setCurrentPostId(id);
         setAboutPetOpen(true);
     };
+
+    useEffect(() => {
+        const fetchSearchResults = async () => {
+            if(searchString){
+                try {
+                    const response = await fetch('/.netlify/functions/search', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ searchInput: searchString }),
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`HTTP error ${response.status}`);
+                    }
+
+                    const searchData = await response.json();
+
+                    // Update the searchResults state with the post ids from the search results
+                    setSearchResults(searchData.map(post => post.id));
+                    //console.log(searchResults)
+                } catch (error) {
+                    console.error('Error fetching search results:', error);
+                }
+            }
+        };
+
+        fetchSearchResults();
+    }, [searchString]);
+
+    useEffect(() => {
+        //console.log(searchResults);
+    }, [searchResults]);
+
 
     useEffect(() => {
         const fetchPetOwnerProfile = async () => {
@@ -129,6 +165,14 @@ const Home = ({ filterPosts, searchString }) => {
                 }
 
                 let data = await response.json();
+
+                //console.log(searchResults.length)
+
+                // If searchResults is not empty, filter the posts based on the search results
+                if (searchResults.length > 0) {
+                    data = data.filter(post => searchResults.includes(post.id));
+                    //console.log(data)
+                }
 
                 // Filter posts if filterPosts is provided and not empty
                 if (filterPosts) {
@@ -261,7 +305,7 @@ const Home = ({ filterPosts, searchString }) => {
         };
 
         fetchPosts();
-    }, [isAuthenticated, user, filterPosts]);
+    }, [isAuthenticated, user, filterPosts, searchResults]);
 
     return (
         <Container maxWidth="md">
