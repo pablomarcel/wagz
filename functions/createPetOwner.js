@@ -1,6 +1,7 @@
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
 const { v4: uuidv4 } = require('uuid');
+const crypto = require('crypto');
 
 // Replace with your Neo4j Aura connection credentials
 const driver = neo4j.driver(
@@ -14,16 +15,19 @@ exports.handler = async (event, context) => {
     }
 
     const body = JSON.parse(event.body);
-    const { name, email, fileUrl, bio } = body;
+    let { name, email, fileUrl, bio } = body;
+
+    // Hash the email
+    const emailHash = crypto.createHash('sha256').update(email).digest('hex');
 
     const session = driver.session();
     try {
         const result = await session.writeTransaction(async (tx) => {
             const query = `
-                CREATE (owner:PetOwner {id: $id, name: $name, email: $email, fileUrl: $fileUrl, bio: $bio})
+                CREATE (owner:PetOwner {id: $id, name: $name, email: $email, hashEmail: $hashEmail, fileUrl: $fileUrl, bio: $bio})
                 RETURN owner
             `;
-            const params = { id: uuidv4(), name, email, fileUrl, bio };
+            const params = { id: uuidv4(), name, email, hashEmail: emailHash, fileUrl, bio };
             const response = await tx.run(query, params);
             return response.records[0].get('owner').properties;
         });
