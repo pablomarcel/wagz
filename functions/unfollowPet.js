@@ -1,19 +1,20 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const unfollowPet = async (followerEmail, petId) => {
+const unfollowPet = async (hashedFollowerEmail, petId) => {
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-          MATCH (follower:PetOwner {email: $followerEmail})-[r:FOLLOWS]->(unfollowee:Pet {id: $petId})
-          DELETE r
-        `,
-                { followerEmail, petId }
+                MATCH (follower:PetOwner {hashEmail: $hashedFollowerEmail})-[r:FOLLOWS]->(unfollowee:Pet {id: $petId})
+                DELETE r
+            `,
+                { hashedFollowerEmail, petId }
             )
         );
 
@@ -26,7 +27,8 @@ const unfollowPet = async (followerEmail, petId) => {
 exports.handler = async (event, context) => {
     try {
         const { followerEmail, petId } = JSON.parse(event.body);
-        const unfollowResult = await unfollowPet(followerEmail, petId);
+        const hashedFollowerEmail = crypto.createHash('sha256').update(followerEmail).digest('hex');
+        const unfollowResult = await unfollowPet(hashedFollowerEmail, petId);
         return {
             statusCode: 200,
             body: JSON.stringify(unfollowResult),

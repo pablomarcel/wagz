@@ -1,7 +1,6 @@
-// savePost.js
-
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -15,14 +14,17 @@ exports.handler = async (event, context) => {
 
     const { userEmail, postId } = JSON.parse(event.body);
 
+    // Hashing the email
+    const hashEmail = crypto.createHash('sha256').update(userEmail).digest('hex');
+
     const session = driver.session();
     try {
         const result = await session.run(`
-            MATCH (owner:PetOwner {email: $userEmail})
+            MATCH (owner:PetOwner {hashEmail: $hashEmail})
             MATCH (post:Post {id: $postId})
             MERGE (owner)-[:SAVES]->(post)
             RETURN post
-        `, { userEmail, postId });
+        `, { hashEmail, postId });
 
         const post = result.records[0].get('post').properties;
 

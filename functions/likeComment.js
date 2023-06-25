@@ -1,7 +1,6 @@
-// likeComment.js
-
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -14,11 +13,12 @@ exports.handler = async (event, context) => {
     }
 
     const { commentId, userEmail } = JSON.parse(event.body);
+    const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
 
     const session = driver.session();
     try {
         const result = await session.run(`
-            MATCH (owner:PetOwner {email: $userEmail})
+            MATCH (owner:PetOwner {hashEmail: $userEmailHash})
             MATCH (comment:Comment {id: $commentId})
             OPTIONAL MATCH (owner)-[r:LIKED]->(comment)
             CALL apoc.do.case(
@@ -28,7 +28,7 @@ exports.handler = async (event, context) => {
                 {owner: owner, comment: comment}
             ) YIELD value
             RETURN sum(value) AS change
-        `, { commentId, userEmail });
+        `, { commentId, userEmailHash });
 
         const change = result.records[0].get('change').toNumber();
 

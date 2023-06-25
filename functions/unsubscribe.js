@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -7,13 +8,17 @@ const driver = neo4j.driver(
 
 const unsubscribePublicFigure = async (userEmail, publicFigureId) => {
     const session = driver.session();
+
+    // Hash the email
+    const hashedUserEmail = crypto.createHash('sha256').update(userEmail).digest('hex');
+
     try {
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-                MATCH (user:PetOwner {email: $userEmail})-[relationship:SUBSCRIBED_TO]->(publicFigure:PublicFigure {id: $publicFigureId})
+                MATCH (user:PetOwner {hashEmail: $hashedUserEmail})-[relationship:SUBSCRIBED_TO]->(publicFigure:PublicFigure {id: $publicFigureId})
                 DELETE relationship
             `,
-                { userEmail, publicFigureId }
+                { hashedUserEmail, publicFigureId }
             )
         );
 

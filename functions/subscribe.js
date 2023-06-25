@@ -1,20 +1,21 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const subscribePublicFigure = async (userEmail, publicFigureId) => {
+const subscribePublicFigure = async (hashedUserEmail, publicFigureId) => {
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-                MATCH (user:PetOwner {email: $userEmail})
+                MATCH (user:PetOwner {hashEmail: $hashedUserEmail})
                 MATCH (publicFigure:PublicFigure {id: $publicFigureId})
                 MERGE (user)-[:SUBSCRIBED_TO]->(publicFigure)
             `,
-                { userEmail, publicFigureId }
+                { hashedUserEmail, publicFigureId }
             )
         );
 
@@ -27,7 +28,8 @@ const subscribePublicFigure = async (userEmail, publicFigureId) => {
 exports.handler = async (event, context) => {
     try {
         const { userEmail, publicFigureId } = JSON.parse(event.body);
-        const joinResult = await subscribePublicFigure(userEmail, publicFigureId);
+        const hashedUserEmail = crypto.createHash('sha256').update(userEmail).digest('hex');
+        const joinResult = await subscribePublicFigure(hashedUserEmail, publicFigureId);
         return {
             statusCode: 200,
             body: JSON.stringify(joinResult),

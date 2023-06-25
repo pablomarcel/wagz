@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto'); // <-- Require the crypto module
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -6,15 +7,24 @@ const driver = neo4j.driver(
 );
 
 const followUser = async (followerEmail, followeeEmail) => {
+    // Generate the SHA-256 hashes of the emails
+    const hashFollower = crypto.createHash('sha256');
+    hashFollower.update(followerEmail);
+    const hashedFollowerEmail = hashFollower.digest('hex');
+
+    const hashFollowee = crypto.createHash('sha256');
+    hashFollowee.update(followeeEmail);
+    const hashedFolloweeEmail = hashFollowee.digest('hex');
+
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-          MATCH (follower:PetOwner {email: $followerEmail})
-          MATCH (followee:PetOwner {email: $followeeEmail})
+          MATCH (follower:PetOwner {hashEmail: $hashedFollowerEmail})
+          MATCH (followee:PetOwner {hashEmail: $hashedFolloweeEmail})
           MERGE (follower)-[:FOLLOWS]->(followee)
         `,
-                { followerEmail, followeeEmail }
+                { hashedFollowerEmail, hashedFolloweeEmail }
             )
         );
 
