@@ -23,9 +23,9 @@ const fetchPosts = async () => {
             return {
                 id: postData.id,
                 caption: postData.caption,
-                fileUrl: postData.fileUrl, // Get the fileUrl
+                fileUrl: postData.fileUrl,
                 pet: petData ? { id: petData.id, name: petData.name } : null,
-                owner: ownerData ? { id: ownerData.id, name: ownerData.name, email: ownerData.email } : null, // include email in the owner object
+                owner: ownerData ? { id: ownerData.id, name: ownerData.name, hashEmail: ownerData.hashEmail } : null,
             };
         });
 
@@ -34,8 +34,6 @@ const fetchPosts = async () => {
         await session.close();
     }
 };
-
-
 
 exports.handler = async (event, context) => {
     try {

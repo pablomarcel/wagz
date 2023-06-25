@@ -15,7 +15,7 @@ exports.handler = async function(event, context) {
         const result = await session.run(
             `
             MATCH (po:PetOwner {id: $followeeId})-[r:POSTED]->(p:Post)
-            RETURN po.name AS name, po.email AS email, po.bio AS bio, po.fileUrl AS fileUrl, collect(p) AS posts
+            RETURN po.name AS name, po.hashEmail AS email, po.bio AS bio, po.fileUrl AS fileUrl, collect(p) AS posts
             `,
             { followeeId }
         );
@@ -25,7 +25,7 @@ exports.handler = async function(event, context) {
         if (result.records.length === 0) {
             return {
                 statusCode: 404,
-                body: JSON.stringify({ error: 'No profile found for this email.' }),
+                body: JSON.stringify({ error: 'No profile found for this ID.' }),
             };
         }
 

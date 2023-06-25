@@ -1,9 +1,13 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 exports.handler = async (event) => {
     const body = JSON.parse(event.body);
     const userEmail = body.userEmail;
     const postId = body.postId;
+
+    // Hash the email
+    const hashedUserEmail = crypto.createHash('sha256').update(userEmail).digest('hex');
 
     const driver = neo4j.driver(
         process.env.NEO4J_URI,
@@ -15,10 +19,10 @@ exports.handler = async (event) => {
     try {
         const result = await session.run(
             `
-      MATCH (u:PetOwner {email: $userEmail})-[r:LIKES]->(p:Post {id: $postId})
+      MATCH (u:PetOwner {hashEmail: $hashedUserEmail})-[r:LIKES]->(p:Post {id: $postId})
       DELETE r
       `,
-            { userEmail, postId }
+            { hashedUserEmail, postId }
         );
 
         return {

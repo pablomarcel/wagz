@@ -1,7 +1,6 @@
-// getLikedComments.js
-
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -15,13 +14,17 @@ exports.handler = async (event, context) => {
 
     const { userEmail } = JSON.parse(event.body);
 
+    // Hash the userEmail using SHA-256
+    const hash = crypto.createHash('sha256');
+    const hashedUserEmail = hash.update(userEmail, 'utf8').digest('hex');
+
     const session = driver.session();
     try {
         const result = await session.run(`
-            MATCH (owner:PetOwner {email: $userEmail})-[:LIKED]->(comment:Comment)
+            MATCH (owner:PetOwner {hashEmail: $hashedUserEmail})-[:LIKED]->(comment:Comment)
             RETURN comment
             ORDER BY comment.timestamp DESC
-        `, { userEmail });
+        `, { hashedUserEmail });
 
         const likedComments = result.records.map((record) => record.get('comment').properties);
 

@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -9,15 +10,18 @@ exports.handler = async function(event, context) {
     const body = JSON.parse(event.body);
     const userEmail = body.userEmail;
 
+    // Hash the email
+    const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
+
     const session = driver.session();
 
     try {
         const result = await session.run(
             `
-            MATCH (po:PetOwner {email: $userEmail})<-[r:OWNED_BY]-(p:Pet)
+            MATCH (po:PetOwner {hashEmail: $userEmailHash})<-[r:OWNED_BY]-(p:Pet)
             RETURN p.id AS id, p.name AS name, p.age AS age, p.bio AS bio, p.breed AS breed, p.fileUrl AS fileUrl
             `,
-            { userEmail }
+            { userEmailHash }
         );
 
         await session.close();

@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -10,17 +11,20 @@ exports.handler = async function(event, context) {
     const body = JSON.parse(event.body);
     const userEmail = body.userEmail;
 
+    // Hash the email
+    const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
+
     // Open a new session
     const session = driver.session();
 
     try {
-        // Run a Cypher query to get the PetOwner name based on the user's email
+        // Run a Cypher query to get the PetOwner name based on the hashed user's email
         const result = await session.run(
             `
-            MATCH (po:PetOwner {email: $userEmail})
+            MATCH (po:PetOwner {hashEmail: $userEmailHash})
             RETURN po.name AS name
             `,
-            { userEmail }
+            { userEmailHash }
         );
 
         // Close the session

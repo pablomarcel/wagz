@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -12,7 +13,11 @@ exports.handler = async (event) => {
 
     const { userEmail } = JSON.parse(event.body);
 
-    if (!userEmail) {
+    // Hash the email using SHA-256
+    const hash = crypto.createHash('sha256');
+    const hashedEmail = hash.update(userEmail, 'utf8').digest('hex');
+
+    if (!hashedEmail) {
         return {
             statusCode: 400,
             body: 'Bad Request: Expected userEmail in JSON body',
@@ -24,10 +29,10 @@ exports.handler = async (event) => {
     try {
         const result = await session.run(
             `
-                    MATCH (follower:PetOwner {email: $userEmail})-[:FOLLOWS]->(followee:PetOwner)
-                    RETURN followee.email as followeeEmail, followee.name as followeeName, followee.fileUrl as fileUrl, followee.bio as bio
-                    `,
-            { userEmail }
+            MATCH (follower:PetOwner {hashEmail: $hashedEmail})-[:FOLLOWS]->(followee:PetOwner)
+            RETURN followee.hashEmail as followeeEmail, followee.name as followeeName, followee.fileUrl as fileUrl, followee.bio as bio
+            `,
+            { hashedEmail }
         );
 
         const followingOwners = result.records.map((record) => ({

@@ -1,19 +1,20 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const getFollowPublicFigureStatus = async (followerEmail, publicFigureId) => {
+const getFollowPublicFigureStatus = async (followerEmailHash, publicFigureId) => {
     const session = driver.session();
     try {
         const result = await session.readTransaction((tx) =>
             tx.run(`
-                MATCH (follower:PetOwner {email: $followerEmail})-[r:HAS_SUBSCRIBED_TO]->(followee:PublicFigure {id: $publicFigureId})
+                MATCH (follower:PetOwner {hashEmail: $followerEmailHash})-[r:HAS_SUBSCRIBED_TO]->(followee:PublicFigure {id: $publicFigureId})
                 RETURN r IS NOT NULL AS isSubscribed
             `,
-                { followerEmail, publicFigureId }
+                { followerEmailHash, publicFigureId }
             )
         );
 
@@ -30,7 +31,9 @@ const getFollowPublicFigureStatus = async (followerEmail, publicFigureId) => {
 exports.handler = async (event, context) => {
     try {
         const { followerEmail, publicFigureId } = JSON.parse(event.body);
-        const followStatus = await getFollowPublicFigureStatus(followerEmail, publicFigureId);
+        const followerEmailHash = crypto.createHash('sha256').update(followerEmail).digest('hex');
+
+        const followStatus = await getFollowPublicFigureStatus(followerEmailHash, publicFigureId);
         return {
             statusCode: 200,
             body: JSON.stringify({ isSubscribed: followStatus }),

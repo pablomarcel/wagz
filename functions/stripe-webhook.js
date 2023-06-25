@@ -1,34 +1,39 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
+const hashEmail = (email) => {
+    return crypto.createHash('sha256').update(email).digest('hex');
+}
+
 const updateSubscriptionInDatabase = async (client_reference_id, customer_email, mode) => {
-    const petOwnerEmail = customer_email;
+    const petOwnerHashedEmail = hashEmail(customer_email);
     const publicFigureId = client_reference_id;
     const transactionType = mode;
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-                MATCH (owner:PetOwner {email: $petOwnerEmail})
+                MATCH (owner:PetOwner {hashEmail: $petOwnerHashedEmail})
                 MATCH (figure:PublicFigure {id: $publicFigureId})
                 MERGE (owner)-[:HAS_SUBSCRIBED_TO]->(figure)
                 CREATE (t:Transaction {type: $transactionType, timestamp: datetime()})
                 CREATE (owner)-[:MADE]->(t)-[:TO]->(figure)
                 RETURN owner, figure, t
             `,
-                { petOwnerEmail, publicFigureId, transactionType }
+                { petOwnerHashedEmail, publicFigureId, transactionType }
             )
         );
 
         if (result.records.length === 0) {
-            console.error("Failed to update subscription status for owner:", petOwnerEmail, "and public figure:", publicFigureId);
+            console.error("Failed to update subscription status for owner:", petOwnerHashedEmail, "and public figure:", publicFigureId);
         } else {
-            console.log("Updated subscription status for owner:", petOwnerEmail, "and public figure:", publicFigureId);
+            console.log("Updated subscription status for owner:", petOwnerHashedEmail, "and public figure:", publicFigureId);
         }
     } catch (error) {
         console.error("Error updating database:", error);

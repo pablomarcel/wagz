@@ -15,7 +15,7 @@ exports.handler = async function(event, context) {
         const result = await session.run(
             `
             MATCH (po:PetOwner)-[r:POSTED]->(p:Post {id: $postId})
-            RETURN po.id AS id, po.name AS name, po.bio AS bio, po.email AS email, po.fileUrl AS fileUrl
+            RETURN po.id AS id, po.name AS name, po.bio AS bio, po.hashEmail AS email, po.fileUrl AS fileUrl
             `,
             { postId }
         );

@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -7,13 +8,18 @@ const driver = neo4j.driver(
 
 const getFollowPetStatus = async (followerEmail, petId) => {
     const session = driver.session();
+
+    // Hash the email using SHA-256
+    const hash = crypto.createHash('sha256');
+    const hashedFollowerEmail = hash.update(followerEmail, 'utf8').digest('hex');
+
     try {
         const result = await session.readTransaction((tx) =>
             tx.run(`
-                MATCH (follower:PetOwner {email: $followerEmail})-[r:FOLLOWS]->(followee:Pet {id: $petId})
+                MATCH (follower:PetOwner {hashEmail: $hashedFollowerEmail})-[r:FOLLOWS]->(followee:Pet {id: $petId})
                 RETURN r IS NOT NULL AS isFollowing
             `,
-                { followerEmail, petId }
+                { hashedFollowerEmail, petId }
             )
         );
 

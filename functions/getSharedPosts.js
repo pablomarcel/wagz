@@ -1,4 +1,5 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -12,13 +13,16 @@ exports.handler = async (event) => {
 
     const { receiverEmail } = JSON.parse(event.body);
 
+    // Hash the receiver's email
+    const receiverEmailHash = crypto.createHash('sha256').update(receiverEmail).digest('hex');
+
     const session = driver.session();
     try {
         const result = await session.run(
             `
-                MATCH (post:Post)-[:SHARED_WITH]->(receiver:PetOwner {email: $receiverEmail})
+                MATCH (post:Post)-[:SHARED_WITH]->(receiver:PetOwner {hashEmail: $receiverEmailHash})
                 RETURN post
-            `, { receiverEmail }
+            `, { receiverEmailHash }
         );
 
         const sharedPosts = result.records.map((record) => record.get('post').properties);

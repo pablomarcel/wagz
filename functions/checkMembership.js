@@ -1,19 +1,20 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto'); // <-- Require the crypto module
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const checkMembership = async (userEmail, communityId) => {
+const checkMembership = async (hashedEmail, communityId) => {
     const session = driver.session();
     try {
         const result = await session.readTransaction((tx) =>
             tx.run(`
-                MATCH (user:PetOwner {email: $userEmail})-[relationship:JOINED]->(community:Community {id: $communityId})
+                MATCH (user:PetOwner {hashEmail: $hashedEmail})-[relationship:JOINED]->(community:Community {id: $communityId})
                 RETURN relationship IS NOT NULL AS isMember
             `,
-                { userEmail, communityId }
+                { hashedEmail, communityId }
             )
         );
 
@@ -29,7 +30,13 @@ const checkMembership = async (userEmail, communityId) => {
 exports.handler = async (event, context) => {
     try {
         const { userEmail, communityId } = JSON.parse(event.body);
-        const isMember = await checkMembership(userEmail, communityId);
+
+        // Generate the SHA-256 hash of the email
+        const hash = crypto.createHash('sha256');
+        hash.update(userEmail);
+        const hashedEmail = hash.digest('hex');
+
+        const isMember = await checkMembership(hashedEmail, communityId);
         return {
             statusCode: 200,
             body: JSON.stringify({ isMember }),

@@ -1,7 +1,6 @@
-// getComments.js
-
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto'); // <-- Require the crypto module
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -15,16 +14,20 @@ exports.handler = async (event, context) => {
 
     const { postId, userEmail } = JSON.parse(event.body);
 
+    // Generate the SHA-256 hash of the email
+    const hash = crypto.createHash('sha256');
+    hash.update(userEmail);
+    const hashedUserEmail = hash.digest('hex');
+
     const session = driver.session();
     try {
-
         const result = await session.run(`
             MATCH (post:Post {id: $postId})<-[:POSTED_ON]-(comment:Comment)-[:COMMENTED_BY]->(owner:PetOwner)
-            OPTIONAL MATCH (comment)<-[like:LIKED]-(user:PetOwner {email: $userEmail})
+            OPTIONAL MATCH (comment)<-[like:LIKED]-(user:PetOwner {hashEmail: $hashedUserEmail})
             OPTIONAL MATCH (comment)<-[likeAll:LIKED]-(allUsers:PetOwner)
             RETURN comment, owner.name as ownerName, COUNT(like) as isLiked, COUNT(likeAll) as likeCount
             ORDER BY comment.timestamp ASC
-        `, { postId, userEmail });
+        `, { postId, hashedUserEmail });
 
         const comments = result.records.map((record) => {
             const properties = record.get('comment').properties;

@@ -1,6 +1,5 @@
-// getSavedPosts.js
-
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -12,6 +11,9 @@ exports.handler = async function(event, context) {
     const body = JSON.parse(event.body);
     const userEmail = body.userEmail;
 
+    // Hash the email
+    const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
+
     // Open a new session
     const session = driver.session();
 
@@ -19,10 +21,10 @@ exports.handler = async function(event, context) {
         // Run a Cypher query to get the posts that the user has saved
         const result = await session.run(
             `
-            MATCH (po:PetOwner {email: $userEmail})-[r:SAVES]->(p:Post)
+            MATCH (po:PetOwner {hashEmail: $userEmailHash})-[r:SAVES]->(p:Post)
             RETURN p.id AS id
             `,
-            { userEmail }
+            { userEmailHash }
         );
 
         // Close the session

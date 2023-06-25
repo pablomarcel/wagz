@@ -1,5 +1,6 @@
 const neo4j = require('neo4j-driver');
 const dotenv = require('dotenv');
+const crypto = require('crypto');
 
 dotenv.config();
 
@@ -11,15 +12,19 @@ const driver = neo4j.driver(
 exports.handler = async (event, context) => {
     const data = JSON.parse(event.body);
     const userEmail = data.userEmail;
+
+    // Hash the user's email
+    const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
+
     const session = driver.session();
 
     try {
         const result = await session.run(
             `
-            MATCH (user:PetOwner {email: $userEmail})<-[:SHARED_WITH]-(post:Post)
+            MATCH (user:PetOwner {hashEmail: $userEmailHash})<-[:SHARED_WITH]-(post:Post)
             RETURN post.id AS postId
             `,
-            { userEmail }
+            { userEmailHash }
         );
 
         const sharedWithMePosts = result.records.map((record) => record.get('postId'));

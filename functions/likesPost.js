@@ -1,5 +1,6 @@
 require('dotenv').config();
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -12,15 +13,16 @@ exports.handler = async (event, context) => {
     }
 
     const { userEmail, postId } = JSON.parse(event.body);
+    const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
 
     const session = driver.session();
     try {
         const result = await session.run(`
-            MATCH (owner:PetOwner {email: $userEmail})
+            MATCH (owner:PetOwner {hashEmail: $userEmailHash})
             MATCH (post:Post {id: $postId})
             MERGE (owner)-[:LIKES]->(post)
             RETURN post
-        `, { userEmail, postId });
+        `, { userEmailHash, postId });
 
         const post = result.records[0].get('post').properties;
 

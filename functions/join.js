@@ -1,20 +1,21 @@
 const neo4j = require('neo4j-driver');
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const joinCommunity = async (userEmail, communityId) => {
+const joinCommunity = async (userEmailHash, communityId) => {
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
             tx.run(`
-                MATCH (user:PetOwner {email: $userEmail})
+                MATCH (user:PetOwner {hashEmail: $userEmailHash})
                 MATCH (community:Community {id: $communityId})
                 MERGE (user)-[:JOINED]->(community)
             `,
-                { userEmail, communityId }
+                { userEmailHash, communityId }
             )
         );
 
@@ -27,7 +28,8 @@ const joinCommunity = async (userEmail, communityId) => {
 exports.handler = async (event, context) => {
     try {
         const { userEmail, communityId } = JSON.parse(event.body);
-        const joinResult = await joinCommunity(userEmail, communityId);
+        const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
+        const joinResult = await joinCommunity(userEmailHash, communityId);
         return {
             statusCode: 200,
             body: JSON.stringify(joinResult),
