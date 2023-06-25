@@ -34,6 +34,12 @@ const Subscriptions = () => {
 
                     const petOwnerProfileData = await response.json();
 
+                    if (!petOwnerProfileData.id) {
+                        console.log('No pet owner profile found for this user.');
+                        setLoading(false);
+                        return;  // Exit the function early if no profile found
+                    }
+
                     setPetOwnerProfile(petOwnerProfileData);
 
                     const subscriptionsResponse = await fetch('/.netlify/functions/getSubscriptionsByUser', {

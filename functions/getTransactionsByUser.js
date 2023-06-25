@@ -24,7 +24,7 @@ const getTransactionsByUser = async (userId) => {
         await session.close();
     }
 
-    if (result.records.length === 0) {
+    if (!result || !result.records || result.records.length === 0) {
         console.error("No transactions found for owner:", userId);
         return [];
     }
