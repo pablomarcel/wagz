@@ -30,6 +30,14 @@ exports.handler = async function(event, context) {
         // Close the session
         await session.close();
 
+        // If there's no result, return null or suitable default
+        if (!result.records || result.records.length === 0) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify(null),
+            };
+        }
+
         // Get the name from the result
         const petOwnerName = result.records[0].get('name');
 

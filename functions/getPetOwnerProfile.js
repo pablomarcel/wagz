@@ -30,6 +30,14 @@ exports.handler = async function(event, context) {
         // Close the session
         await session.close();
 
+        // If there's no result, return an empty object
+        if (!result.records || result.records.length === 0) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify({}),
+            };
+        }
+
         // Get the name, bio, fileUrl and id from the result
         const petOwnerProfile = result.records[0].toObject();
 

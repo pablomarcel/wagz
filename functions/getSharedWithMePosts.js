@@ -27,6 +27,14 @@ exports.handler = async (event, context) => {
             { userEmailHash }
         );
 
+        // If there's no result, return an empty array
+        if (!result.records || result.records.length === 0) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify([]),
+            };
+        }
+
         const sharedWithMePosts = result.records.map((record) => record.get('postId'));
 
         return {
