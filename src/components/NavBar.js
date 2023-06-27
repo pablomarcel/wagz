@@ -45,6 +45,7 @@ import PaymentIcon from '@mui/icons-material/Payment';
 import FormatListNumberedRtlIcon from '@mui/icons-material/FormatListNumberedRtl';
 import ExploreIcon from '@mui/icons-material/Explore';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
+import FeedIcon from '@mui/icons-material/Feed';
 const drawerWidth = 240;
 
 const NavBar = ({setSearchString}) => {
@@ -72,6 +73,11 @@ const NavBar = ({setSearchString}) => {
         },
         ...(isAuthenticated
             ? [
+                {
+                    text: 'Timeline',
+                    icon: <FeedIcon style={{ color: '#1976d2'}}/>, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+                    route: '/timeline',
+                },
                 {
                     text: 'Profile',
                     icon: <AccountCircleIcon style={{ color: '#1976d2'}}/>, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
