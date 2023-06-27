@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
 import Home from './pages/Home';
+import Timeline from './pages/Timeline';
 import Create from './pages/Create';
 import LoginPage from './pages/LoginPage';
 import NavBar from './components/NavBar';
@@ -83,6 +84,7 @@ function App() {
             <Route path="/postrecommendations" element={<PostRecommendations />} />
             <Route path="/stripepayments/*" element={<StripePayments />} />
             <Route path="/polls/*" element={<Polls />} />
+            <Route path="/timeline" element={<Timeline searchString={searchString}/>} />
           </Routes>
         </Router>
       </div>
