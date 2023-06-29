@@ -3,7 +3,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Box, Container, Grid, Card, CardHeader, CardContent, Typography, Avatar, IconButton, CircularProgress, CardMedia } from '@mui/material';
+import { Box, Container, Grid, Card, CardHeader, CardContent, Typography, Avatar, IconButton, CircularProgress, CardMedia, CardActions } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { StyledCard, StyledCardMedia, StyledCardVideo } from './styledComponents';
 
@@ -48,14 +48,13 @@ function Timeline() {
                     <Grid item xs={12} key={index}>
                         <StyledCard>
                             <CardHeader
-                                avatar={<Avatar src={post.owner ? post.owner.fileUrl : ''} />}
-                                title={post.caption}
-                                subheader={post.owner ? `by: ${post.owner.name}` : 'Unknown'}
                                 action={
                                     <IconButton>
                                         <MoreVertIcon />
                                     </IconButton>
                                 }
+                                title={`${post.pet ? post.pet.name : 'Unknown'}`}
+                                subheader={`by: ${post.owner ? post.owner.name : 'Unknown'}`}
                             />
                             {post.fileUrl && post.fileUrl.endsWith('.mp4') ? (
                                 <StyledCardVideo controls>
@@ -69,15 +68,39 @@ function Timeline() {
                                 />
                             )}
                             <CardContent>
-                                <Typography variant="body1">{`Pet: ${post.pet ? post.pet.name : 'Unknown'}`}</Typography>
+                                <Typography variant="body1">{post.caption}</Typography>
                             </CardContent>
+                            <CardActions disableSpacing>
+                                {/* Here would be your CardActions, similar to those in the Home component. */}
+                                {/* These are just placeholders and you should replace them with your actual components and functions. */}
+                                <IconButton>
+                                    {/* Replace with your favorite icon */}
+                                </IconButton>
+                                <IconButton>
+                                    {/* Replace with your comment icon */}
+                                </IconButton>
+                                <IconButton>
+                                    {/* Replace with your share icon */}
+                                </IconButton>
+                                <IconButton>
+                                    {/* Replace with your save icon */}
+                                </IconButton>
+                                <IconButton>
+                                    {/* Replace with your follow icon */}
+                                </IconButton>
+                            </CardActions>
                         </StyledCard>
                     </Grid>
                 ))}
             </Grid>
-            {loading && <CircularProgress />}
+            {loading &&
+                <Grid item xs={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                    <CircularProgress />
+                </Grid>
+            }
         </Container>
     );
+
 }
 
 export default Timeline;
