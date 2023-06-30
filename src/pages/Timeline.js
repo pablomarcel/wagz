@@ -54,7 +54,7 @@ function Timeline() {
                                     </IconButton>
                                 }
                                 title={`${post.pet ? post.pet.name : 'Unknown'}`}
-                                subheader={`by: ${post.owner ? post.owner.name : 'Unknown'}`}
+                                // subheader={`by: ${post.owner ? post.owner.name : 'Unknown'}`}
                             />
                             {post.fileUrl && post.fileUrl.endsWith('.mp4') ? (
                                 <StyledCardVideo controls>
@@ -69,6 +69,11 @@ function Timeline() {
                             )}
                             <CardContent>
                                 <Typography variant="body1">{post.caption}</Typography>
+                                <Typography variant="subheader"
+                                            sx={{
+                                                color:'grey'
+                                            }}
+                                >{`by: ${post.owner ? post.owner.name : 'Unknown'}`}</Typography>
                             </CardContent>
                             <CardActions disableSpacing>
                                 {/* Here would be your CardActions, similar to those in the Home component. */}
