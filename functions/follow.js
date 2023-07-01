@@ -1,21 +1,12 @@
 const neo4j = require('neo4j-driver');
-const crypto = require('crypto'); // <-- Require the crypto module
+const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const followUser = async (followerEmail, followeeEmail) => {
-    // Generate the SHA-256 hashes of the emails
-    const hashFollower = crypto.createHash('sha256');
-    hashFollower.update(followerEmail);
-    const hashedFollowerEmail = hashFollower.digest('hex');
-
-    const hashFollowee = crypto.createHash('sha256');
-    hashFollowee.update(followeeEmail);
-    const hashedFolloweeEmail = hashFollowee.digest('hex');
-
+const followUser = async (hashedFollowerEmail, hashedFolloweeEmail) => {
     const session = driver.session();
     try {
         const result = await session.writeTransaction((tx) =>
@@ -35,9 +26,19 @@ const followUser = async (followerEmail, followeeEmail) => {
 };
 
 exports.handler = async (event, context) => {
+    //console.log('event.body: ', event.body); // Add this line to troubleshoot
     try {
         const { followerEmail, followeeEmail } = JSON.parse(event.body);
-        const followResult = await followUser(followerEmail, followeeEmail);
+        if (!followerEmail || !followeeEmail) {
+            throw new Error('Missing required parameters');
+        }
+
+        // Hash followerEmail
+        const hashFollower = crypto.createHash('sha256');
+        hashFollower.update(followerEmail);
+        const hashedFollowerEmail = hashFollower.digest('hex');
+
+        const followResult = await followUser(hashedFollowerEmail, followeeEmail);
         return {
             statusCode: 200,
             body: JSON.stringify(followResult),

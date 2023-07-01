@@ -1,46 +1,18 @@
 /* eslint-disable no-unused-vars */
-import {
-    React,
-    useEffect,
-    useState,
-    useAuth0,
-    Container,
-    Grid,
-    Card,
-    CardHeader,
-    CardContent,
-    Typography,
-    CircularProgress,
-    Alert,
-    CardMedia,
-    IconButton,
-    CardActions,
-    Box,
-    Modal,
-    MenuItem,
-    MenuList,
-    Button,
-    styled,
-    FavoriteIcon,
-    FavoriteBorderIcon,
-    CommentIcon,
-    ShareIcon,
-    SaveIcon,
-    MoreVertIcon,
-    Avatar,
-    Comments,
-    ShareForm,
-    AboutPet
-} from './imports';
+import {React,useEffect,useState,useAuth0, Container,Grid,Card,CardHeader,CardContent,Typography,CircularProgress,Alert,CardMedia,IconButton,CardActions,Box,Modal,MenuItem,MenuList,Button,styled,FavoriteIcon,FavoriteBorderIcon,CommentIcon,ShareIcon,SaveIcon,MoreVertIcon,Avatar,Comments,ShareForm,AboutPet} from './imports';
 import { StyledCard, StyledCardMedia, StyledCardVideo } from './styledComponents';
 import likePostHome from './likePostHome';
 import savePost from './savePost';
 import likeComment from './likeComment';
-import followUser from './followUser';
-import unfollowUser from './unfollowUser';
 import handleFollowUser from './handleFollowUser';
 import { handleSharePost } from './handleSharePost';
 import {PersonAdd} from "@mui/icons-material";
+import { fetchSearchResults } from './searchHelper';
+import { fetchPetOwnerProfileHelper } from './fetchPetOwnerProfileHelper';
+import { getPetOwnerName } from './getPetOwnerNameHelper';
+import fetchLikedPosts from './fetchLikedPosts';
+import fetchSavedPosts from './fetchSavedPosts';
+import fetchFollowedUsers from './fetchFollowedUsers';
 
 const Home = ({ filterPosts, searchString }) => {
     const { user, isAuthenticated } = useAuth0();
@@ -67,9 +39,6 @@ const Home = ({ filterPosts, searchString }) => {
     });
     const [searchResults, setSearchResults] = useState([]);
 
-    //console.log(searchString)
-
-
     const openComments = (postId) => {
         setCurrentPostId(postId);
         setCommentsOpen(true);
@@ -93,33 +62,7 @@ const Home = ({ filterPosts, searchString }) => {
     };
 
     useEffect(() => {
-        const fetchSearchResults = async () => {
-            if(searchString){
-                try {
-                    const response = await fetch('/.netlify/functions/search', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ searchInput: searchString }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error ${response.status}`);
-                    }
-
-                    const searchData = await response.json();
-
-                    // Update the searchResults state with the post ids from the search results
-                    setSearchResults(searchData.map(post => post.id));
-                    //console.log(searchResults)
-                } catch (error) {
-                    console.error('Error fetching search results:', error);
-                }
-            }
-        };
-
-        fetchSearchResults();
+        fetchSearchResults(searchString, setSearchResults);
     }, [searchString]);
 
     useEffect(() => {
@@ -130,24 +73,9 @@ const Home = ({ filterPosts, searchString }) => {
     useEffect(() => {
         const fetchPetOwnerProfile = async () => {
             if (isAuthenticated && user) {
-                try {
-                    const response = await fetch('/.netlify/functions/getPetOwnerProfile', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userEmail: user.email }),
-                    });
-
-                    if (!response.ok) {
-                        throw new Error(`HTTP error ${response.status}`);
-                    }
-
-                    const petOwnerProfileData = await response.json();
-
+                const petOwnerProfileData = await fetchPetOwnerProfileHelper(user.email);
+                if (petOwnerProfileData) {
                     setPetOwnerProfile(petOwnerProfileData);
-                } catch (error) {
-                    console.error('Error fetching pet owner profile:', error);
                 }
             }
         };
@@ -165,8 +93,6 @@ const Home = ({ filterPosts, searchString }) => {
                 }
 
                 let data = await response.json();
-
-                //console.log(searchResults.length)
 
                 // If searchResults is not empty, filter the posts based on the search results
                 if (searchResults.length > 0) {
@@ -192,63 +118,16 @@ const Home = ({ filterPosts, searchString }) => {
                 // fetch the liked posts only if the user is authenticated
                 if (isAuthenticated && user) {
 
-                    const petOwnerNameResponse = await fetch('/.netlify/functions/getPetOwnerName', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userEmail: user.email }),
-                    });
-
-                    if (!petOwnerNameResponse.ok) {
-                        throw new Error(`HTTP error ${petOwnerNameResponse.status}`);
+                    try {
+                        const petOwnerNameData = await getPetOwnerName(user.email);
+                        setPetOwnerName(petOwnerNameData);
+                    } catch (error) {
+                        console.error(error);
                     }
 
-                    const petOwnerNameData = await petOwnerNameResponse.json();
+                    fetchLikedPosts(user.email, setLikedPosts);
 
-                    // Set the pet owner name state
-                    setPetOwnerName(petOwnerNameData);
-
-                    const likedResponse = await fetch('/.netlify/functions/getLikedPosts', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userEmail: user.email }),
-                    });
-
-                    if (!likedResponse.ok) {
-                        throw new Error(`HTTP error ${likedResponse.status}`);
-                    }
-
-                    const likedData = await likedResponse.json();
-
-                    // set the liked posts state
-                    let likedPostsObj = {};
-                    likedData.forEach(postId => {
-                        likedPostsObj[postId] = true;
-                    });
-                    setLikedPosts(likedPostsObj);
-
-                    const savedResponse = await fetch('/.netlify/functions/getSavedPosts', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userEmail: user.email }),
-                    });
-
-                    if (!savedResponse.ok) {
-                        throw new Error(`HTTP error ${savedResponse.status}`);
-                    }
-
-                    const savedData = await savedResponse.json();
-
-                    let savedPostsObj = {};
-                    savedData.forEach(postId => {
-                        savedPostsObj[postId] = true;
-                    });
-                    setSavedPosts(savedPostsObj);
+                    fetchSavedPosts(user.email, setSavedPosts);
 
                     // fetch the liked comments
                     const likedCommentsResponse = await fetch('/.netlify/functions/getLikedComments', {
@@ -273,27 +152,7 @@ const Home = ({ filterPosts, searchString }) => {
                     setLikedComments(likedCommentsObj);
 
                     // Fetch the followed owners
-                    const followResponse = await fetch('/.netlify/functions/getFollowingOwners', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userEmail: user.email }),
-                    });
-
-                    if (!followResponse.ok) {
-                        throw new Error(`HTTP error ${followResponse.status}`);
-                    }
-
-                    const followData = await followResponse.json();
-
-                    // set the followed users state
-                    let followObj = {};
-                    followData.forEach(user => {
-                        followObj[user.email] = true;
-                    });
-                    setFollowedUsers(followObj);
-
+                    fetchFollowedUsers(user.email, setFollowedUsers);
 
                 }
             } catch (error) {
@@ -384,8 +243,8 @@ const Home = ({ filterPosts, searchString }) => {
                                             <IconButton aria-label="save" onClick={() => savePost(user, id, savedPosts[id], setSavedPosts)}>
                                                 {savedPosts[id] ? <SaveIcon style={{ color: '#1976d2'}}/> : <SaveIcon style={{ color: '#607d8b'}}/>}
                                             </IconButton>
-                                            <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.email, user, followedUsers, setFollowedUsers)}>
-                                                {followedUsers[owner.email] ? <PersonAdd style={{ color: '#1976d2'}}/> : <PersonAdd style={{ color: '#607d8b'}}/>}
+                                            <IconButton aria-label="follow" onClick={() => handleFollowUser(owner.hashEmail, user, followedUsers, setFollowedUsers)}>
+                                                {followedUsers[owner.hashEmail] ? <PersonAdd style={{ color: '#1976d2'}}/> : <PersonAdd style={{ color: '#607d8b'}}/>}
                                             </IconButton>
                                             {/*<Typography variant="body2">*/}
                                             {/*    {likeCounts[id] || 0} Likes*/}
@@ -437,5 +296,3 @@ const Home = ({ filterPosts, searchString }) => {
 };
 
 export default Home;
-
-

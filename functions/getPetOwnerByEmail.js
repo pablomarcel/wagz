@@ -1,5 +1,4 @@
 const neo4j = require('neo4j-driver');
-const crypto = require('crypto');
 
 const driver = neo4j.driver(
     process.env.NEO4J_URI,
@@ -35,8 +34,8 @@ const getPetOwnerByHashedEmail = async (hashedEmail) => {
 };
 
 exports.handler = async (event, context) => {
-    const { email } = JSON.parse(event.body);
-    const hashedEmail = crypto.createHash('sha256').update(email).digest('hex');
+    // hashedEmail already coming from frontend
+    const { hashedEmail } = JSON.parse(event.body);
 
     try {
         const ownerData = await getPetOwnerByHashedEmail(hashedEmail);

@@ -6,15 +6,8 @@ const driver = neo4j.driver(
     neo4j.auth.basic(process.env.NEO4J_USER, process.env.NEO4J_PASSWORD)
 );
 
-const getFollowStatus = async (followerEmail, followeeEmail) => {
+const getFollowStatus = async (hashedFollowerEmail, hashedFolloweeEmail) => {
     const session = driver.session();
-
-    // Hash the emails using SHA-256
-    const hash = crypto.createHash('sha256');
-    const hashedFollowerEmail = hash.update(followerEmail, 'utf8').digest('hex');
-    hash.reset();
-    const hashedFolloweeEmail = hash.update(followeeEmail, 'utf8').digest('hex');
-
     try {
         const result = await session.readTransaction((tx) =>
             tx.run(`
@@ -38,7 +31,15 @@ const getFollowStatus = async (followerEmail, followeeEmail) => {
 exports.handler = async (event, context) => {
     try {
         const { followerEmail, followeeEmail } = JSON.parse(event.body);
-        const followStatus = await getFollowStatus(followerEmail, followeeEmail);
+
+        // Hash the followerEmail
+        const hash = crypto.createHash('sha256');
+        const hashedFollowerEmail = hash.update(followerEmail, 'utf8').digest('hex');
+
+        // Hashed followeeEmail already coming from the frontend
+        const hashedFolloweeEmail = followeeEmail;
+
+        const followStatus = await getFollowStatus(hashedFollowerEmail, hashedFolloweeEmail);
         return {
             statusCode: 200,
             body: JSON.stringify({ isFollowing: followStatus }),

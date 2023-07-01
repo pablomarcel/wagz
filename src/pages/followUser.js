@@ -6,7 +6,7 @@ const followUser = async (followerEmail, followeeEmail) => {
             headers: {
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ followerEmail, followeeEmail }),
+            body: JSON.stringify({ followerEmail: followerEmail, followeeEmail: followeeEmail }),
         });
 
         if (!response.ok) {
@@ -21,3 +21,4 @@ const followUser = async (followerEmail, followeeEmail) => {
 };
 
 export default followUser;
+
