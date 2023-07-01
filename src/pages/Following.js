@@ -26,14 +26,14 @@ const Following = () => {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
 
-    const handleProfileClick = async (email) => {
+    const handleProfileClick = async (hashedEmail) => {
         try {
             const response = await fetch('/.netlify/functions/getPetOwnerByEmail', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ email }),
+                body: JSON.stringify({ hashedEmail }), // renamed variable here
             });
 
             if (!response.ok) {
@@ -51,6 +51,7 @@ const Following = () => {
             setError(error.toString());
         }
     }
+
 
     const handleFollow = async (owner) => {
         const response = await fetch('/.netlify/functions/follow', {

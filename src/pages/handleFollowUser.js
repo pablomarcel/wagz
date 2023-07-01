@@ -2,6 +2,7 @@ import unfollowUser from './unfollowUser';
 import followUser from './followUser';
 
 const handleFollowUser = async (postAuthorEmail, user, followedUsers, setFollowedUsers) => {
+    //console.log('postAuthorEmail:', postAuthorEmail, 'user:', user);
     try {
         if (followedUsers[postAuthorEmail]) {
             await unfollowUser(user.email, postAuthorEmail);

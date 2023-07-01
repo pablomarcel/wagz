@@ -28,8 +28,8 @@ exports.handler = async (event, context) => {
     try {
         const { followerEmail, unfolloweeEmail } = JSON.parse(event.body);
         const hashedFollowerEmail = crypto.createHash('sha256').update(followerEmail).digest('hex');
-        const hashedUnfolloweeEmail = crypto.createHash('sha256').update(unfolloweeEmail).digest('hex');
-        const unfollowResult = await unfollowUser(hashedFollowerEmail, hashedUnfolloweeEmail);
+        // unfolloweeEmail is already hashed, no need to hash it again
+        const unfollowResult = await unfollowUser(hashedFollowerEmail, unfolloweeEmail);
         return {
             statusCode: 200,
             body: JSON.stringify(unfollowResult),
