@@ -13,6 +13,10 @@ import { handleSharePost } from './handleSharePost';
 import {PersonAdd} from "@mui/icons-material";
 import { fetchSearchResults } from './searchHelper';
 import { fetchPetOwnerProfileHelper } from './fetchPetOwnerProfileHelper';
+import { getPetOwnerName } from './getPetOwnerNameHelper';
+import fetchLikedPosts from './fetchLikedPosts';
+import fetchSavedPosts from './fetchSavedPosts';
+import fetchFollowedUsers from './fetchFollowedUsers';
 
 function Timeline({ filterPosts, searchString }) {
     const { user, isAuthenticated } = useAuth0();
@@ -39,6 +43,29 @@ function Timeline({ filterPosts, searchString }) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
+
+    const openComments = (postId) => {
+        setCurrentPostId(postId);
+        setCommentsOpen(true);
+    };
+    const closeComments = () => {
+        setCurrentPostId(null);
+        setCommentsOpen(false);
+    };
+
+    const handleLikeComment = (postId, commentId) => {
+        likeComment(user.email, postId, commentId, setLikedComments);
+    };
+
+    const handlePostSharing = (shareToEmail) => {
+        handleSharePost(shareToEmail, user, currentPostToShare);
+    };
+
+    const handleAboutPet = (pet, id) => {
+        setCurrentPet(pet);
+        setCurrentPostId(id);
+        setAboutPetOpen(true);
+    };
 
     useEffect(() => {
         const fetchPetOwnerProfile = async () => {
@@ -91,6 +118,63 @@ function Timeline({ filterPosts, searchString }) {
         return () => window.removeEventListener('scroll', handleScroll);
     }, [fetchPosts]);
 
+    useEffect(() => {
+        const fetchUserData = async () => {
+            setLoading(true);
+            try {
+
+                // fetch the liked posts only if the user is authenticated
+                if (isAuthenticated && user) {
+
+                    try {
+                        const petOwnerNameData = await getPetOwnerName(user.email);
+                        setPetOwnerName(petOwnerNameData);
+                    } catch (error) {
+                        console.error(error);
+                    }
+
+                    fetchLikedPosts(user.email, setLikedPosts);
+
+                    fetchSavedPosts(user.email, setSavedPosts);
+
+                    // fetch the liked comments
+                    const likedCommentsResponse = await fetch('/.netlify/functions/getLikedComments', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userEmail: user.email }),
+                    });
+
+                    if (!likedCommentsResponse.ok) {
+                        throw new Error(`HTTP error ${likedCommentsResponse.status}`);
+                    }
+
+                    const likedCommentsData = await likedCommentsResponse.json();
+
+                    // set the liked comments state
+                    let likedCommentsObj = {};
+                    likedCommentsData.forEach(commentId => {
+                        likedCommentsObj[commentId] = true;
+                    });
+                    setLikedComments(likedCommentsObj);
+
+                    // Fetch the followed owners
+                    fetchFollowedUsers(user.email, setFollowedUsers);
+
+                }
+            } catch (error) {
+                console.error('Error fetching posts:', error);
+                setError(error.message);
+                setLoading(false);
+                setHasFetched(true);
+            }
+        };
+
+        fetchUserData();
+    }, [isAuthenticated, user]);
+
+
     return (
         <Container maxWidth="md">
             <Typography variant="h6" sx={{
@@ -124,8 +208,8 @@ function Timeline({ filterPosts, searchString }) {
                         <StyledCard>
                             <CardHeader
                                 action={
-                                    <IconButton>
-                                        <MoreVertIcon />
+                                    <IconButton onClick={() => handleAboutPet(post.pet, post.id)}>
+                                        <MoreVertIcon style={{ color: '#e91e63' }}/>
                                     </IconButton>
                                 }
                                 title={`${post.pet ? post.pet.name : 'Unknown'}`}
@@ -151,23 +235,27 @@ function Timeline({ filterPosts, searchString }) {
                                 >{`by: ${post.owner ? post.owner.name : 'Unknown'}`}</Typography>
                             </CardContent>
                             <CardActions disableSpacing>
-                                {/* Here would be your CardActions, similar to those in the Home component. */}
-                                {/* These are just placeholders and you should replace them with your actual components and functions. */}
-                                <IconButton>
-                                    {/* Replace with your favorite icon */}
+                                <IconButton aria-label="add to favorites" onClick={() => likePostHome(user, post.id, likedPosts[post.id], setLikedPosts, setLikeCounts)}>
+                                    {likedPosts[post.id] ? <FavoriteIcon style={{ color: '#e91e63'}}/> : <FavoriteBorderIcon style={{ color: '#607d8b'}}/>}
                                 </IconButton>
-                                <IconButton>
-                                    {/* Replace with your comment icon */}
+                                <IconButton aria-label="comment" onClick={() => openComments(post.id)}>
+                                    <CommentIcon style={{ color: '#607d8b'}}/>
                                 </IconButton>
-                                <IconButton>
-                                    {/* Replace with your share icon */}
+                                <IconButton aria-label="share" onClick={() => {
+                                    setCurrentPostToShare(post.id);
+                                    setShareFormOpen(true);
+                                }}>
+                                    <ShareIcon style={{ color: '#607d8b'}}/>
                                 </IconButton>
-                                <IconButton>
-                                    {/* Replace with your save icon */}
+                                <IconButton aria-label="save" onClick={() => savePost(user, post.id, savedPosts[post.id], setSavedPosts)}>
+                                    {savedPosts[post.id] ? <SaveIcon style={{ color: '#1976d2'}}/> : <SaveIcon style={{ color: '#607d8b'}}/>}
                                 </IconButton>
-                                <IconButton>
-                                    {/* Replace with your follow icon */}
+                                <IconButton aria-label="follow" onClick={() => handleFollowUser(post.owner.hashEmail, user, followedUsers, setFollowedUsers)}>
+                                    {followedUsers[post.owner.hashEmail] ? <PersonAdd style={{ color: '#1976d2'}}/> : <PersonAdd style={{ color: '#607d8b'}}/>}
                                 </IconButton>
+                                {/*<Typography variant="body2">*/}
+                                {/*    {likeCounts[id] || 0} Likes*/}
+                                {/*</Typography>*/}
                             </CardActions>
                         </StyledCard>
                     </Grid>
@@ -178,6 +266,38 @@ function Timeline({ filterPosts, searchString }) {
                     <CircularProgress />
                 </Grid>
             }
+
+            {commentsOpen && user && (
+                <Comments
+                    postId={currentPostId}
+                    userEmail={user.email}
+                    userPicture={user.picture}
+                    closeComments={closeComments}
+                    likeComment={handleLikeComment}
+                    likedComments={likedComments}
+                    commentsOpen={commentsOpen}
+                    handleClose={closeComments}
+                />
+            )}
+
+            {user && (
+                <ShareForm
+                    open={shareFormOpen}
+                    onClose={() => setShareFormOpen(false)}
+                    onShare={handlePostSharing}
+                />
+            )}
+
+
+            {aboutPetOpen && currentPet && (
+                <AboutPet
+                    open={aboutPetOpen}
+                    onClose={() => setAboutPetOpen(false)}
+                    pet={currentPet}
+                    post={currentPostId}
+                />
+            )}
+
         </Container>
     );
 
