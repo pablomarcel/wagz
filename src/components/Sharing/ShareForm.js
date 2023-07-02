@@ -101,15 +101,15 @@ const ShareForm = ({ open, onClose, onShare }) => {
         <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth='sm'>
             <StyledDialogTitle>Share Post</StyledDialogTitle>
             <DialogContent>
-                <TextField
-                    autoFocus
-                    margin="dense"
-                    label="Shared With"
-                    type="text" // We change this from "email" to "text" because we're now displaying the owner's name
-                    fullWidth
-                    value={selectedOwner} // We now use "selectedOwner" here instead of "value"
-                    readOnly // We set this to "readOnly" to prevent the user from editing the owner's name
-                />
+                {/*<TextField*/}
+                {/*    autoFocus*/}
+                {/*    margin="dense"*/}
+                {/*    label="Shared With"*/}
+                {/*    type="text" // We change this from "email" to "text" because we're now displaying the owner's name*/}
+                {/*    fullWidth*/}
+                {/*    value={selectedOwner} // We now use "selectedOwner" here instead of "value"*/}
+                {/*    readOnly // We set this to "readOnly" to prevent the user from editing the owner's name*/}
+                {/*/>*/}
                 <Select
                     label="Select Owner"
                     value={ownerEmail} // We now use "ownerEmail" here instead of "value"

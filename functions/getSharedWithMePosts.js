@@ -13,8 +13,12 @@ exports.handler = async (event, context) => {
     const data = JSON.parse(event.body);
     const userEmail = data.userEmail;
 
+    //console.log(`Received userEmail: ${userEmail}`);
+
     // Hash the user's email
     const userEmailHash = crypto.createHash('sha256').update(userEmail).digest('hex');
+
+    //console.log(`Hashed userEmail: ${userEmailHash}`);
 
     const session = driver.session();
 
@@ -27,8 +31,11 @@ exports.handler = async (event, context) => {
             { userEmailHash }
         );
 
+        //console.log('Cypher query executed successfully');
+
         // If there's no result, return an empty array
         if (!result.records || result.records.length === 0) {
+            console.log('No posts were shared with the user');
             return {
                 statusCode: 200,
                 body: JSON.stringify([]),
@@ -37,16 +44,20 @@ exports.handler = async (event, context) => {
 
         const sharedWithMePosts = result.records.map((record) => record.get('postId'));
 
+        //console.log(`Posts shared with the user: ${JSON.stringify(sharedWithMePosts)}`);
+
         return {
             statusCode: 200,
             body: JSON.stringify(sharedWithMePosts),
         };
     } catch (error) {
+        console.error(`Error while executing Cypher query: ${error}`);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: 'Error in fetching shared with me posts' }),
         };
     } finally {
+        //console.log('Closing session');
         await session.close();
     }
 };
