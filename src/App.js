@@ -1,7 +1,6 @@
 import React, {useState} from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import './App.css';
-import Home from './pages/Home';
 import Timeline from './pages/Timeline';
 import Create from './pages/Create';
 import LoginPage from './pages/LoginPage';
@@ -48,7 +47,7 @@ function App() {
         <Router>
           <NavBar setSearchString={setSearchString}/>
           <Routes>
-            <Route path="/" exact element={<Home searchString={searchString}/>} />
+            <Route path="/" exact element={<Timeline searchString={searchString}/>} />
             <Route path="/create" element={<Create />} />
             <Route path="/createPetOwner" element={<CreatePetOwner />} />
             <Route path="/createPet" element={<CreatePet />} />
@@ -84,7 +83,6 @@ function App() {
             <Route path="/postrecommendations" element={<PostRecommendations />} />
             <Route path="/stripepayments/*" element={<StripePayments />} />
             <Route path="/polls/*" element={<Polls />} />
-            <Route path="/timeline" element={<Timeline searchString={searchString}/>} />
           </Routes>
         </Router>
       </div>

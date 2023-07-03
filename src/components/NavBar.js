@@ -74,11 +74,6 @@ const NavBar = ({setSearchString}) => {
         ...(isAuthenticated
             ? [
                 {
-                    text: 'Timeline',
-                    icon: <FeedIcon style={{ color: '#1976d2'}}/>, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
-                    route: '/timeline',
-                },
-                {
                     text: 'Profile',
                     icon: <AccountCircleIcon style={{ color: '#1976d2'}}/>, // import AccountCircleIcon from '@mui/icons-material/AccountCircle'
                     route: '/profile',
