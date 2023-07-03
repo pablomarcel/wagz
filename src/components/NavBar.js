@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink as RouterLink } from 'react-router-dom';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-
+import { motion } from 'framer-motion';
 import {
     AppBar,
     Toolbar,
@@ -47,6 +47,12 @@ import ExploreIcon from '@mui/icons-material/Explore';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import FeedIcon from '@mui/icons-material/Feed';
 const drawerWidth = 240;
+
+const drawerVariant = {
+    hidden: { x: '-100%' },
+    visible: { x: '0%', transition: { duration: 0.5 } },
+    exit: { x: '-100%', transition: { ease: 'easeInOut' } },
+};
 
 const NavBar = ({setSearchString}) => {
     const { isAuthenticated, loginWithRedirect, logout } = useAuth0();

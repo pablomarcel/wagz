@@ -6,8 +6,6 @@ import { StyledCard, StyledCardMedia, StyledCardVideo } from './styledComponents
 import likePostHome from './likePostHome';
 import savePost from './savePost';
 import likeComment from './likeComment';
-import followUser from './followUser';
-import unfollowUser from './unfollowUser';
 import handleFollowUser from './handleFollowUser';
 import { handleSharePost } from './handleSharePost';
 import {PersonAdd} from "@mui/icons-material";
