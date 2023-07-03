@@ -9,7 +9,7 @@ import likeComment from './likeComment';
 import handleFollowUser from './handleFollowUser';
 import { handleSharePost } from './handleSharePost';
 import {PersonAdd} from "@mui/icons-material";
-import { fetchSearchResults } from './searchHelper';
+import { fetchSearchResults } from './searchHelperTimeline';
 import { fetchPetOwnerProfileHelper } from './fetchPetOwnerProfileHelper';
 import { getPetOwnerName } from './getPetOwnerNameHelper';
 import fetchLikedPosts from './fetchLikedPosts';
@@ -41,6 +41,8 @@ function Timeline({ filterPosts, searchString }) {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(false);
     const [page, setPage] = useState(0);
+    const [filteredPosts, setFilteredPosts] = useState([]);
+    const [postsSearch, setPostsSearch] = useState([]);
 
     const openComments = (postId) => {
         setCurrentPostId(postId);
@@ -79,13 +81,10 @@ function Timeline({ filterPosts, searchString }) {
     }, [user, isAuthenticated]);
 
     useEffect(() => {
-        fetchSearchResults(searchString, setSearchResults);
+        if (searchString.trim() !== '') {
+            fetchSearchResults(searchString, setPostsSearch);
+        }
     }, [searchString]);
-
-    useEffect(() => {
-        //console.log(searchResults);
-    }, [searchResults]);
-
 
     const fetchPosts = async () => {
         if (loading) return;
@@ -201,7 +200,7 @@ function Timeline({ filterPosts, searchString }) {
                 </Alert>
             )}
             <Grid container spacing={2} justifyContent="center">
-                {posts.map((post, index) => (
+                {(searchString.trim() !== '' ? postsSearch : posts).map((post, index) => (
                     <Grid item xs={12} key={index}>
                         <StyledCard>
                             <CardHeader
@@ -302,5 +301,3 @@ function Timeline({ filterPosts, searchString }) {
 }
 
 export default Timeline;
-
-
