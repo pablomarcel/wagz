@@ -5,6 +5,7 @@ import axios from 'axios';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Chip } from '@mui/material';
 import UploadComponent from './UploadComponent';
+import {Helmet} from "react-helmet";
 
 const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || '';
 
@@ -78,6 +79,16 @@ const Create = () => {
 
     return (
         <Container maxWidth="xs">
+            <Helmet>
+                <title>Wagzters - Create Pet</title>
+                <meta name="description" content="Create a new pet profile on Wagzters - the dedicated social network for pet lovers. Connect your pet with the pet owner first to get started."/>
+                <meta property="og:title" content="Wagzters - Create Pet" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/createPet" />
+                <meta property="og:description" content="Create a new pet profile on Wagzters - the dedicated social network for pet lovers. Connect your pet with the pet owner first to get started." />
+            </Helmet>
+
             <Box sx={{display: 'flex',justifyContent: 'center'}}>
                 <Card sx={{boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',backgroundColor: '#f5f5f5',borderRadius: '15px'}}>
                     <CardContent>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useAuth0 } from '@auth0/auth0-react';
 import Home from './Home';
+import { Helmet } from 'react-helmet';
 
 const SharedWithMe = () => {
     const { user, isAuthenticated } = useAuth0();
@@ -29,7 +30,20 @@ const SharedWithMe = () => {
         fetchSharedPosts();
     }, [isAuthenticated, user]);
 
-    return <Home filterPosts={sharedPosts} />;
+    return (
+        <>
+            <Helmet>
+                <title>Wagzters - Shared With Me</title>
+                <meta name="description" content="Wagzters - Explore pet posts shared with you by other users, dive into the delightful world of pets shared by our community."/>
+                <meta property="og:title" content="Wagzters - Shared With Me" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/sharedwithme" />
+                <meta property="og:description" content="Wagzters - Discover posts shared with you, showcasing the wonderful variety of pets within our community." />
+            </Helmet>
+            <Home filterPosts={sharedPosts} />
+        </>
+    );
 };
 
 export default SharedWithMe;

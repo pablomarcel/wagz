@@ -9,6 +9,7 @@ import EventIcon from '@mui/icons-material/Event';
 import HowToVoteIcon from '@mui/icons-material/HowToVote';
 import AboutPolls from '../MorePolls/AboutPolls';
 import PollList from "./PollList";
+import {Helmet} from "react-helmet";
 
 
 const StyledTypography = styled(Typography)({
@@ -83,6 +84,17 @@ const Polls = () => {
 
     return (
         <Container maxWidth="md">
+            <Helmet>
+                <title>Wagzters - Polls</title>
+                <meta name="description" content="Participate in polls on Wagzters to help us improve our platform. Your feedback is invaluable in making Wagzters better for everyone."/>
+                <meta property="og:title" content="Wagzters - Polls" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/polls" />
+                <meta property="og:description" content="Participate in polls on Wagzters to help us improve our platform. Your feedback is invaluable in making Wagzters better for everyone." />
+            </Helmet>
+
+
             <Box
                 sx={{
                     display: 'flex',

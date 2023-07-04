@@ -6,6 +6,7 @@ import { Typography, List, ListItem, CircularProgress, Container, Grid, Paper, B
 import { styled } from '@mui/system';
 import Alert from '@mui/lab/Alert';
 import { useNavigate } from 'react-router-dom';
+import {Helmet} from "react-helmet";
 
 const StyledTypography = styled(Typography)({
     marginBottom: '10px',
@@ -128,6 +129,17 @@ const Following = () => {
 
     return (
         <Container>
+
+            <Helmet>
+                <title>Wagzters - Following</title>
+                <meta name="description" content="View the pet owners you're following on Wagzters. Stay updated with your fellow pet lovers and their furry friends."/>
+                <meta property="og:title" content="Wagzters - Following" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/following" />
+                <meta property="og:description" content="View the pet owners you're following on Wagzters. Stay updated with your fellow pet lovers and their furry friends." />
+            </Helmet>
+
             <StyledTypography variant="h4" component="h1">Following</StyledTypography>
             {owners.length > 0 ? (
                 <List>

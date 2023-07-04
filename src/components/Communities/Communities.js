@@ -10,6 +10,7 @@ import CommunityList from '../Communities/CommunityList';
 import PortraitIcon from "@mui/icons-material/Portrait";
 import ForumIcon from '@mui/icons-material/Forum';
 import GroupsIcon from '@mui/icons-material/Groups';
+import {Helmet} from "react-helmet";
 
 
 const StyledTypography = styled(Typography)({
@@ -78,6 +79,15 @@ const Communities = () => {
 
     return (
         <Container maxWidth="md">
+            <Helmet>
+                <title>Wagzters - Communities</title>
+                <meta name="description" content="Wagzters - Discover various pet communities on Wagzters. Whether you love golden retrievers, cats, reptiles, pandas, or any other pets, we have a community for you. Share your love for pets with others!"/>
+                <meta property="og:title" content="Wagzters - Communities" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/communities" />
+                <meta property="og:description" content="Wagzters - Discover various pet communities on Wagzters. Whether you love golden retrievers, cats, reptiles, pandas, or any other pets, we have a community for you. Share your love for pets with others!" />
+            </Helmet>
             <Box
                 sx={{
                     display: 'flex',

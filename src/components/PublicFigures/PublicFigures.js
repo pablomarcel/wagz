@@ -10,6 +10,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import PublicFigureList from '../PublicFigures/PublicFigureList';
 import PortraitIcon from "@mui/icons-material/Portrait";
 import AboutPublicFigures from '../MorePublicFigures/AboutPublicFigures';
+import {Helmet} from "react-helmet";
 
 
 const StyledTypography = styled(Typography)({
@@ -86,6 +87,15 @@ const PublicFigures = () => {
 
     return (
         <Container maxWidth="md">
+            <Helmet>
+                <title>Wagzters - People</title>
+                <meta name="description" content="Wagzters - Explore profiles of public figures who are also pet lovers on Wagzters. Artists, politicians, influencers and more share their experiences and memories with their pets here."/>
+                <meta property="og:title" content="Wagzters - People" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/publicfigures" />
+                <meta property="og:description" content="Wagzters - Explore profiles of public figures who are also pet lovers on Wagzters. Artists, politicians, influencers and more share their experiences and memories with their pets here." />
+            </Helmet>
             <Box
                 sx={{
                     display: 'flex',

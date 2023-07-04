@@ -15,6 +15,7 @@ import { getPetOwnerName } from './getPetOwnerNameHelper';
 import fetchLikedPosts from './fetchLikedPosts';
 import fetchSavedPosts from './fetchSavedPosts';
 import fetchFollowedUsers from './fetchFollowedUsers';
+import { Helmet } from 'react-helmet';
 
 function Timeline({ filterPosts, searchString }) {
     const { user, isAuthenticated } = useAuth0();
@@ -174,6 +175,16 @@ function Timeline({ filterPosts, searchString }) {
 
     return (
         <Container maxWidth="md">
+
+            <Helmet>
+                <title>Wagzters - Home</title>
+                <meta property="og:title" content="Wagzters - Pet Social Network" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com" />
+                <meta property="og:description" content="Wagzters - the dedicated social network for pet lovers - share, cherish, and explore memories of your furry friends, making them the stars of the show." />
+            </Helmet>
+
             <Typography variant="h6" sx={{
                 marginBottom: 6
             }}>

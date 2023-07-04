@@ -4,6 +4,7 @@ import { Avatar, Typography, Box, Card, CardContent } from '@mui/material';
 import { styled } from '@mui/system';
 import { Container } from '@mui/material';
 import PetList from './PetList';
+import {Helmet} from "react-helmet";
 
 const StyledTypography = styled(Typography)({
     textAlign: 'center',
@@ -71,6 +72,18 @@ const MyPets = () => {
 
     return (
         <Container maxWidth="md">
+
+            <Helmet>
+                <title>Wagzters - My Pets</title>
+                <meta name="description" content="View and manage your list of pets on Wagzters, the dedicated social network for pet lovers. Connect and share the love for your furry friends."/>
+                <meta property="og:title" content="Wagzters - My Pets" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/mypets" />
+                <meta property="og:description" content="View and manage your list of pets on Wagzters, the dedicated social network for pet lovers. Connect and share the love for your furry friends." />
+            </Helmet>
+
+
             <Box
                 sx={{
                     display: 'flex',
