@@ -8,6 +8,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import EventList from '../Events/EventList';
 import EventIcon from '@mui/icons-material/Event';
 import AboutEvents from '../MoreEvents/AboutEvents';
+import {Helmet} from "react-helmet";
 
 
 const StyledTypography = styled(Typography)({
@@ -82,6 +83,15 @@ const Events = () => {
 
     return (
         <Container maxWidth="md">
+            <Helmet>
+                <title>Wagzters - Events</title>
+                <meta name="description" content="Wagzters - Discover and join upcoming pet-related events and competitions on Wagzters. From dog shows, pet adoption events to pet care webinars, find the perfect event for you and your pet."/>
+                <meta property="og:title" content="Wagzters - Events" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/events" />
+                <meta property="og:description" content="Wagzters - Discover and join upcoming pet-related events and competitions on Wagzters. From dog shows, pet adoption events to pet care webinars, find the perfect event for you and your pet." />
+            </Helmet>
             <Box
                 sx={{
                     display: 'flex',

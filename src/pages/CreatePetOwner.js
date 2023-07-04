@@ -8,6 +8,7 @@ import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 import UploadComponent from './UploadComponent';
+import { Helmet } from 'react-helmet';
 
 const Create = () => {
     const { user } = useAuth0();
@@ -61,6 +62,18 @@ const Create = () => {
 
     return (
         <Container maxWidth="xs">
+
+            <Helmet>
+                <title>Wagzters - Create Pet Owner</title>
+                <meta name="description" content="Create a new pet owner profile on Wagzters, the dedicated social network for pet lovers. Start managing your pets, posts, and more."/>
+                <meta property="og:title" content="Wagzters - Create Pet Owner" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/createPetOwner" />
+                <meta property="og:description" content="Create a new pet owner profile on Wagzters, the dedicated social network for pet lovers. Start managing your pets, posts, and more." />
+            </Helmet>
+
+
             <Box
                 sx={{
                     display: 'flex',

@@ -6,6 +6,7 @@ import { styled } from '@mui/system';
 import { Container } from '@mui/material';
 import ItemList from './ItemList';
 import StoreIcon from '@mui/icons-material/Store';
+import {Helmet} from "react-helmet";
 
 const StyledTypography = styled(Typography)({
     textAlign: 'center',
@@ -35,7 +36,7 @@ const StyledCard = styled(Card)({
     marginBottom: '2rem'
 });
 
-const MyPets = () => {
+const Shop = () => {
     const { user, isAuthenticated } = useAuth0();
     const [petOwnerProfile, setPetOwnerProfile] = useState({
         name: '',
@@ -73,6 +74,15 @@ const MyPets = () => {
 
     return (
         <Container maxWidth="md">
+            <Helmet>
+                <title>Wagzters - Shopping</title>
+                <meta name="description" content="Wagzters - Explore a wide variety of pet supplies provided by our affiliate partners on Wagzters. From food, toys, to accessories, find everything your pet needs in one place."/>
+                <meta property="og:title" content="Wagzters - Shopping" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/shop" />
+                <meta property="og:description" content="Wagzters - Explore a wide variety of pet supplies provided by our affiliate partners on Wagzters. From food, toys, to accessories, find everything your pet needs in one place." />
+            </Helmet>
             <Box
                 sx={{
                     display: 'flex',
@@ -102,4 +112,4 @@ const MyPets = () => {
     );
 };
 
-export default MyPets;
+export default Shop;

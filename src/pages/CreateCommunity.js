@@ -7,6 +7,7 @@ import '../bootstrap-5.2.3-dist/css/bootstrap.min.css';
 import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Chip } from '@mui/material';
 import UploadComponent from './UploadComponent';
+import {Helmet} from "react-helmet";
 
 const CreateCommunity = () => {
     const { user } = useAuth0();
@@ -73,6 +74,17 @@ const CreateCommunity = () => {
 
     return (
         <Container maxWidth="xs">
+
+            <Helmet>
+                <title>Wagzters - Create Community</title>
+                <meta name="description" content="Wagzters - Create your very own pet community. Gather pet lovers together and share your love for any particular type of pets."/>
+                <meta property="og:title" content="Wagzters - Create Community" />
+                <meta property="og:type" content="website" />
+                <meta property="og:image" content="https://i.imgur.com/jrbqoWp.png" />
+                <meta property="og:url" content="https://wagzters.com/createCommunity" />
+                <meta property="og:description" content="Wagzters - Start a new journey with us by creating a community for your favorite pets. Join us now and spread the love for pets." />
+            </Helmet>
+
             <Box sx={{ display: 'flex', justifyContent: 'center'}}>
                 <Card sx={{
                     boxShadow: '0px 5px 15px rgba(0, 0, 0, 0.2)',

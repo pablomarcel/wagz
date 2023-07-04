@@ -105,7 +105,7 @@ const NavBar = ({setSearchString}) => {
                     route: '/post',
                 },
                 {
-                    text: 'Liked',
+                    text: 'Favorites',
                     icon: <FavoriteIcon style={{ color: '#1976d2'}}/>, // import FavoriteIcon from '@mui/icons-material/Favorite';
                     route: '/favorites',
                 },
