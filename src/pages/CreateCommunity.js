@@ -8,6 +8,7 @@ import { useAuth0, withAuthenticationRequired } from '@auth0/auth0-react';
 import { Box, Container, TextField, Button, Card, CardContent, FormControl, InputLabel, MenuItem, Select, Chip } from '@mui/material';
 import UploadComponent from './UploadComponent';
 import {Helmet} from "react-helmet";
+import CryptoJS from 'crypto-js';
 
 const CreateCommunity = () => {
     const { user } = useAuth0();
@@ -42,7 +43,8 @@ const CreateCommunity = () => {
     const fetchOwners = async () => {
         try {
             const response = await axios.get(`${API_BASE_URL}/.netlify/functions/listPetOwners`);
-            const filteredOwners = response.data.filter(owner => owner.email === currentUserEmail);
+            const hashedCurrentUserEmail = CryptoJS.SHA256(currentUserEmail).toString();
+            const filteredOwners = response.data.filter(owner => owner.hashEmail === hashedCurrentUserEmail);
             setOwners(filteredOwners);
         } catch (error) {
             console.error('Error fetching pet owners', error);
